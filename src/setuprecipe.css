@@ -1,0 +1,244 @@
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Times New Roman", Times, serif;
+  background: radial-gradient(
+    circle at center,
+    #1a3a5c 0%,
+    #0f1f35 35%,
+    #0b0f1a 70%,
+    #05070d 100%
+  );
+  color: #e6e8ef;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+.navbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 28px 64px;
+}
+
+.navbar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 36px;
+}
+
+.navbar a {
+  text-decoration: none;
+  font-size: 17px;
+  color: #c7cce0;
+  position: relative;
+  transition: color 0.25s ease;
+}
+
+.navbar a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0%;
+  height: 1px;
+  background-color: #6ea8ff;
+  transition: width 0.25s ease;
+}
+
+.navbar a:hover {
+  color: #6ea8ff;
+}
+
+.navbar a:hover::after {
+  width: 100%;
+}
+
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.items {
+  text-align: center;
+}
+
+h1 {
+  font-size: 42px;
+  margin: 40px 0 20px;
+  letter-spacing: 2px;
+  color: #ffffff;
+  text-shadow: 0 2px 10px rgba(110, 168, 255, 0.3);
+}
+
+h4 {
+  font-size: 20px;
+  color: #c7cce0;
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+
+#myDropdown {
+  padding: 12px 20px;
+  font-size: 16px;
+  background-color: #1a2233;
+  color: #e6e8ef;
+  border: 2px solid #2a3447;
+  cursor: pointer;
+  min-width: 250px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+#myDropdown:hover {
+  border-color: #6ea8ff;
+  background-color: #1f2838;
+}
+
+#myDropdown:focus {
+  outline: none;
+  border-color: #6ea8ff;
+  box-shadow: 0 0 0 3px rgba(110, 168, 255, 0.2);
+}
+
+#otherInputContainer {
+  margin-top: 15px;
+}
+
+#otherText,
+#newModuleText {
+  padding: 10px 15px;
+  font-size: 16px;
+  background-color: #1a2233;
+  color: #e6e8ef;
+  border: 2px solid #2a3447;
+  margin-right: 10px;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+#otherText:focus,
+#newModuleText:focus {
+  outline: none;
+  border-color: #6ea8ff;
+  box-shadow: 0 0 0 3px rgba(110, 168, 255, 0.2);
+}
+
+#modulesContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 30px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.module-btn {
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #1a2233;
+  color: #e6e8ef;
+  border: 2px solid #2a3447;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.module-btn:hover {
+  background-color: #6ea8ff;
+  border-color: #6ea8ff;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(110, 168, 255, 0.3);
+}
+
+.module-btn:active {
+  transform: translateY(0);
+}
+
+#addModuleBtn {
+  padding: 10px 15px;
+  font-size: 24px;
+  background-color: #2a3447;
+  color: #6ea8ff;
+  border: 2px dashed #6ea8ff;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  min-width: 60px;
+  font-weight: bold;
+}
+
+#addModuleBtn:hover {
+  background-color: #6ea8ff;
+  color: #ffffff;
+  border-style: solid;
+  transform: scale(1.05);
+}
+
+#saveCategory,
+#saveModule,
+#cancelModule {
+  padding: 10px 20px;
+  font-size: 15px;
+  background-color: #6ea8ff;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+#saveCategory:hover,
+#saveModule:hover {
+  background-color: #5a95e8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(110, 168, 255, 0.4);
+}
+
+#cancelModule {
+  background-color: #2a3447;
+  color: #c7cce0;
+}
+
+#cancelModule:hover {
+  background-color: #374052;
+}
+
+#newModuleContainer {
+  margin-top: 15px;
+}
+.btn {
+  display: inline-block;
+  margin: 5%;
+  font-size: 16px;
+  font-family: "Times New Roman", Times, serif;
+  padding: 6px 30px;
+  background: linear-gradient(135deg, #6ea8ff 0%, #4c7dff 100%);
+  color: #ffffff;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(110, 168, 255, 0.45);
+  background: linear-gradient(135deg, #4c7dff 0%, #6ea8ff 100%);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+}
