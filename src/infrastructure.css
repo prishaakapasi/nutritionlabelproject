@@ -614,3 +614,125 @@ textarea:hover:not(:focus) {
     padding: 12px 16px;
     min-width: 44px;
 }
+.hosting-btn {
+  padding: 12px var(--spacing-md);
+  background-color: var(--color-bg);
+  border: 2px solid var(--color-border);
+  color: var(--color-text);
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-size: 16px;
+  font-weight: normal;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: all var(--transition-standard);
+  border-radius: 2px;
+}
+
+.hosting-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: var(--color-accent-light);
+  transition: width var(--transition-standard);
+  z-index: -1;
+}
+
+.hosting-btn:hover::before {
+  width: 100%;
+}
+
+.hosting-btn.selected {
+  background-color: var(--color-accent);
+  color: var(--color-text);
+  border-color: var(--color-accent);
+}
+
+.hosting-btn.selected::before {
+  width: 100%;
+  background: var(--color-accent);
+}
+
+#hostingDescription {
+  margin-top: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+#hostingDetails {
+  width: 100%;
+  max-width: 100%;
+}
+
+.channel-input-container {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.channel-input-container input[type="url"] {
+  flex: 1;
+  min-width: 250px;
+  margin-bottom: 0;
+}
+
+.channels-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+  min-height: 50px;
+}
+
+.channel-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.channel-btn {
+  padding: 12px var(--spacing-md);
+  background-color: var(--color-accent);
+  border: 2px solid var(--color-accent);
+  color: var(--color-text);
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: bold;
+  white-space: nowrap;
+  text-decoration: none;
+  border-radius: 2px;
+  transition: all var(--transition-standard);
+  display: inline-block;
+}
+
+.channel-btn:hover {
+  background-color: var(--color-accent-light);
+  border-color: var(--color-accent-light);
+  transform: translateY(-2px);
+}
+
+.remove-channel-btn {
+  padding: 8px 12px;
+  background-color: var(--color-bg);
+  border: 2px solid var(--color-border);
+  color: var(--color-text);
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1;
+  border-radius: 2px;
+  transition: all var(--transition-fast);
+}
+
+.remove-channel-btn:hover {
+  background-color: #ff4444;
+  border-color: #ff4444;
+  color: white;
+}

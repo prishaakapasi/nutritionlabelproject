@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="createrecipe.css" />
+    <link rel="stylesheet" href="legalcompliance.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Community - Admin Type</title>
+    <title>Community - Legal Compliance</title>
 </head>
 <body>
   <nav class="navbar">
@@ -31,6 +31,102 @@
     </aside>
 
     <main>
+      <h1>Legal Compliance</h1>
+      <h3> Let people know what laws you need to comply with to keep the community up and running.</h3>
+      
+      <h2>Based In</h2>
+      <select id="country" name="country">
+        <option value="">Select a country...</option>
+        <option value="US">United States</option>
+        <option value="GB">United Kingdom</option>
+        <option value="CA">Canada</option>
+        <option value="AU">Australia</option>
+        <option value="DE">Germany</option>
+        <option value="FR">France</option>
+        <option value="JP">Japan</option>
+        <option value="NL">Netherlands</option>
+        <option value="SE">Sweden</option>
+        <option value="other">Other</option>
+      </select>
+      <p class="note">This is where your server is located and/or obligated to comply with local laws.</p>
+      
+      <h2>Relevant Regulations</h2>
+      <div id="regulationsContainer" class="button-container">
+        <button class="regulation-btn" data-regulation="dmca">DMCA</button>
+        <button class="regulation-btn" data-regulation="gdpr">GDPR</button>
+        <button class="regulation-btn" data-regulation="dsa">Digital Services Act (DSA)</button>
+        <button class="add-module-btn">+</button>
+      </div>
+      <div class="new-module-container" style="display: none;">
+        <input type="text" class="new-module-text" placeholder="Enter new regulation...">
+        <div class="button-group">
+          <button class="save-module">Save</button>
+          <button class="cancel-module">Cancel</button>
+        </div>
+      </div>
+      
+      <div id="dmcaInfo" class="regulation-info" style="display: none;">
+        <h2>DMCA Registered Agent Information</h2>
+        <input type="text" id="dmcaAgentName" placeholder="Agent Name">
+        <input type="text" id="dmcaAgentAddress" placeholder="Address">
+        <input type="email" id="dmcaAgentEmail" placeholder="Email">
+        <input type="tel" id="dmcaAgentPhone" placeholder="Phone">
+      </div>
+    </main>
   </div>
+
+  <script>
+    const regulationsContainer = document.getElementById('regulationsContainer');
+    const addBtn = regulationsContainer.querySelector('.add-module-btn');
+    const newModuleContainer = document.querySelector('.new-module-container');
+    const newModuleText = newModuleContainer.querySelector('.new-module-text');
+    const saveBtn = newModuleContainer.querySelector('.save-module');
+    const cancelBtn = newModuleContainer.querySelector('.cancel-module');
+    const dmcaInfo = document.getElementById('dmcaInfo');
+
+    document.querySelectorAll('.regulation-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        this.classList.toggle('selected');
+        
+        if (this.dataset.regulation === 'dmca') {
+          dmcaInfo.style.display = this.classList.contains('selected') ? 'block' : 'none';
+        }
+      });
+    });
+
+    addBtn.addEventListener('click', function() {
+      newModuleContainer.style.display = 'block';
+      newModuleText.focus();
+    });
+
+    saveBtn.addEventListener('click', function() {
+      const newRegulation = newModuleText.value.trim();
+      if (newRegulation) {
+        const newButton = document.createElement('button');
+        newButton.className = 'regulation-btn';
+        newButton.textContent = newRegulation;
+        
+        newButton.addEventListener('click', function() {
+          this.classList.toggle('selected');
+        });
+
+        regulationsContainer.insertBefore(newButton, addBtn);
+        
+        newModuleContainer.style.display = 'none';
+        newModuleText.value = '';
+      }
+    });
+
+    cancelBtn.addEventListener('click', function() {
+      newModuleContainer.style.display = 'none';
+      newModuleText.value = '';
+    });
+
+    newModuleText.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        saveBtn.click();
+      }
+    });
+  </script>
 </body>
 </html>

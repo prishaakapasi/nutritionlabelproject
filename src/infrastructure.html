@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="createrecipe.css" />
+    <link rel="stylesheet" href="infrastructure.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Community - Admin Type</title>
+    <title>Community - Infrastructure</title>
 </head>
 <body>
   <nav class="navbar">
@@ -31,8 +31,108 @@
     </aside>
 
     <main>
-     <h1> Rules </h1>
-     <h3> Let people know who administers and moderates the community space. </h3>
+      <h1>Infrastructure</h1>
+      <h3>Give people some insight into the technical infrastructure that your community sits on.</h3>
+      
+      <h2>Protocol</h2>
+      <textarea id="protocols" name="protocols" placeholder="Describe the protocol(s) your community uses..."></textarea>
+      
+      <h2>Hosting</h2>
+      <div class="button-container">
+        <button class="hosting-btn" data-type="physical">Physical</button>
+        <button class="hosting-btn" data-type="cloud">Cloud</button>
+      </div>
+      
+      <div id="hostingDescription" style="display: none;">
+        <input type="text" id="hostingDetails" placeholder=" e.g in admin basement">
+      </div>
+      
+      <h2>Costs</h2>
+      <textarea id="costs" name="costs" placeholder="Funded by admin"></textarea>
+      
+      <h2>Other Channels</h2>
+      <div id="channelsList" class="channels-list"></div>
+      <div class="channel-input-container">
+        <input type="url" id="channelUrl" placeholder="https://discord.gg/example or https://loomio.org/example">
+        <button id="addChannel" class="save-module">Add Channel</button>
+      </div>
+    </main>
   </div>
+
+  <script>
+    const hostingBtns = document.querySelectorAll('.hosting-btn');
+    const hostingDescription = document.getElementById('hostingDescription');
+    const hostingDetails = document.getElementById('hostingDetails');
+    const channelUrl = document.getElementById('channelUrl');
+    const addChannelBtn = document.getElementById('addChannel');
+    const channelsList = document.getElementById('channelsList');
+
+    hostingBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        hostingBtns.forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+        
+        hostingDescription.style.display = 'block';
+        
+        if (this.dataset.type === 'physical') {
+          hostingDetails.placeholder = 'e.g. in admin basement';
+        } else {
+          hostingDetails.placeholder = 'e.g., AWS, Google Cloud, Co-op Cloud';
+        }
+        
+        hostingDetails.value = '';
+      });
+    });
+    function detectPlatform(url) {
+      url = url.toLowerCase();
+      
+      if (url.includes('discord')) return 'Discord';
+      if (url.includes('loomio')) return 'Loomio';
+      if (url.includes('slack')) return 'Slack';
+      if (url.includes('telegram')) return 'Telegram';
+      if (url.includes('matrix')) return 'Matrix';
+      if (url.includes('github')) return 'GitHub';
+      if (url.includes('gitlab')) return 'GitLab';
+      if (url.includes('reddit')) return 'Reddit';
+      if (url.includes('twitter') || url.includes('x.com')) return 'Twitter/X';
+      if (url.includes('facebook')) return 'Facebook';
+      
+      return 'Link';
+    }
+    addChannelBtn.addEventListener('click', function() {
+      const url = channelUrl.value.trim();
+      
+      if (url) {
+        const platform = detectPlatform(url);
+        
+        const channelItem = document.createElement('div');
+        channelItem.className = 'channel-item';
+        
+        const channelBtn = document.createElement('a');
+        channelBtn.className = 'channel-btn';
+        channelBtn.href = url;
+        channelBtn.target = '_blank';
+        channelBtn.textContent = platform.toUpperCase();
+        
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-channel-btn';
+        removeBtn.textContent = '×';
+        removeBtn.addEventListener('click', function() {
+          channelItem.remove();
+        });
+        
+        channelItem.appendChild(channelBtn);
+        channelItem.appendChild(removeBtn);
+        channelsList.appendChild(channelItem);
+        
+        channelUrl.value = '';
+      }
+    });
+    channelUrl.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        addChannelBtn.click();
+      }
+    });
+  </script>
 </body>
 </html>

@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="createrecipe.css" />
+    <link rel="stylesheet" href="federation.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Community - Admin Type</title>
+    <title>Federation</title>
 </head>
 <body>
   <nav class="navbar">
@@ -29,17 +29,97 @@
         <a href="communityprocesses.html" class="sidebar-link">Community Processes</a>
       </nav>
     </aside>
-    <main> 
-    <h1> Federation </h1>
-    <h2> Federation Policy </h2>
-    <div class="button-container">
+
+    <main>
+      <h1>Federation</h1>
+      <h3>Summarize your policy for federating with other servers, including those on other protocols.</h3>
+      
+      <h2>Federation Policy</h2>
+      <div id="federationContainer" class="button-container">
         <button class="module-btn">Whitelist Mode</button>
-        <button class="module-btn">Blocklist Mode</button>
-        <button class="module-btn">Anti-Meta Fedipact </button>
-        <button id="addModuleBtn">+</button>
+        <button class="module-btn">Blacklist Mode</button>
+        <button class="module-btn">Anti-meta Fedipact</button>
+        <button class="add-module-btn">+</button>
+      </div>
+      <div class="new-module-container" style="display: none;">
+        <input type="text" class="new-module-text" placeholder="Enter new federation policy...">
+        <div class="button-group">
+          <button class="save-module">Save</button>
+          <button class="cancel-module">Cancel</button>
+        </div>
+      </div>
+
+      <h2>Bridging Policy</h2>
+      <div id="bridgingContainer" class="button-container">
+        <button class="module-btn">AT Protocol</button>
+        <button class="module-btn">Nostr</button>
+        <button class="module-btn">Farcaster</button>
+        <button class="add-module-btn">+</button>
+      </div>
+      <div class="new-module-container" style="display: none;">
+        <input type="text" class="new-module-text" placeholder="Enter new bridging policy...">
+        <div class="button-group">
+          <button class="save-module">Save</button>
+          <button class="cancel-module">Cancel</button>
+        </div>
+      </div>
+      <h2>Blocklists</h2>
+      <div id="bridgingContainer" class="button-container">
+        <button class="module-btn">Garden Fence</button>
+        <button class="module-btn">CARIAD</button>
+        <button class="module-btn">IFTAS-DNI</button>
+        <button class="module-btn"> Seridy Tier-0 </button>
+         <button class="module-btn"> FediNuke </button>
       </div>
     </main>
   </div>
-  
+
+  <script>
+    function initializeSection(containerElement) {
+      const addBtn = containerElement.querySelector('.add-module-btn');
+      const newModuleContainer = containerElement.nextElementSibling;
+      const newModuleText = newModuleContainer.querySelector('.new-module-text');
+      const saveBtn = newModuleContainer.querySelector('.save-module');
+      const cancelBtn = newModuleContainer.querySelector('.cancel-module');
+
+      addBtn.addEventListener('click', function() {
+        newModuleContainer.style.display = 'block';
+        newModuleText.focus();
+      });
+
+      saveBtn.addEventListener('click', function() {
+        const newModule = newModuleText.value.trim();
+        if (newModule) {
+          const newButton = document.createElement('button');
+          newButton.className = 'module-btn';
+          newButton.textContent = newModule;
+
+          newButton.addEventListener('click', function() {
+            if (confirm('Remove "' + newModule + '"?')) {
+              newButton.remove();
+            }
+          });
+
+          containerElement.insertBefore(newButton, addBtn);
+          
+          newModuleContainer.style.display = 'none';
+          newModuleText.value = '';
+        }
+      });
+
+      cancelBtn.addEventListener('click', function() {
+        newModuleContainer.style.display = 'none';
+        newModuleText.value = '';
+      });
+
+      newModuleText.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          saveBtn.click();
+        }
+      });
+    }
+    initializeSection(document.getElementById('federationContainer'));
+    initializeSection(document.getElementById('bridgingContainer'));
+  </script>
 </body>
 </html>
