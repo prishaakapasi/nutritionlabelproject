@@ -229,11 +229,6 @@ h3 {
   color: var(--color-text);
   border-style: solid;
   outline: none;
-  transform: rotate(90deg);
-}
-
-#addModuleBtn:active {
-  transform: rotate(90deg) scale(0.95);
 }
 
 #username {
