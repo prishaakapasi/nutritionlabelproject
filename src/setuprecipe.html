@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="setuprecipe.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Community</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Community</title>
+  <link rel="stylesheet" href="setuprecipe.css" />
 </head>
+
 <body>
   <nav class="navbar">
     <ul>
@@ -18,44 +19,58 @@
   </nav>
 
   <main>
-    <div class="items"> 
-    <h1>DESCRIBE YOUR COMMUNITY TYPE</h1>
-    <h4>Select the types of decisions relevant for your community</h4>
-    <select id="myDropdown">
+    <div class="items">
+
+      <h1>DESCRIBE YOUR COMMUNITY TYPE</h1>
+      <h4>Select the types of decisions relevant for your community</h4>
+
+      <select id="myDropdown">
         <option value="">Select a Type</option>
         <option value="social">Social network</option>
         <option value="community">Online community</option>
         <option value="science">Open Science</option>
         <option value="archiving">Archiving</option>
         <option value="other">Other</option>
-    </select>
-    
-    <div id="otherInputContainer" style="display: none; margin-top: 10px;">
-        <input type="text" id="otherText" placeholder="Enter new category name">
+      </select>
+
+      <div id="otherInputContainer" style="display:none; margin-top:10px;">
+        <input
+          type="text"
+          id="otherText"
+          placeholder="Enter new category name"
+        />
         <button id="saveCategory">Save Category</button>
-    </div>
+      </div>
 
-    <h1>SELECT CATEGORY MODULES</h1>
-    <div id="modulesContainer">
-      <button class="module-btn">Admin</button>
-      <button class="module-btn">Rules</button>
-      <button class="module-btn">Membership</button>
-      <button class="module-btn">Federation</button>
-      <button class="module-btn">Infastructure</button>
-      <button class="module-btn">Data/Privacy</button>
-      <button class="module-btn">Legal Compliance</button>
-      <button class="module-btn">Community Processes</button>
-      <button id="addModuleBtn">+</button>
-    </div>
+      <h1>SELECT CATEGORY MODULES</h1>
 
-    <div id="newModuleContainer" style="display: none; margin-top: 10px;">
-        <input type="text" id="newModuleText" placeholder="Enter new module name">
+      <div id="modulesContainer">
+        <button type="button" class="module-btn">Admin</button>
+        <button type="button" class="module-btn">Rules</button>
+        <button type="button" class="module-btn">Membership</button>
+        <button type="button" class="module-btn">Federation</button>
+        <button type="button" class="module-btn">Infrastructure</button>
+        <button type="button" class="module-btn">Data/Privacy</button>
+        <button type="button" class="module-btn">Legal Compliance</button>
+        <button type="button" class="module-btn">Community Processes</button>
+        <button type="button" id="addModuleBtn">+</button>
+      </div>
+
+      <div id="newModuleContainer" style="display:none; margin-top:10px;">
+        <input
+          type="text"
+          id="newModuleText"
+          placeholder="Enter new module name"
+        />
         <button id="saveModule">Add Module</button>
         <button id="cancelModule">Cancel</button>
+      </div>
+
+      <a href="infrastructure.html" class="btn">Next</a>
+
     </div>
-      <a href="infrastructure.html" class="btn"> Next </a>
-</div>
   </main>
-    <script type="module" src="setuprecipe.js"> </script> 
+
+  <script type="module" src="setuprecipe.js"></script>
 </body>
 </html>
