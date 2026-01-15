@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="dataprivacy.css" />
+    <link rel="stylesheet" href="admintype.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Community - Data/Privacy</title>
+    <title>Community - Admin Type</title>
 </head>
 <body>
   <nav class="navbar">
@@ -21,31 +21,22 @@
     <aside class="sidebar">
       <nav class="sidebar-nav">
         <a href="infrastructure.html" class="sidebar-link">Infrastructure</a>
-        <a href="admintype.html" class="sidebar-link">Admin Type</a>
+        <a href="admintype.html" class="sidebar-link" active>Admin Type</a>
         <a href="membership.html" class="sidebar-link">Membership</a>
         <a href="rules.html" class="sidebar-link">Rules</a>
         <a href="federation.html" class="sidebar-link">Federation</a>
-        <a href="dataprivacy.html" class="sidebar-link active">Data/Privacy</a>
+        <a href="dataprivacy.html" class="sidebar-link">Data/Privacy</a>
         <a href="legalcompliance.html" class="sidebar-link">Legal Compliance</a>
         <a href="communityprocesses.html" class="sidebar-link">Community Processes</a>
       </nav>
     </aside>
 
     <main>
-      <h1>Data/Privacy</h1>
-      <h3> Help people understand what they can expect in terms of data protections and privacy. </h3>
-      
-      <h2>Privacy Policy</h2>
-      <input type="url" id="privacyPolicyUrl" name="privacyPolicyUrl" placeholder="https://example.com/privacy-policy">
-      
-      <h2>Log Data Retention</h2>
-      <div class="input-with-label">
-        <input type="number" id="logRetention" name="logRetention" min="0" placeholder="90">
-        <span class="input-suffix">days</span>
-      </div>
-      
-      <h2>Protection Measures</h2>
-      <textarea id="protectionMeasures" name="protectionMeasures" placeholder="Describe your data protection measures..."></textarea>
+      <h1>Membership</h1>
+      <h3>Select your type of membership.</h3>
+      <div id="modulesContainer" class="button-container">
+        <button class="module-btn">Open Membership</button>
+        <button class="module-btn">Closed Membership</button>
     </main>
   </div>
 </body>
