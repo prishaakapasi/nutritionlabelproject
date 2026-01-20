@@ -29,7 +29,18 @@
       
       <h2>Protocol</h2>
       <textarea id="protocols" name="protocols" placeholder="Describe the protocol(s) your community uses..."></textarea>
-      
+      <h2>Software</h2>
+      <div class="software-container">
+        <input
+          type="text"
+          id="software"
+          placeholder="Start typing to search or type your own"
+          autocomplete="off"
+        />
+        <div class="software-hint">Choose one or type your own software</div>
+        <ul id="software-dropdown" class="software-dropdown"></ul>
+      </div>
+
       <h2>Hosting</h2>
       <div class="button-container">
         <button class="hosting-btn" data-type="physical">Physical</button>
@@ -126,7 +137,58 @@
         addChannelBtn.click();
       }
     });
+        const softwareOptions = [
+      "Mastodon", "Pixelfed", "Lemmy", "PeerTube", "WordPress", "Misskey",
+      "Pleroma", "WriteFreely", "Fedibird", "NodeBB", "Activity Relay",
+      "Micro.blog", "Akkoma", "Firefish", "BookWyrm", "Sharkey",
+      "Hometown", "Friendica", "Loops", "PieFed", "NeoDB", "Hubzilla",
+      "Forgejo", "Mbin", "Iceshrimp", "Wafrn", "Funkwhale", "KmyBlue",
+      "Owncast", "FoundKey", "Gitea", "GNU social", "Mitra", "CherryPick",
+      "Meisskey", "Vernissage", "Smithereen", "Hollo", "Ghost", "Snac",
+      "GoToSocial", "Postmarks", "Betula", "Microblog.pub", "Manyfold",
+      "Hackers' Pub", "Ktistec", "Takahē", "Stegodon", "Mobilizon",
+      "Frequency", "Gancio", "Drupal", "Plume", "Flipboard", "Loforo",
+      "Brutalinks", "Zap", "Ecko", "Irwin", "Honk", "Lotide", "Emissary",
+      "Bonfire", "Bridgy Fed"
+    ];
+
+    const softwareInput = document.getElementById("software");
+    const softwareDropdown = document.getElementById("software-dropdown");
+
+    softwareInput.addEventListener("input", () => {
+      const value = softwareInput.value.toLowerCase();
+      softwareDropdown.innerHTML = "";
+
+      if (!value) {
+        softwareDropdown.style.display = "none";
+        return;
+      }
+
+      const filtered = softwareOptions.filter(opt =>
+        opt.toLowerCase().includes(value)
+      );
+
+      filtered.forEach(opt => {
+        const li = document.createElement("li");
+        li.textContent = opt;
+        li.addEventListener("click", () => {
+          softwareInput.value = opt;
+          softwareDropdown.style.display = "none";
+        });
+        softwareDropdown.appendChild(li);
+      });
+
+      softwareDropdown.style.display = filtered.length ? "block" : "none";
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".software-container")) {
+        softwareDropdown.style.display = "none";
+      }
+    });
+
   </script>
   <script type="module" src="navigation.js"></script>
+  
 </body>
 </html>

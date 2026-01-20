@@ -103,7 +103,6 @@ function generateSideNav(modules) {
     navContainer.appendChild(a);
   });
 
-
   const separator = document.createElement("div");
   separator.style.borderTop = "2px solid #000";
   separator.style.margin = "20px 0";
@@ -123,6 +122,24 @@ function generateSideNav(modules) {
   `;
   editButton.addEventListener("click", showModuleEditor);
   navContainer.appendChild(editButton);
+
+  const finishButton = document.createElement("button");
+  finishButton.className = "sidebar-link finish-btn";
+  finishButton.textContent = "Generate Recipe Now";
+  finishButton.style.cssText = `
+    background: #ffae35;;
+    border: 2px solid #000;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    font-weight: bold;
+    color: #000;
+    margin-top: 12px;
+  `;
+  finishButton.addEventListener("click", () => {
+    window.location.href = "finalrecipe.html";
+  });
+  navContainer.appendChild(finishButton);
 }
 
 window.addEventListener('DOMContentLoaded', loadNavigation);
@@ -181,7 +198,6 @@ function showModuleEditor() {
     if (e.target === modal) modal.remove();
   });
 }
-
 
 async function loadModuleCheckboxes() {
   const container = document.getElementById("moduleCheckboxes");
