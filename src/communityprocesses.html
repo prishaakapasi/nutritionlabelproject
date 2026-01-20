@@ -25,7 +25,7 @@
 
     <main>
       <h1>Community Processes</h1>
-      <h3> Set a shared understanding about how governance works in your community. Can people submit proposals, and if so how? Who can be involved in the decision-making? Is there a deliberation process? How are your rules enforced?</h3>
+      <h3>Set a shared understanding about how governance works in your community. Can people submit proposals, and if so how? Who can be involved in the decision-making? Is there a deliberation process? How are your rules enforced?</h3>
       
       <h2>Moderation</h2>
       <textarea id="moderation" name="moderation" placeholder="Describe your moderation process, disciplinary steps, warning system, etc."></textarea>
@@ -46,6 +46,117 @@
       <textarea id="feedback" name="feedback" placeholder="Describe where and how people can submit feedback, requests, polls, or suggestions."></textarea>
     </main>
   </div>
+
   <script type="module" src="navigation.js"></script>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    const supabaseUrl = "https://sewbsumjjlpsbadgwgfk.supabase.co";
+    const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    async function loadCommunityProcessesData() {
+      const communityId = localStorage.getItem("communityId");
+      if (!communityId) {
+        console.error("No community ID found");
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("communities")
+        .select("communityprocesses_data")
+        .eq("id", communityId)
+        .single();
+
+      if (error) {
+        console.error("Error loading community processes data:", error);
+        return;
+      }
+
+      if (data && data.communityprocesses_data) {
+        populateForm(data.communityprocesses_data);
+      }
+    }
+
+    function populateForm(processesData) {
+      if (processesData.moderation) {
+        document.getElementById("moderation").value = processesData.moderation;
+      }
+
+      if (processesData.reporting) {
+        document.getElementById("reporting").value = processesData.reporting;
+      }
+
+      if (processesData.conflict) {
+        document.getElementById("conflict").value = processesData.conflict;
+      }
+
+      if (processesData.decisionMaking) {
+        document.getElementById("decisionMaking").value = processesData.decisionMaking;
+      }
+
+      if (processesData.updates) {
+        document.getElementById("updates").value = processesData.updates;
+      }
+
+      if (processesData.feedback) {
+        document.getElementById("feedback").value = processesData.feedback;
+      }
+    }
+
+    function collectFormData() {
+      return {
+        moderation: document.getElementById("moderation").value,
+        reporting: document.getElementById("reporting").value,
+        conflict: document.getElementById("conflict").value,
+        decisionMaking: document.getElementById("decisionMaking").value,
+        updates: document.getElementById("updates").value,
+        feedback: document.getElementById("feedback").value
+      };
+    }
+
+    async function saveCommunityProcessesData() {
+      const communityId = localStorage.getItem("communityId");
+      if (!communityId) {
+        console.error("No community ID found");
+        return false;
+      }
+
+      const processesData = collectFormData();
+
+      const { error } = await supabase
+        .from("communities")
+        .update({ communityprocesses_data: processesData })
+        .eq("id", communityId);
+
+      if (error) {
+        console.error("Error saving community processes data:", error);
+        return false;
+      }
+
+      console.log("Community processes data saved successfully");
+      return true;
+    }
+
+    let saveTimeout;
+    function autoSaveData() {
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => {
+        saveCommunityProcessesData();
+      }, 1000);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadCommunityProcessesData();
+
+      document.getElementById("moderation").addEventListener("input", autoSaveData);
+      document.getElementById("reporting").addEventListener("input", autoSaveData);
+      document.getElementById("conflict").addEventListener("input", autoSaveData);
+      document.getElementById("decisionMaking").addEventListener("input", autoSaveData);
+      document.getElementById("updates").addEventListener("input", autoSaveData);
+      document.getElementById("feedback").addEventListener("input", autoSaveData);
+    });
+  </script>
 </body>
 </html>

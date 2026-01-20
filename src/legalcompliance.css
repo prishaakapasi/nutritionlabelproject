@@ -646,3 +646,8 @@ select:hover:not(:focus) {
     padding: 10px var(--spacing-sm);
   }
 }
+.regulation-btn.selected {
+  background-color: var(--color-accent);
+  color: var(--color-text);
+  border-color: var(--color-accent);
+}

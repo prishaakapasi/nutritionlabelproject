@@ -25,7 +25,7 @@
 
     <main>
       <h1>Data/Privacy</h1>
-      <h3> Help people understand what they can expect in terms of data protections and privacy. </h3>
+      <h3>Help people understand what they can expect in terms of data protections and privacy.</h3>
       
       <h2>Privacy Policy</h2>
       <input type="url" id="privacyPolicyUrl" name="privacyPolicyUrl" placeholder="https://example.com/privacy-policy">
@@ -40,6 +40,99 @@
       <textarea id="protectionMeasures" name="protectionMeasures" placeholder="Describe your data protection measures..."></textarea>
     </main>
   </div>
+
   <script type="module" src="navigation.js"></script>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    const supabaseUrl = "https://sewbsumjjlpsbadgwgfk.supabase.co";
+    const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    async function loadDataPrivacyData() {
+      const communityId = localStorage.getItem("communityId");
+      if (!communityId) {
+        console.error("No community ID found");
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("communities")
+        .select("dataprivacy_data")
+        .eq("id", communityId)
+        .single();
+
+      if (error) {
+        console.error("Error loading data/privacy data:", error);
+        return;
+      }
+
+      if (data && data.dataprivacy_data) {
+        populateForm(data.dataprivacy_data);
+      }
+    }
+
+    function populateForm(dataprivacyData) {
+      if (dataprivacyData.privacyPolicyUrl) {
+        document.getElementById("privacyPolicyUrl").value = dataprivacyData.privacyPolicyUrl;
+      }
+
+      if (dataprivacyData.logRetention) {
+        document.getElementById("logRetention").value = dataprivacyData.logRetention;
+      }
+
+      if (dataprivacyData.protectionMeasures) {
+        document.getElementById("protectionMeasures").value = dataprivacyData.protectionMeasures;
+      }
+    }
+
+    function collectFormData() {
+      return {
+        privacyPolicyUrl: document.getElementById("privacyPolicyUrl").value,
+        logRetention: document.getElementById("logRetention").value,
+        protectionMeasures: document.getElementById("protectionMeasures").value
+      };
+    }
+
+    async function saveDataPrivacyData() {
+      const communityId = localStorage.getItem("communityId");
+      if (!communityId) {
+        console.error("No community ID found");
+        return false;
+      }
+
+      const dataprivacyData = collectFormData();
+
+      const { error } = await supabase
+        .from("communities")
+        .update({ dataprivacy_data: dataprivacyData })
+        .eq("id", communityId);
+
+      if (error) {
+        console.error("Error saving data/privacy data:", error);
+        return false;
+      }
+
+      console.log("Data/Privacy data saved successfully");
+      return true;
+    }
+
+    let saveTimeout;
+    function autoSaveData() {
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => {
+        saveDataPrivacyData();
+      }, 1000);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadDataPrivacyData();
+
+      document.getElementById("privacyPolicyUrl").addEventListener("input", autoSaveData);
+      document.getElementById("logRetention").addEventListener("input", autoSaveData);
+      document.getElementById("protectionMeasures").addEventListener("input", autoSaveData);
+    });
+  </script>
 </body>
 </html>

@@ -440,3 +440,8 @@ h3 {
     padding: 10px var(--spacing-sm);
   }
 }
+.module-btn.selected {
+  background-color: var(--color-accent);
+  color: var(--color-text);
+  
+}

@@ -47,42 +47,180 @@
   </div>
 
   <script type="module" src="navigation.js"></script>
-  <script>
-    const addModuleBtn = document.getElementById('addModuleBtn');
-    const newModuleContainer = document.getElementById('newModuleContainer');
-    const newModuleText = document.getElementById('newModuleText');
-    const saveModule = document.getElementById('saveModule');
-    const cancelModule = document.getElementById('cancelModule');
-    const modulesContainer = document.getElementById('modulesContainer');
 
-    addModuleBtn.addEventListener('click', function() {
-      newModuleContainer.style.display = 'block';
-      newModuleText.focus();
-    });
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-    saveModule.addEventListener('click', function() {
-      const newModule = newModuleText.value.trim();
-      if (newModule) {
-        const newButton = document.createElement('button');
-        newButton.className = 'module-btn';
-        newButton.textContent = newModule;
+    const supabaseUrl = "https://sewbsumjjlpsbadgwgfk.supabase.co";
+    const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
-        modulesContainer.insertBefore(newButton, addModuleBtn);
+    async function loadAdminData() {
+      const communityId = localStorage.getItem("communityId");
+      if (!communityId) {
+        console.error("No community ID found");
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("communities")
+        .select("admin_data")
+        .eq("id", communityId)
+        .single();
+
+      if (error) {
+        console.error("Error loading admin data:", error);
+        return;
+      }
+
+      if (data && data.admin_data) {
+        populateForm(data.admin_data);
+      }
+    }
+
+    function populateForm(adminData) {
+      if (adminData.selectedType) {
+        const buttons = document.querySelectorAll('.module-btn');
+        buttons.forEach(btn => {
+          if (btn.textContent === adminData.selectedType) {
+            btn.classList.add('selected');
+          }
+        });
+      }
+
+      if (adminData.customTypes && Array.isArray(adminData.customTypes)) {
+        const modulesContainer = document.getElementById('modulesContainer');
+        const addBtn = document.getElementById('addModuleBtn');
         
+        adminData.customTypes.forEach(type => {
+          const newButton = document.createElement('button');
+          newButton.className = 'module-btn';
+          if (type === adminData.selectedType) {
+            newButton.classList.add('selected');
+          }
+          newButton.textContent = type;
+          modulesContainer.insertBefore(newButton, addBtn);
+          
+          newButton.addEventListener('click', function() {
+            document.querySelectorAll('.module-btn').forEach(b => b.classList.remove('selected'));
+            this.classList.add('selected');
+            autoSaveData();
+          });
+        });
+      }
+
+      if (adminData.username) {
+        document.getElementById('username').value = adminData.username;
+      }
+    }
+
+    function collectFormData() {
+      const selectedBtn = document.querySelector('.module-btn.selected');
+      const defaultTypes = ['Benevolent Dictator', 'Cooperative', 'Team'];
+      
+      const customTypes = [];
+      document.querySelectorAll('.module-btn').forEach(btn => {
+        const text = btn.textContent;
+        if (!defaultTypes.includes(text)) {
+          customTypes.push(text);
+        }
+      });
+
+      return {
+        selectedType: selectedBtn ? selectedBtn.textContent : null,
+        customTypes: customTypes,
+        username: document.getElementById('username').value
+      };
+    }
+
+    async function saveAdminData() {
+      const communityId = localStorage.getItem("communityId");
+      if (!communityId) {
+        console.error("No community ID found");
+        return false;
+      }
+
+      const adminData = collectFormData();
+
+      const { error } = await supabase
+        .from("communities")
+        .update({ admin_data: adminData })
+        .eq("id", communityId);
+
+      if (error) {
+        console.error("Error saving admin data:", error);
+        return false;
+      }
+
+      console.log("Admin data saved successfully");
+      return true;
+    }
+
+    let saveTimeout;
+    function autoSaveData() {
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => {
+        saveAdminData();
+      }, 1000);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadAdminData();
+
+      document.getElementById('username').addEventListener('input', autoSaveData);
+
+      document.querySelectorAll('.module-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.module-btn').forEach(b => b.classList.remove('selected'));
+          this.classList.add('selected');
+          autoSaveData();
+        });
+      });
+
+      const addModuleBtn = document.getElementById('addModuleBtn');
+      const newModuleContainer = document.getElementById('newModuleContainer');
+      const newModuleText = document.getElementById('newModuleText');
+      const saveModule = document.getElementById('saveModule');
+      const cancelModule = document.getElementById('cancelModule');
+      const modulesContainer = document.getElementById('modulesContainer');
+
+      addModuleBtn.addEventListener('click', function() {
+        newModuleContainer.style.display = 'block';
+        newModuleText.focus();
+      });
+
+      saveModule.addEventListener('click', function() {
+        const newModule = newModuleText.value.trim();
+        if (newModule) {
+          const newButton = document.createElement('button');
+          newButton.className = 'module-btn';
+          newButton.textContent = newModule;
+
+          newButton.addEventListener('click', function() {
+            document.querySelectorAll('.module-btn').forEach(b => b.classList.remove('selected'));
+            this.classList.add('selected');
+            autoSaveData();
+          });
+
+          modulesContainer.insertBefore(newButton, addModuleBtn);
+          
+          newModuleContainer.style.display = 'none';
+          newModuleText.value = '';
+          
+          autoSaveData();
+        }
+      });
+
+      cancelModule.addEventListener('click', function() {
         newModuleContainer.style.display = 'none';
         newModuleText.value = '';
-      }
-    });
+      });
 
-    cancelModule.addEventListener('click', function() {
-      newModuleContainer.style.display = 'none';
-      newModuleText.value = '';
-    });
-
-    newModuleText.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        saveModule.click();
-      }
+      newModuleText.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          saveModule.click();
+        }
+      });
     });
   </script>
 </body>

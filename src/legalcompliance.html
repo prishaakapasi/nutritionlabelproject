@@ -25,7 +25,7 @@
 
     <main>
       <h1>Legal Compliance</h1>
-      <h3> Let people know what laws you need to comply with to keep the community up and running.</h3>
+      <h3>Let people know what laws you need to comply with to keep the community up and running.</h3>
       
       <h2>Based In</h2>
       <select id="country" name="country">
@@ -68,7 +68,155 @@
     </main>
   </div>
 
-  <script>
+  <script type="module" src="navigation.js"></script>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    const supabaseUrl = "https://sewbsumjjlpsbadgwgfk.supabase.co";
+    const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    const defaultRegulations = ['DMCA', 'GDPR', 'Digital Services Act (DSA)'];
+
+    async function loadLegalComplianceData() {
+      const communityId = localStorage.getItem("communityId");
+      if (!communityId) {
+        console.error("No community ID found");
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("communities")
+        .select("legalcompliance_data")
+        .eq("id", communityId)
+        .single();
+
+      if (error) {
+        console.error("Error loading legal compliance data:", error);
+        return;
+      }
+
+      if (data && data.legalcompliance_data) {
+        populateForm(data.legalcompliance_data);
+      }
+    }
+
+    function populateForm(legalData) {
+      if (legalData.country) {
+        document.getElementById("country").value = legalData.country;
+      }
+
+      if (legalData.selectedRegulations && Array.isArray(legalData.selectedRegulations)) {
+        legalData.selectedRegulations.forEach(regulation => {
+          const btn = Array.from(document.querySelectorAll('.regulation-btn'))
+            .find(b => b.textContent === regulation);
+          if (btn) {
+            btn.classList.add('selected');
+            if (btn.dataset.regulation === 'dmca') {
+              document.getElementById('dmcaInfo').style.display = 'block';
+            }
+          }
+        });
+      }
+
+      if (legalData.customRegulations && Array.isArray(legalData.customRegulations)) {
+        const container = document.getElementById('regulationsContainer');
+        const addBtn = container.querySelector('.add-module-btn');
+        
+        legalData.customRegulations.forEach(regulation => {
+          const newButton = document.createElement('button');
+          newButton.className = 'regulation-btn';
+          if (legalData.selectedRegulations && legalData.selectedRegulations.includes(regulation)) {
+            newButton.classList.add('selected');
+          }
+          newButton.textContent = regulation;
+          
+          newButton.addEventListener('click', function() {
+            this.classList.toggle('selected');
+            autoSaveData();
+          });
+
+          container.insertBefore(newButton, addBtn);
+        });
+      }
+
+      if (legalData.dmcaAgent) {
+        if (legalData.dmcaAgent.name) {
+          document.getElementById('dmcaAgentName').value = legalData.dmcaAgent.name;
+        }
+        if (legalData.dmcaAgent.address) {
+          document.getElementById('dmcaAgentAddress').value = legalData.dmcaAgent.address;
+        }
+        if (legalData.dmcaAgent.email) {
+          document.getElementById('dmcaAgentEmail').value = legalData.dmcaAgent.email;
+        }
+        if (legalData.dmcaAgent.phone) {
+          document.getElementById('dmcaAgentPhone').value = legalData.dmcaAgent.phone;
+        }
+      }
+    }
+
+    function collectFormData() {
+      const selectedRegulations = [];
+      document.querySelectorAll('.regulation-btn.selected').forEach(btn => {
+        selectedRegulations.push(btn.textContent);
+      });
+
+      const customRegulations = [];
+      document.querySelectorAll('.regulation-btn').forEach(btn => {
+        const text = btn.textContent;
+        if (!defaultRegulations.includes(text) && text !== '+') {
+          customRegulations.push(text);
+        }
+      });
+
+      const dmcaAgent = {
+        name: document.getElementById('dmcaAgentName').value,
+        address: document.getElementById('dmcaAgentAddress').value,
+        email: document.getElementById('dmcaAgentEmail').value,
+        phone: document.getElementById('dmcaAgentPhone').value
+      };
+
+      return {
+        country: document.getElementById('country').value,
+        selectedRegulations,
+        customRegulations,
+        dmcaAgent
+      };
+    }
+
+    async function saveLegalComplianceData() {
+      const communityId = localStorage.getItem("communityId");
+      if (!communityId) {
+        console.error("No community ID found");
+        return false;
+      }
+
+      const legalData = collectFormData();
+
+      const { error } = await supabase
+        .from("communities")
+        .update({ legalcompliance_data: legalData })
+        .eq("id", communityId);
+
+      if (error) {
+        console.error("Error saving legal compliance data:", error);
+        return false;
+      }
+
+      console.log("Legal compliance data saved successfully");
+      return true;
+    }
+
+    let saveTimeout;
+    function autoSaveData() {
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => {
+        saveLegalComplianceData();
+      }, 1000);
+    }
+
     const regulationsContainer = document.getElementById('regulationsContainer');
     const addBtn = regulationsContainer.querySelector('.add-module-btn');
     const newModuleContainer = document.querySelector('.new-module-container');
@@ -77,50 +225,63 @@
     const cancelBtn = newModuleContainer.querySelector('.cancel-module');
     const dmcaInfo = document.getElementById('dmcaInfo');
 
-    document.querySelectorAll('.regulation-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        this.classList.toggle('selected');
-        
-        if (this.dataset.regulation === 'dmca') {
-          dmcaInfo.style.display = this.classList.contains('selected') ? 'block' : 'none';
+    document.addEventListener("DOMContentLoaded", () => {
+      loadLegalComplianceData();
+
+      document.getElementById('country').addEventListener('change', autoSaveData);
+      document.getElementById('dmcaAgentName').addEventListener('input', autoSaveData);
+      document.getElementById('dmcaAgentAddress').addEventListener('input', autoSaveData);
+      document.getElementById('dmcaAgentEmail').addEventListener('input', autoSaveData);
+      document.getElementById('dmcaAgentPhone').addEventListener('input', autoSaveData);
+
+      document.querySelectorAll('.regulation-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          this.classList.toggle('selected');
+          
+          if (this.dataset.regulation === 'dmca') {
+            dmcaInfo.style.display = this.classList.contains('selected') ? 'block' : 'none';
+          }
+          
+          autoSaveData();
+        });
+      });
+
+      addBtn.addEventListener('click', function() {
+        newModuleContainer.style.display = 'block';
+        newModuleText.focus();
+      });
+
+      saveBtn.addEventListener('click', function() {
+        const newRegulation = newModuleText.value.trim();
+        if (newRegulation) {
+          const newButton = document.createElement('button');
+          newButton.className = 'regulation-btn';
+          newButton.textContent = newRegulation;
+          
+          newButton.addEventListener('click', function() {
+            this.classList.toggle('selected');
+            autoSaveData();
+          });
+
+          regulationsContainer.insertBefore(newButton, addBtn);
+          
+          newModuleContainer.style.display = 'none';
+          newModuleText.value = '';
+          autoSaveData();
+        }
+      });
+
+      cancelBtn.addEventListener('click', function() {
+        newModuleContainer.style.display = 'none';
+        newModuleText.value = '';
+      });
+
+      newModuleText.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          saveBtn.click();
         }
       });
     });
-
-    addBtn.addEventListener('click', function() {
-      newModuleContainer.style.display = 'block';
-      newModuleText.focus();
-    });
-
-    saveBtn.addEventListener('click', function() {
-      const newRegulation = newModuleText.value.trim();
-      if (newRegulation) {
-        const newButton = document.createElement('button');
-        newButton.className = 'regulation-btn';
-        newButton.textContent = newRegulation;
-        
-        newButton.addEventListener('click', function() {
-          this.classList.toggle('selected');
-        });
-
-        regulationsContainer.insertBefore(newButton, addBtn);
-        
-        newModuleContainer.style.display = 'none';
-        newModuleText.value = '';
-      }
-    });
-
-    cancelBtn.addEventListener('click', function() {
-      newModuleContainer.style.display = 'none';
-      newModuleText.value = '';
-    });
-
-    newModuleText.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        saveBtn.click();
-      }
-    });
   </script>
-  <script type="module" src="navigation.js"></script>
 </body>
 </html>

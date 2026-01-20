@@ -56,18 +56,198 @@
           <button class="cancel-module">Cancel</button>
         </div>
       </div>
+
       <h2>Blocklists</h2>
-      <div id="bridgingContainer" class="button-container">
+      <div id="blocklistsContainer" class="button-container">
         <button class="module-btn">Garden Fence</button>
         <button class="module-btn">CARIAD</button>
         <button class="module-btn">IFTAS-DNI</button>
-        <button class="module-btn"> Seridy Tier-0 </button>
-         <button class="module-btn"> FediNuke </button>
+        <button class="module-btn">Seridy Tier-0</button>
+        <button class="module-btn">FediNuke</button>
       </div>
     </main>
   </div>
 
-  <script>
+  <script type="module" src="navigation.js"></script>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    const supabaseUrl = "https://sewbsumjjlpsbadgwgfk.supabase.co";
+    const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    const defaultFederation = ['Whitelist Mode', 'Blacklist Mode', 'Anti-meta Fedipact'];
+    const defaultBridging = ['AT Protocol', 'Nostr', 'Farcaster'];
+    const defaultBlocklists = ['Garden Fence', 'CARIAD', 'IFTAS-DNI', 'Seridy Tier-0', 'FediNuke'];
+
+    async function loadFederationData() {
+      const communityId = localStorage.getItem("communityId");
+      if (!communityId) {
+        console.error("No community ID found");
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("communities")
+        .select("federation_data")
+        .eq("id", communityId)
+        .single();
+
+      if (error) {
+        console.error("Error loading federation data:", error);
+        return;
+      }
+
+      if (data && data.federation_data) {
+        populateForm(data.federation_data);
+      }
+    }
+
+    function populateForm(federationData) {
+      if (federationData.selectedFederation && Array.isArray(federationData.selectedFederation)) {
+        federationData.selectedFederation.forEach(policy => {
+          const btn = Array.from(document.querySelectorAll('#federationContainer .module-btn'))
+            .find(b => b.textContent === policy);
+          if (btn) {
+            btn.classList.add('selected');
+          }
+        });
+      }
+
+      if (federationData.customFederation && Array.isArray(federationData.customFederation)) {
+        const container = document.getElementById('federationContainer');
+        const addBtn = container.querySelector('.add-module-btn');
+        
+        federationData.customFederation.forEach(policy => {
+          const newButton = document.createElement('button');
+          newButton.className = 'module-btn';
+          if (federationData.selectedFederation && federationData.selectedFederation.includes(policy)) {
+            newButton.classList.add('selected');
+          }
+          newButton.textContent = policy;
+          container.insertBefore(newButton, addBtn);
+          
+          newButton.addEventListener('click', function() {
+            this.classList.toggle('selected');
+            autoSaveData();
+          });
+        });
+      }
+
+      if (federationData.selectedBridging && Array.isArray(federationData.selectedBridging)) {
+        federationData.selectedBridging.forEach(policy => {
+          const btn = Array.from(document.querySelectorAll('#bridgingContainer .module-btn'))
+            .find(b => b.textContent === policy);
+          if (btn) {
+            btn.classList.add('selected');
+          }
+        });
+      }
+
+      if (federationData.customBridging && Array.isArray(federationData.customBridging)) {
+        const container = document.getElementById('bridgingContainer');
+        const addBtn = container.querySelector('.add-module-btn');
+        
+        federationData.customBridging.forEach(policy => {
+          const newButton = document.createElement('button');
+          newButton.className = 'module-btn';
+          if (federationData.selectedBridging && federationData.selectedBridging.includes(policy)) {
+            newButton.classList.add('selected');
+          }
+          newButton.textContent = policy;
+          container.insertBefore(newButton, addBtn);
+          
+          newButton.addEventListener('click', function() {
+            this.classList.toggle('selected');
+            autoSaveData();
+          });
+        });
+      }
+
+      if (federationData.selectedBlocklists && Array.isArray(federationData.selectedBlocklists)) {
+        federationData.selectedBlocklists.forEach(blocklist => {
+          const btn = Array.from(document.querySelectorAll('#blocklistsContainer .module-btn'))
+            .find(b => b.textContent === blocklist);
+          if (btn) {
+            btn.classList.add('selected');
+          }
+        });
+      }
+    }
+
+    function collectFormData() {
+      const selectedFederation = [];
+      document.querySelectorAll('#federationContainer .module-btn.selected').forEach(btn => {
+        selectedFederation.push(btn.textContent);
+      });
+
+      const customFederation = [];
+      document.querySelectorAll('#federationContainer .module-btn').forEach(btn => {
+        const text = btn.textContent;
+        if (!defaultFederation.includes(text) && text !== '+') {
+          customFederation.push(text);
+        }
+      });
+
+      const selectedBridging = [];
+      document.querySelectorAll('#bridgingContainer .module-btn.selected').forEach(btn => {
+        selectedBridging.push(btn.textContent);
+      });
+
+      const customBridging = [];
+      document.querySelectorAll('#bridgingContainer .module-btn').forEach(btn => {
+        const text = btn.textContent;
+        if (!defaultBridging.includes(text) && text !== '+') {
+          customBridging.push(text);
+        }
+      });
+
+      const selectedBlocklists = [];
+      document.querySelectorAll('#blocklistsContainer .module-btn.selected').forEach(btn => {
+        selectedBlocklists.push(btn.textContent);
+      });
+
+      return {
+        selectedFederation,
+        customFederation,
+        selectedBridging,
+        customBridging,
+        selectedBlocklists
+      };
+    }
+
+    async function saveFederationData() {
+      const communityId = localStorage.getItem("communityId");
+      if (!communityId) {
+        console.error("No community ID found");
+        return false;
+      }
+
+      const federationData = collectFormData();
+
+      const { error } = await supabase
+        .from("communities")
+        .update({ federation_data: federationData })
+        .eq("id", communityId);
+
+      if (error) {
+        console.error("Error saving federation data:", error);
+        return false;
+      }
+
+      console.log("Federation data saved successfully");
+      return true;
+    }
+
+    let saveTimeout;
+    function autoSaveData() {
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => {
+        saveFederationData();
+      }, 1000);
+    }
+
     function initializeSection(containerElement) {
       const addBtn = containerElement.querySelector('.add-module-btn');
       const newModuleContainer = containerElement.nextElementSibling;
@@ -88,15 +268,15 @@
           newButton.textContent = newModule;
 
           newButton.addEventListener('click', function() {
-            if (confirm('Remove "' + newModule + '"?')) {
-              newButton.remove();
-            }
+            this.classList.toggle('selected');
+            autoSaveData();
           });
 
           containerElement.insertBefore(newButton, addBtn);
           
           newModuleContainer.style.display = 'none';
           newModuleText.value = '';
+          autoSaveData();
         }
       });
 
@@ -111,9 +291,22 @@
         }
       });
     }
-    initializeSection(document.getElementById('federationContainer'));
-    initializeSection(document.getElementById('bridgingContainer'));
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadFederationData();
+
+      initializeSection(document.getElementById('federationContainer'));
+      initializeSection(document.getElementById('bridgingContainer'));
+
+      document.querySelectorAll('#federationContainer .module-btn, #bridgingContainer .module-btn, #blocklistsContainer .module-btn').forEach(btn => {
+        if (!btn.classList.contains('add-module-btn')) {
+          btn.addEventListener('click', function() {
+            this.classList.toggle('selected');
+            autoSaveData();
+          });
+        }
+      });
+    });
   </script>
-  <script type="module" src="navigation.js"></script>
 </body>
 </html>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="admintype.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Community - Admin Type</title>
+    <title>Community - Membership</title>
 </head>
 <body>
   <nav class="navbar">
@@ -29,8 +29,103 @@
       <div id="modulesContainer" class="button-container">
         <button class="module-btn">Open Membership</button>
         <button class="module-btn">Closed Membership</button>
+      </div>
     </main>
   </div>
+
   <script type="module" src="navigation.js"></script>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    const supabaseUrl = "https://sewbsumjjlpsbadgwgfk.supabase.co";
+    const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    async function loadMembershipData() {
+      const communityId = localStorage.getItem("communityId");
+      if (!communityId) {
+        console.error("No community ID found");
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("communities")
+        .select("membership_data")
+        .eq("id", communityId)
+        .single();
+
+      if (error) {
+        console.error("Error loading membership data:", error);
+        return;
+      }
+
+      if (data && data.membership_data) {
+        populateForm(data.membership_data);
+      }
+    }
+
+    function populateForm(membershipData) {
+      if (membershipData.selectedType) {
+        const buttons = document.querySelectorAll('.module-btn');
+        buttons.forEach(btn => {
+          if (btn.textContent === membershipData.selectedType) {
+            btn.classList.add('selected');
+          }
+        });
+      }
+    }
+
+    function collectFormData() {
+      const selectedBtn = document.querySelector('.module-btn.selected');
+      
+      return {
+        selectedType: selectedBtn ? selectedBtn.textContent : null
+      };
+    }
+
+    async function saveMembershipData() {
+      const communityId = localStorage.getItem("communityId");
+      if (!communityId) {
+        console.error("No community ID found");
+        return false;
+      }
+
+      const membershipData = collectFormData();
+
+      const { error } = await supabase
+        .from("communities")
+        .update({ membership_data: membershipData })
+        .eq("id", communityId);
+
+      if (error) {
+        console.error("Error saving membership data:", error);
+        return false;
+      }
+
+      console.log("Membership data saved successfully");
+      return true;
+    }
+
+    let saveTimeout;
+    function autoSaveData() {
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => {
+        saveMembershipData();
+      }, 1000);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadMembershipData();
+
+      document.querySelectorAll('.module-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.module-btn').forEach(b => b.classList.remove('selected'));
+          this.classList.add('selected');
+          autoSaveData();
+        });
+      });
+    });
+  </script>
 </body>
 </html>

@@ -63,7 +63,15 @@
     </main>
   </div>
 
-  <script>
+  <script type="module" src="navigation.js"></script>
+  
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    const supabaseUrl = "https://sewbsumjjlpsbadgwgfk.supabase.co";
+    const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
     const hostingBtns = document.querySelectorAll('.hosting-btn');
     const hostingDescription = document.getElementById('hostingDescription');
     const hostingDetails = document.getElementById('hostingDetails');
@@ -71,22 +79,6 @@
     const addChannelBtn = document.getElementById('addChannel');
     const channelsList = document.getElementById('channelsList');
 
-    hostingBtns.forEach(btn => {
-      btn.addEventListener('click', function() {
-        hostingBtns.forEach(b => b.classList.remove('selected'));
-        this.classList.add('selected');
-        
-        hostingDescription.style.display = 'block';
-        
-        if (this.dataset.type === 'physical') {
-          hostingDetails.placeholder = 'e.g. in admin basement';
-        } else {
-          hostingDetails.placeholder = 'e.g., AWS, Google Cloud, Co-op Cloud';
-        }
-        
-        hostingDetails.value = '';
-      });
-    });
     function detectPlatform(url) {
       url = url.toLowerCase();
       
@@ -103,6 +95,155 @@
       
       return 'Link';
     }
+
+    async function loadInfrastructureData() {
+      const communityId = localStorage.getItem("communityId");
+      if (!communityId) {
+        console.error("No community ID found");
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("communities")
+        .select("infrastructure_data")
+        .eq("id", communityId)
+        .single();
+
+      if (error) {
+        console.error("Error loading infrastructure data:", error);
+        return;
+      }
+
+      if (data && data.infrastructure_data) {
+        populateForm(data.infrastructure_data);
+      }
+    }
+
+    function populateForm(infrastructureData) {
+      if (infrastructureData.protocol) {
+        document.getElementById("protocols").value = infrastructureData.protocol;
+      }
+
+      if (infrastructureData.software) {
+        document.getElementById("software").value = infrastructureData.software;
+      }
+
+      if (infrastructureData.hostingType) {
+        const hostingBtn = document.querySelector(`[data-type="${infrastructureData.hostingType}"]`);
+        if (hostingBtn) {
+          hostingBtn.click();
+        }
+      }
+
+      if (infrastructureData.hostingDetails) {
+        document.getElementById("hostingDetails").value = infrastructureData.hostingDetails;
+      }
+
+      if (infrastructureData.costs) {
+        document.getElementById("costs").value = infrastructureData.costs;
+      }
+
+      if (infrastructureData.channels && Array.isArray(infrastructureData.channels)) {
+        infrastructureData.channels.forEach(channel => {
+          const platform = detectPlatform(channel.url);
+          
+          const channelItem = document.createElement("div");
+          channelItem.className = "channel-item";
+          
+          const channelBtn = document.createElement("a");
+          channelBtn.className = "channel-btn";
+          channelBtn.href = channel.url;
+          channelBtn.target = "_blank";
+          channelBtn.textContent = platform.toUpperCase();
+          
+          const removeBtn = document.createElement("button");
+          removeBtn.className = "remove-channel-btn";
+          removeBtn.textContent = "×";
+          removeBtn.addEventListener("click", function() {
+            channelItem.remove();
+            autoSaveData();
+          });
+          
+          channelItem.appendChild(channelBtn);
+          channelItem.appendChild(removeBtn);
+          channelsList.appendChild(channelItem);
+        });
+      }
+    }
+
+    function collectFormData() {
+      const channels = [];
+      document.querySelectorAll(".channel-item").forEach(item => {
+        const link = item.querySelector(".channel-btn");
+        if (link) {
+          channels.push({
+            url: link.href,
+            platform: link.textContent
+          });
+        }
+      });
+
+      const hostingType = document.querySelector(".hosting-btn.selected")?.dataset.type || null;
+
+      return {
+        protocol: document.getElementById("protocols").value,
+        software: document.getElementById("software").value,
+        hostingType: hostingType,
+        hostingDetails: document.getElementById("hostingDetails").value,
+        costs: document.getElementById("costs").value,
+        channels: channels
+      };
+    }
+
+    async function saveInfrastructureData() {
+      const communityId = localStorage.getItem("communityId");
+      if (!communityId) {
+        console.error("No community ID found");
+        return false;
+      }
+
+      const infrastructureData = collectFormData();
+
+      const { error } = await supabase
+        .from("communities")
+        .update({ infrastructure_data: infrastructureData })
+        .eq("id", communityId);
+
+      if (error) {
+        console.error("Error saving infrastructure data:", error);
+        return false;
+      }
+
+      console.log("Infrastructure data saved successfully");
+      return true;
+    }
+
+    let saveTimeout;
+    function autoSaveData() {
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => {
+        saveInfrastructureData();
+      }, 1000);
+    }
+
+    hostingBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        hostingBtns.forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+        
+        hostingDescription.style.display = 'block';
+        
+        if (this.dataset.type === 'physical') {
+          hostingDetails.placeholder = 'e.g. in admin basement';
+        } else {
+          hostingDetails.placeholder = 'e.g., AWS, Google Cloud, Co-op Cloud';
+        }
+        
+        hostingDetails.value = '';
+        autoSaveData();
+      });
+    });
+
     addChannelBtn.addEventListener('click', function() {
       const url = channelUrl.value.trim();
       
@@ -123,6 +264,7 @@
         removeBtn.textContent = '×';
         removeBtn.addEventListener('click', function() {
           channelItem.remove();
+          autoSaveData();
         });
         
         channelItem.appendChild(channelBtn);
@@ -130,14 +272,17 @@
         channelsList.appendChild(channelItem);
         
         channelUrl.value = '';
+        autoSaveData();
       }
     });
+
     channelUrl.addEventListener('keypress', function(e) {
       if (e.key === 'Enter') {
         addChannelBtn.click();
       }
     });
-        const softwareOptions = [
+
+    const softwareOptions = [
       "Mastodon", "Pixelfed", "Lemmy", "PeerTube", "WordPress", "Misskey",
       "Pleroma", "WriteFreely", "Fedibird", "NodeBB", "Activity Relay",
       "Micro.blog", "Akkoma", "Firefish", "BookWyrm", "Sharkey",
@@ -174,6 +319,7 @@
         li.addEventListener("click", () => {
           softwareInput.value = opt;
           softwareDropdown.style.display = "none";
+          autoSaveData();
         });
         softwareDropdown.appendChild(li);
       });
@@ -187,8 +333,14 @@
       }
     });
 
+    document.addEventListener("DOMContentLoaded", () => {
+      loadInfrastructureData();
+
+      document.getElementById("protocols").addEventListener("input", autoSaveData);
+      document.getElementById("software").addEventListener("input", autoSaveData);
+      document.getElementById("hostingDetails").addEventListener("input", autoSaveData);
+      document.getElementById("costs").addEventListener("input", autoSaveData);
+    });
   </script>
-  <script type="module" src="navigation.js"></script>
-  
 </body>
 </html>
