@@ -160,8 +160,8 @@ function showModuleEditor() {
     <div id="moduleCheckboxes" style="margin: 20px 0;"></div>
     <div style="margin-top: 20px;">
       <input type="text" id="newModuleName" placeholder="Add custom module..." 
-        style="padding: 10px; width: calc(100% - 120px); border: 2px solid #000; font-family: inherit;">
-      <button id="addNewModule" style="padding: 10px 20px; background: #FF8F00; border: 2px solid #000; cursor: pointer; font-family: inherit;">Add</button>
+        style="padding: 10px; width: calc(100% - 120px); background: #fffaf4; border: 2px solid #000; font-family: inherit;">
+      <button id="addNewModule" style="padding: 10px 20px; background: #fffaf4; #FF8F00; border: 2px solid #000; cursor: pointer; font-family: inherit;">Add</button>
     </div>
     <div style="margin-top: 30px; display: flex; gap: 10px;">
       <button id="saveModules" style="padding: 12px 24px; background: #FF8F00; border: 2px solid #000; cursor: pointer; font-weight: bold; font-family: inherit;">Save Changes</button>
