@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="createrecipe.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Community - Community Processes</title>
+</head>
+<body>
+  <nav class="navbar">
+    <ul>
+      <li><a href="home.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="tutorial.html">Tutorial</a></li>
+      <li><a href="setuprecipe.html">Create</a></li>
+      <li><a href="library.html">Library</a></li>
+    </ul>
+  </nav>
+  
+  <div class="content-wrapper">
+    <aside class="sidebar">
+      <nav class="sidebar-nav" id="dynamicNav">
+      </nav>
+    </aside>
+
+    <main>
+      <h1>Create Module</h1>
+
+      <h2>Enter your Title</h2>
+      <textarea id="moderation" name="moderation"
+        placeholder="Create a title for your custom module."></textarea>
+
+      <h2>Enter your Title</h2>
+      <textarea id="moderation" name="moderation"
+        placeholder="Create a title for your custom module."></textarea>
+
+      <div id="custom-sections"></div>
+
+      <button type="button" onclick="addCustomSection()">
+        + Add another section
+      </button>
+    </main>
+  </div>
+
+  <script>
+    function addCustomSection() {
+      const container = document.getElementById("custom-sections");
+
+      const section = document.createElement("div");
+
+      section.innerHTML = `
+        <h2>Enter your Title (optional)</h2>
+        <textarea
+          placeholder="Create a title for your custom module.">
+        </textarea>
+
+        <h2>Enter your Content (optional)</h2>
+        <textarea
+          placeholder="Add any details here...">
+        </textarea>
+
+        <button type="button" onclick="this.parentElement.remove()">
+          Remove section
+        </button>
+      `;
+
+      container.appendChild(section);
+    }
+  </script>
+</body>
+</html>

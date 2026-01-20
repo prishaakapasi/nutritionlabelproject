@@ -158,8 +158,34 @@ h4 {
   border-color: #000000;
 }
 
+/* Selected state for module buttons */
+.module-btn.selected {
+  background-color: #FF8F00;
+  color: #000000;
+  border-color: #000000;
+  font-weight: bold;
+  transform: scale(1.05);
+}
+
+.module-btn.selected::before {
+  width: 100%;
+  background: #FF8F00;
+}
+
+.module-btn.selected:hover {
+  background-color: #ffae35;
+}
+
+.module-btn.selected:hover::before {
+  background: #ffae35;
+}
+
 .module-btn:active {
   transform: translateY(0);
+}
+
+.module-btn.selected:active {
+  transform: scale(1.05) translateY(0);
 }
 
 #addModuleBtn {
