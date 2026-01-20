@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="createrecipe.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Community - Community Processes</title>
+    <title>Custom Modules</title>
 </head>
 <body>
   <nav class="navbar">
@@ -24,49 +24,190 @@
     </aside>
 
     <main>
-      <h1>Create Module</h1>
+      <h1 id="moduleTitle">Create Module</h1>
 
       <h2>Enter your Title</h2>
-      <textarea id="moderation" name="moderation"
+      <textarea id="section1Title" name="section1Title"
         placeholder="Create a title for your custom module."></textarea>
 
-      <h2>Enter your Title</h2>
-      <textarea id="moderation" name="moderation"
-        placeholder="Create a title for your custom module."></textarea>
+      <h2>Enter your Content</h2>
+      <textarea id="section1Content" name="section1Content"
+        placeholder="Add any details here..."></textarea>
 
       <div id="custom-sections"></div>
 
-      <button type="button" onclick="addCustomSection()">
+      <button type="button" class="add-btn" onclick="window.addCustomSection()">
         + Add another section
       </button>
     </main>
   </div>
 
-  <script>
-    function addCustomSection() {
-      const container = document.getElementById("custom-sections");
+  <script type="module" src="navigation.js"></script>
 
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    const supabaseUrl = "https://sewbsumjjlpsbadgwgfk.supabase.co";
+    const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    let currentModuleName = '';
+
+    async function loadCustomModuleData() {
+      const communityId = localStorage.getItem("communityId");
+      const urlParams = new URLSearchParams(window.location.search);
+      currentModuleName = urlParams.get('module');
+
+      if (!communityId || !currentModuleName) {
+        console.error("No community ID or module name found");
+        return;
+      }
+
+      document.getElementById('moduleTitle').textContent = currentModuleName;
+
+      const { data, error } = await supabase
+        .from("communities")
+        .select("custom_modules_data")
+        .eq("id", communityId)
+        .single();
+
+      if (error) {
+        console.error("Error loading custom module data:", error);
+        return;
+      }
+
+      if (data && data.custom_modules_data && data.custom_modules_data[currentModuleName]) {
+        populateForm(data.custom_modules_data[currentModuleName]);
+      }
+    }
+
+    function populateForm(moduleData) {
+      if (moduleData.section1Title) {
+        document.getElementById('section1Title').value = moduleData.section1Title;
+      }
+
+      if (moduleData.section1Content) {
+        document.getElementById('section1Content').value = moduleData.section1Content;
+      }
+
+      if (moduleData.customSections && Array.isArray(moduleData.customSections)) {
+        moduleData.customSections.forEach(section => {
+          const container = document.getElementById("custom-sections");
+          const newSection = document.createElement("div");
+          newSection.className = "custom-section";
+
+          newSection.innerHTML = `
+            <h2>Enter your Title (optional)</h2>
+            <textarea class="section-title" placeholder="Create a title for your custom module.">${section.title || ''}</textarea>
+
+            <h2>Enter your Content (optional)</h2>
+            <textarea class="section-content" placeholder="Add any details here...">${section.content || ''}</textarea>
+
+            <button type="button" class="remove-btn" onclick="window.removeSection(this)">
+              Remove section
+            </button>
+          `;
+
+          container.appendChild(newSection);
+
+          newSection.querySelector('.section-title').addEventListener('input', window.autoSaveData);
+          newSection.querySelector('.section-content').addEventListener('input', window.autoSaveData);
+        });
+      }
+    }
+
+    function collectFormData() {
+      const customSections = [];
+      document.querySelectorAll('#custom-sections .custom-section').forEach(section => {
+        const title = section.querySelector('.section-title').value;
+        const content = section.querySelector('.section-content').value;
+        customSections.push({ title, content });
+      });
+
+      return {
+        section1Title: document.getElementById('section1Title').value,
+        section1Content: document.getElementById('section1Content').value,
+        customSections
+      };
+    }
+
+    async function saveCustomModuleData() {
+      const communityId = localStorage.getItem("communityId");
+      if (!communityId || !currentModuleName) {
+        console.error("No community ID or module name found");
+        return false;
+      }
+
+      const { data: existing, error: fetchError } = await supabase
+        .from("communities")
+        .select("custom_modules_data")
+        .eq("id", communityId)
+        .single();
+
+      if (fetchError) {
+        console.error("Error fetching custom modules data:", fetchError);
+        return false;
+      }
+
+      const customModulesData = existing?.custom_modules_data || {};
+      customModulesData[currentModuleName] = collectFormData();
+
+      const { error } = await supabase
+        .from("communities")
+        .update({ custom_modules_data: customModulesData })
+        .eq("id", communityId);
+
+      if (error) {
+        console.error("Error saving custom module data:", error);
+        return false;
+      }
+
+      console.log("Custom module data saved successfully");
+      return true;
+    }
+
+    let saveTimeout;
+    window.autoSaveData = function() {
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => {
+        saveCustomModuleData();
+      }, 1000);
+    };
+
+    window.addCustomSection = function() {
+      const container = document.getElementById("custom-sections");
       const section = document.createElement("div");
+      section.className = "custom-section";
 
       section.innerHTML = `
         <h2>Enter your Title (optional)</h2>
-        <textarea
-          placeholder="Create a title for your custom module.">
-        </textarea>
+        <textarea class="section-title" placeholder="Create a title for your custom module."></textarea>
 
         <h2>Enter your Content (optional)</h2>
-        <textarea
-          placeholder="Add any details here...">
-        </textarea>
+        <textarea class="section-content" placeholder="Add any details here..."></textarea>
 
-        <button type="button" onclick="this.parentElement.remove()">
+        <button type="button" class="remove-btn" onclick="window.removeSection(this)">
           Remove section
         </button>
       `;
 
       container.appendChild(section);
-    }
+
+      section.querySelector('.section-title').addEventListener('input', window.autoSaveData);
+      section.querySelector('.section-content').addEventListener('input', window.autoSaveData);
+    };
+
+    window.removeSection = function(button) {
+      button.parentElement.remove();
+      window.autoSaveData();
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadCustomModuleData();
+
+      document.getElementById('section1Title').addEventListener('input', window.autoSaveData);
+      document.getElementById('section1Content').addEventListener('input', window.autoSaveData);
+    });
   </script>
-  <script type="module" src="navigation.js"></script>
 </body>
 </html>
