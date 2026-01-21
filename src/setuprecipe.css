@@ -158,7 +158,6 @@ h4 {
   border-color: #000000;
 }
 
-/* Selected state for module buttons */
 .module-btn.selected {
   background-color: #FF8F00;
   color: #000000;

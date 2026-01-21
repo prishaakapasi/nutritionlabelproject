@@ -72,50 +72,46 @@ h4 {
   font-weight: normal;
   margin-bottom: 20px;
 }
-/* ---------- Recipe Container ---------- */
 .recipe-container {
   max-width: 760px;
   margin: 40px auto 80px;
   padding: 28px 32px;
-  background-color: #fff;
+  background-color: #fffaf4;
   border: 2px solid #000;
 }
 
-/* ---------- Header ---------- */
 .recipe-header h1 {
   font-size: 34px;
   letter-spacing: -0.5px;
   margin: 0;
   padding-bottom: 12px;
-  border-bottom: 8px solid #000;
+  border-bottom: 2px solid #000;
+  font-weight:normal;
 }
 
 .community-type {
   font-size: 15px;
   margin-top: 10px;
   padding-bottom: 14px;
-  border-bottom: 1.5px solid #000;
+  border-bottom: 2px solid #000;
 }
 
-/* ---------- Module Sections ---------- */
 .module-section {
   margin-top: 28px;
   padding-top: 18px;
-  border-top: 6px solid #000;
+  border-top: 2px solid #000;
 }
 
 .module-section h2 {
   font-size: 22px;
-  font-weight: bold;
+  font-weight: normal;
   margin: 0 0 14px 0;
 }
 
-/* ---------- Module Content ---------- */
 .module-content {
   font-size: 15px;
 }
 
-/* ---------- Data Rows ---------- */
 .data-item {
   display: flex;
   justify-content: space-between;
@@ -129,7 +125,7 @@ h4 {
 }
 
 .data-label {
-  font-weight: bold;
+  font-weight: normal;
   flex: 1;
 }
 
@@ -139,40 +135,39 @@ h4 {
   white-space: pre-line;
 }
 
-/* ---------- Nested Objects ---------- */
 .data-value div {
   text-align: right;
 }
 
-/* ---------- Empty State ---------- */
 .module-content em {
   font-style: normal;
   opacity: 0.7;
 }
 
-/* ---------- Buttons ---------- */
 .action-buttons {
   margin-top: 36px;
   padding-top: 18px;
-  border-top: 8px solid #000;
+  border-top: 2px solid #000;
   display: flex;
   gap: 18px;
 }
 
 .btn-download,
 .btn-edit {
-  font-family: inherit;
+  padding: 10px 15px;
   font-size: 14px;
-  padding: 10px 16px;
-  border: 1.5px solid #000;
-  background: none;
+  background-color: #fffaf4;
+  color: #FF8F00;
+  border: 2px dashed #FF8F00;
   cursor: pointer;
-  text-decoration: none;
-  color: #000;
-  transition: background-color 0.2s ease;
+  font-family: "Courier New", Courier, monospace;
+  transition: all 0.3s ease;
+  min-width: 60px;
+  font-weight: bold;
+  text-decoration:none;
 }
 
 .btn-download:hover,
 .btn-edit:hover {
-  background-color: #fff4e6;
+  background-color: #FF8F00;
 }

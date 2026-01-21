@@ -36,10 +36,14 @@
       
       <div class="action-buttons">
         <button class="btn-download" onclick="downloadRecipe()">Download as Text</button>
+        <button class="btn-download" onclick="downloadRecipeImage()">Download as Image</button>
+        <button class="btn-download" onclick="copyRecipeHTML()">Copy Code</button>
         <a href="setuprecipe.html" class="btn-edit">Edit Recipe</a>
       </div>
     </div>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -50,7 +54,6 @@
 
     const communityId = localStorage.getItem("communityId");
 
-    // Module column mappings - these are columns in the communities table
     const moduleColumnMappings = {
       "Infrastructure": "infrastructure_data",
       "Admin": "admin_data",
@@ -61,6 +64,16 @@
       "Community Processes": "communityprocesses_data",
       "Legal Compliance": "legalcompliance_data"
     };
+    const communityTypeMapping = {
+            social: "Social Network",
+            community: "Online Community",
+            science: "Open Science",
+            archiving: "Archiving",
+    };
+    function fixCommunityName(value) {
+                if (!value) return "Not specified";
+                return communityTypeMapping[value] ?? value;
+    }
 
     async function loadRecipe() {
       console.log("Starting to load recipe...");
@@ -73,7 +86,6 @@
       }
 
       try {
-        // Load community data
         const { data: community, error: communityError } = await supabase
           .from("communities")
           .select("*")
@@ -88,15 +100,12 @@
           showError();
           return;
         }
-
-        // Display community type
-        document.getElementById("communityType").textContent = 
-          `Community Type: ${community.type || 'Not specified'}`;
-
+        document.getElementById("communityType").textContent =
+        `Community Type: ${fixCommunityName(community.type)}`;
+        
         const modulesContent = document.getElementById("modulesContent");
         modulesContent.innerHTML = "";
 
-        // Get selected modules
         const selectedModules = community.selected_modules || [];
         console.log("Selected modules:", selectedModules);
         
@@ -107,20 +116,16 @@
           return;
         }
 
-        // Load data for each selected module
         for (const moduleName of selectedModules) {
           console.log("Processing module:", moduleName);
           const columnName = moduleColumnMappings[moduleName];
           console.log("Column name:", columnName);
           
           if (columnName && community[columnName]) {
-            // Get data from the column in the community record
             const moduleData = community[columnName];
             console.log(`Data for ${moduleName}:`, moduleData);
 
-            // Only display if there's actual data
             if (moduleData && typeof moduleData === 'object') {
-              // Check if the object has any non-empty values (recursively)
               const hasData = hasActualData(moduleData);
               
               if (hasData) {
@@ -136,7 +141,6 @@
           }
         }
 
-        // Show the recipe
         document.getElementById("loadingMessage").style.display = "none";
         document.getElementById("recipeContent").style.display = "block";
 
@@ -147,27 +151,38 @@
     }
 
     function hasActualData(obj) {
-      // Check if an object or any of its nested values contain actual data
       if (obj === null || obj === undefined || obj === '') {
         return false;
       }
       
-      // For arrays, check if any element has data
       if (Array.isArray(obj)) {
         if (obj.length === 0) return false;
         return obj.some(item => hasActualData(item));
       }
       
-      // For objects, recursively check all values
       if (typeof obj === 'object') {
         const values = Object.values(obj);
         if (values.length === 0) return false;
         return values.some(val => hasActualData(val));
       }
       
-      // Primitive values (strings, numbers, booleans)
       return true;
     }
+
+    window.copyRecipeHTML = function() {
+        const container = document.getElementById("recipeContent");
+        if (!container) return;
+
+        const html = container.innerHTML;
+
+        navigator.clipboard.writeText(html)
+            .then(() => {
+            alert("Recipe HTML copied to clipboard!");
+            })
+            .catch(err => {
+            console.error("Failed to copy HTML: ", err);
+            });
+    };
 
     function displayModuleSection(moduleName, data) {
       const modulesContent = document.getElementById("modulesContent");
@@ -191,19 +206,15 @@
       
       let hasAnyData = false;
       
-      // Display all the data fields from this module
       for (const [key, value] of Object.entries(data)) {
-        // Skip if value is null, undefined, or empty string
         if (value === null || value === undefined || value === '') {
           continue;
         }
         
-        // Skip empty arrays
         if (Array.isArray(value) && value.length === 0) {
           continue;
         }
         
-        // For objects, check if they have any non-empty values
         if (typeof value === 'object' && !Array.isArray(value)) {
           const hasNonEmptyValues = Object.values(value).some(v => 
             v !== null && v !== undefined && v !== ''
@@ -225,7 +236,6 @@
         const valueDiv = document.createElement("div");
         valueDiv.className = "data-value";
         
-        // Special handling for channels array
         if (key === 'channels' && Array.isArray(value)) {
           const channelLinks = value.map(ch => {
             if (ch.url) {
@@ -235,7 +245,6 @@
           }).filter(Boolean).join(', ');
           valueDiv.innerHTML = channelLinks || formatValue(value);
         } 
-        // Special handling for nested objects like dmcaAgent
         else if (typeof value === 'object' && !Array.isArray(value)) {
           const nestedContent = document.createElement("div");
           nestedContent.style.marginLeft = "15px";
@@ -260,7 +269,6 @@
         content.appendChild(dataItem);
       }
       
-      // If no data was actually displayed, show the "no data" message
       if (!hasAnyData) {
         content.innerHTML = "<p><em>No data entered for this module yet.</em></p>";
       }
@@ -270,29 +278,23 @@
     }
 
     function formatFieldName(fieldName) {
-  return fieldName
- 
-    .replace(/_/g, " ")
-    .replace(/([a-z])([A-Z])/g, "$1 $2")
-    // capitalize first letter of each word
-    .split(" ")
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
+      return fieldName
+        .replace(/_/g, " ")
+        .replace(/([a-z])([A-Z])/g, "$1 $2")
+        .split(" ")
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+    }
 
     function formatValue(value) {
-      // Handle null/undefined
       if (value === null || value === undefined) {
         return '';
       }
       
-      // Handle arrays
       if (Array.isArray(value)) {
-        // Filter out empty values
         const filtered = value.filter(v => v !== null && v !== undefined && v !== '');
         if (filtered.length === 0) return '';
         
-        // If array contains objects, try to format them nicely
         if (filtered.length > 0 && typeof filtered[0] === 'object') {
           return filtered.map(item => {
             if (item.url && item.platform) {
@@ -305,11 +307,9 @@
         return filtered.join(', ');
       }
       
-      // Handle objects (but not arrays)
       if (typeof value === 'object') {
         try {
           const stringified = JSON.stringify(value, null, 2);
-          // Don't show empty objects
           if (stringified === '{}' || stringified === '[]') return '';
           return stringified;
         } catch (e) {
@@ -317,7 +317,6 @@
         }
       }
       
-      // Handle strings and primitives
       return String(value);
     }
 
@@ -326,7 +325,6 @@
       document.getElementById("errorMessage").style.display = "block";
     }
 
-    // Make downloadRecipe available globally
     window.downloadRecipe = function() {
       const recipeContent = document.getElementById("recipeContent");
       const text = recipeContent.innerText;
@@ -340,7 +338,28 @@
       URL.revokeObjectURL(url);
     };
 
-    // Load recipe when page loads
+    window.downloadRecipeImage = async function () {
+            const container = document.getElementById("recipeContent");
+            if (!container) return;
+            const buttons = container.querySelector(".action-buttons");
+            if (buttons) buttons.style.display = "none";
+            const wrapper = document.createElement("div");
+            wrapper.style.padding = "50px"; 
+            wrapper.style.backgroundColor = "#fffaf4;";
+            wrapper.style.display = "inline-block"; 
+            container.parentNode.insertBefore(wrapper, container);
+            wrapper.appendChild(container);
+            const canvas = await html2canvas(wrapper, { scale: 4, backgroundColor: "#ffffff" });
+            const image = canvas.toDataURL("image/png");
+            wrapper.parentNode.insertBefore(container, wrapper);
+            wrapper.remove();
+            if (buttons) buttons.style.display = "flex";
+            const link = document.createElement("a");
+            link.href = image;
+            link.download = "community-recipe.png";
+            link.click();
+            };
+
     loadRecipe();
   </script>
 </body>
