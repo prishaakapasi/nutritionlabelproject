@@ -78,6 +78,13 @@
     const channelUrl = document.getElementById('channelUrl');
     const addChannelBtn = document.getElementById('addChannel');
     const channelsList = document.getElementById('channelsList');
+    function normalizeUrl(url) {
+          if (!/^https?:\/\//i.test(url)) {
+            return "https://" + url;
+          }
+          return url;
+        }
+
 
     function detectPlatform(url) {
       url = url.toLowerCase();
@@ -152,7 +159,7 @@
           
           const channelBtn = document.createElement("a");
           channelBtn.className = "channel-btn";
-          channelBtn.href = channel.url;
+          channelBtn.href = normalizeUrl(channel.url);
           channelBtn.target = "_blank";
           channelBtn.textContent = platform.toUpperCase();
           
@@ -244,36 +251,37 @@
       });
     });
 
-    addChannelBtn.addEventListener('click', function() {
-      const url = channelUrl.value.trim();
-      
-      if (url) {
-        const platform = detectPlatform(url);
-        
-        const channelItem = document.createElement('div');
-        channelItem.className = 'channel-item';
-        
-        const channelBtn = document.createElement('a');
-        channelBtn.className = 'channel-btn';
-        channelBtn.href = url;
-        channelBtn.target = '_blank';
-        channelBtn.textContent = platform.toUpperCase();
-        
-        const removeBtn = document.createElement('button');
-        removeBtn.className = 'remove-channel-btn';
-        removeBtn.textContent = '×';
-        removeBtn.addEventListener('click', function() {
-          channelItem.remove();
-          autoSaveData();
-        });
-        
-        channelItem.appendChild(channelBtn);
-        channelItem.appendChild(removeBtn);
-        channelsList.appendChild(channelItem);
-        
-        channelUrl.value = '';
+        addChannelBtn.addEventListener('click', function() {
+      let url = channelUrl.value.trim();
+      if (!url) return;
+
+      url = normalizeUrl(url);
+      const platform = detectPlatform(url);
+
+      const channelItem = document.createElement('div');
+      channelItem.className = 'channel-item';
+
+      const channelBtn = document.createElement('a');
+      channelBtn.className = 'channel-btn';
+      channelBtn.href = url;
+      channelBtn.target = '_blank';
+      channelBtn.rel = 'noopener noreferrer';
+      channelBtn.textContent = platform.toUpperCase();
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove-channel-btn';
+      removeBtn.textContent = '×';
+      removeBtn.addEventListener('click', function() {
+        channelItem.remove();
         autoSaveData();
-      }
+      });
+
+      channelItem.appendChild(channelBtn);
+      channelItem.appendChild(removeBtn);
+      channelsList.appendChild(channelItem);
+
+      channelUrl.value = '';
+      autoSaveData();
     });
 
     channelUrl.addEventListener('keypress', function(e) {
