@@ -116,17 +116,235 @@
 
     let customRuleCount = 12;
 
+    async function loadRulesData() {
+      const communityId = localStorage.getItem("communityId");
+      if (!communityId) {
+        console.error("No community ID found");
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("communities")
+        .select("rules_data")
+        .eq("id", communityId)
+        .single();
+
+      if (error) {
+        console.error("Error loading rules data:", error);
+        return;
+      }
+
+      if (data && data.rules_data) {
+        populateForm(data.rules_data);
+      }
+    }
+
+    function populateForm(rulesData) {
+      if (rulesData.covenants && Array.isArray(rulesData.covenants)) {
+        const covenantList = document.getElementById('covenant-list');
+        covenantList.innerHTML = '';
+        
+        rulesData.covenants.forEach(covenant => {
+          const newItem = document.createElement('div');
+          newItem.className = 'covenant-item';
+          
+          const predefinedCovenants = [
+            "Mastodon Server Covenant",
+            "Discord Community Guidelines",
+            "Bonfire Community Guidelines",
+            "Bluesky Community Guidelines"
+          ];
+          
+          const isCustom = !predefinedCovenants.includes(covenant);
+          
+          newItem.innerHTML = `
+            <select onchange="window.handleCovenantChange(this)">
+              <option value="">Select a covenant...</option>
+              <option value="Mastodon Server Covenant" ${covenant === "Mastodon Server Covenant" ? 'selected' : ''}>Mastodon Server Covenant</option>
+              <option value="Discord Community Guidelines" ${covenant === "Discord Community Guidelines" ? 'selected' : ''}>Discord Community Guidelines</option>
+              <option value="Bonfire Community Guidelines" ${covenant === "Bonfire Community Guidelines" ? 'selected' : ''}>Bonfire Community Guidelines</option>
+              <option value="Bluesky Community Guidelines" ${covenant === "Bluesky Community Guidelines" ? 'selected' : ''}>Bluesky Community Guidelines</option>
+              <option value="custom" ${isCustom ? 'selected' : ''}>Custom</option>
+            </select>
+            <input type="text" class="custom-covenant-input" placeholder="Enter custom covenant name" value="${isCustom ? covenant : ''}" style="display: ${isCustom ? 'block' : 'none'}; margin-top: var(--spacing-sm); width: 100%; flex-basis: 100%;">
+          `;
+          covenantList.appendChild(newItem);
+          
+          newItem.querySelector('.custom-covenant-input').addEventListener('input', window.autoSaveData);
+        });
+      }
+
+      if (rulesData.adaptedFrom) {
+        document.getElementById('adaptedFrom').value = rulesData.adaptedFrom;
+      }
+
+      if (rulesData.selectedRules && Array.isArray(rulesData.selectedRules)) {
+        rulesData.selectedRules.forEach(ruleText => {
+          document.querySelectorAll('.checkbox-list > .checkbox-item').forEach(item => {
+            const checkbox = item.querySelector('input[type="checkbox"]');
+            const label = item.querySelector('label');
+            if (label && label.textContent === ruleText) {
+              checkbox.checked = true;
+            }
+          });
+        });
+      }
+      if (rulesData.customRules && Array.isArray(rulesData.customRules)) {
+        rulesData.customRules.forEach(rule => {
+          const container = document.getElementById('custom-rules');
+          const newRule = document.createElement('div');
+          newRule.className = 'checkbox-item';
+          newRule.style.marginTop = 'var(--spacing-sm)';
+          newRule.innerHTML = `
+            <input type="checkbox" id="rule${customRuleCount}" ${rule.checked ? 'checked' : ''}>
+            <input type="text" placeholder="Enter custom rule" value="${rule.text}" style="flex: 1; margin-left: var(--spacing-sm);">
+          `;
+          container.appendChild(newRule);
+          
+          newRule.querySelector('input[type="checkbox"]').addEventListener('change', window.autoSaveData);
+          newRule.querySelector('input[type="text"]').addEventListener('input', window.autoSaveData);
+          
+          customRuleCount++;
+        });
+      }
+    }
+
+    function collectFormData() {
+      const covenants = [];
+      document.querySelectorAll('#covenant-list .covenant-item').forEach(item => {
+        const select = item.querySelector('select');
+        const customInput = item.querySelector('.custom-covenant-input');
+        
+        if (select.value === 'custom' && customInput.value.trim()) {
+          covenants.push(customInput.value.trim());
+        } else if (select.value && select.value !== 'custom') {
+          covenants.push(select.value);
+        }
+      });
+
+      const selectedRules = [];
+      document.querySelectorAll('.checkbox-list > .checkbox-item input[type="checkbox"]:checked').forEach(cb => {
+        const label = cb.nextElementSibling;
+        if (label) {
+          selectedRules.push(label.textContent);
+        }
+      });
+
+      const customRules = [];
+      document.querySelectorAll('#custom-rules .checkbox-item').forEach(item => {
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        const textInput = item.querySelector('input[type="text"]');
+        if (textInput && textInput.value.trim()) {
+          customRules.push({
+            text: textInput.value.trim(),
+            checked: checkbox.checked
+          });
+        }
+      });
+
+      return {
+        covenants: covenants,
+        adaptedFrom: document.getElementById('adaptedFrom').value,
+        selectedRules: selectedRules,
+        customRules: customRules
+      };
+    }
+
+    async function saveRulesData() {
+      const communityId = localStorage.getItem("communityId");
+      if (!communityId) {
+        console.error("No community ID found");
+        return false;
+      }
+
+      const rulesData = collectFormData();
+      console.log("Saving rules data:", rulesData);
+
+      const { error } = await supabase
+        .from("communities")
+        .update({ rules_data: rulesData })
+        .eq("id", communityId);
+
+      if (error) {
+        console.error("Error saving rules data:", error);
+        return false;
+      }
+
+      console.log("Rules data saved successfully");
+      return true;
+    }
+
+    let saveTimeout;
+    window.autoSaveData = function() {
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => {
+        saveRulesData();
+      }, 1000);
+    };
+
     window.handleCovenantChange = function(select) {
-      const textInput = select.nextElementSibling;
+      const customInput = select.parentElement.querySelector('.custom-covenant-input');
       if (select.value === 'custom') {
-        textInput.style.display = 'block';
-        textInput.focus();
+        customInput.style.display = 'block';
+        customInput.focus();
       } else {
-        textInput.style.display = 'none';
-        textInput.value = '';
+        customInput.style.display = 'none';
+        customInput.value = '';
       }
       window.autoSaveData();
     };
+
+    window.addCovenant = function() {
+      const list = document.getElementById('covenant-list');
+      const newItem = document.createElement('div');
+      newItem.className = 'covenant-item';
+      newItem.innerHTML = `
+        <select onchange="window.handleCovenantChange(this)">
+          <option value="">Select a covenant...</option>
+          <option value="Mastodon Server Covenant">Mastodon Server Covenant</option>
+          <option value="Discord Community Guidelines">Discord Community Guidelines</option>
+          <option value="Bonfire Community Guidelines">Bonfire Community Guidelines</option>
+          <option value="Bluesky Community Guidelines">Bluesky Community Guidelines</option>
+          <option value="custom">Custom</option>
+        </select>
+        <input type="text" class="custom-covenant-input" placeholder="Enter custom covenant name" style="display: none; margin-top: var(--spacing-sm); width: 100%; flex-basis: 100%;">
+      `;
+      list.appendChild(newItem);
+      
+      newItem.querySelector('.custom-covenant-input').addEventListener('input', window.autoSaveData);
+    };
+
+    window.removeItem = function(element) {
+      element.remove();
+      window.autoSaveData();
+    };
+
+    window.addCustomRule = function() {
+      const container = document.getElementById('custom-rules');
+      const newRule = document.createElement('div');
+      newRule.className = 'checkbox-item';
+      newRule.style.marginTop = 'var(--spacing-sm)';
+      newRule.innerHTML = `
+        <input type="checkbox" id="rule${customRuleCount}">
+        <input type="text" placeholder="Enter custom rule" style="flex: 1; margin-left: var(--spacing-sm);">
+      `;
+      container.appendChild(newRule);
+      
+      newRule.querySelector('input[type="checkbox"]').addEventListener('change', window.autoSaveData);
+      newRule.querySelector('input[type="text"]').addEventListener('input', window.autoSaveData);
+      
+      customRuleCount++;
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadRulesData();
+
+      document.getElementById('adaptedFrom').addEventListener('input', window.autoSaveData);
+
+      document.querySelectorAll('.checkbox-list > .checkbox-item input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', window.autoSaveData);
+      });
+    });
   </script>
 </body>
 </html>
