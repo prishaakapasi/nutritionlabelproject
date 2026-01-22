@@ -32,11 +32,17 @@
             <h2>Widely Shared Covenants</h2>
             <div class="covenant-list" id="covenant-list">
                 <div class="covenant-item">
-                    <input type="text" placeholder="Mastodon Server Covenant" value="Mastodon Server Covenant">
-                    <button class="remove-btn" onclick="removeItem(this)">−</button>
+                    <select onchange="window.handleCovenantChange(this)">
+                        <option value="">Select a covenant...</option>
+                        <option value="Mastodon Server Covenant">Mastodon Server Covenant</option>
+                        <option value="Discord Community Guidelines">Discord Community Guidelines</option>
+                        <option value="Bonfire Community Guidelines">Bonfire Community Guidelines</option>
+                        <option value="Bluesky Community Guidelines">Bluesky Community Guidelines</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                    <input type="text" class="custom-covenant-input" placeholder="Enter custom covenant name" style="display: none; margin-top: var(--spacing-sm); width: 100%; flex-basis: 100%;">
                 </div>
             </div>
-            <button class="add-btn" onclick="addCovenant()">+</button>
         </div>
 
         <div class="section">
@@ -94,7 +100,7 @@
                 </div>
             </div>
             <div id="custom-rules"></div>
-            <button class="add-btn" onclick="addCustomRule()" style="margin-top: var(--spacing-md);">+</button>
+            <button class="add-btn" onclick="window.addCustomRule()" style="margin-top: var(--spacing-md);">+</button>
         </div>
     </div>
   </div>
@@ -110,198 +116,17 @@
 
     let customRuleCount = 12;
 
-    async function loadRulesData() {
-      const communityId = localStorage.getItem("communityId");
-      if (!communityId) {
-        console.error("No community ID found");
-        return;
+    window.handleCovenantChange = function(select) {
+      const textInput = select.nextElementSibling;
+      if (select.value === 'custom') {
+        textInput.style.display = 'block';
+        textInput.focus();
+      } else {
+        textInput.style.display = 'none';
+        textInput.value = '';
       }
-
-      const { data, error } = await supabase
-        .from("communities")
-        .select("rules_data")
-        .eq("id", communityId)
-        .single();
-
-      if (error) {
-        console.error("Error loading rules data:", error);
-        return;
-      }
-
-      if (data && data.rules_data) {
-        populateForm(data.rules_data);
-      }
-    }
-
-    function populateForm(rulesData) {
-      if (rulesData.covenants && Array.isArray(rulesData.covenants)) {
-        const covenantList = document.getElementById('covenant-list');
-        covenantList.innerHTML = '';
-        
-        rulesData.covenants.forEach(covenant => {
-          const newItem = document.createElement('div');
-          newItem.className = 'covenant-item';
-          newItem.innerHTML = `
-            <input type="text" placeholder="Enter covenant name" value="${covenant}">
-            <button class="remove-btn" onclick="window.removeItem(this)">−</button>
-          `;
-          covenantList.appendChild(newItem);
-          
-          newItem.querySelector('input').addEventListener('input', window.autoSaveData);
-        });
-      }
-
-      if (rulesData.adaptedFrom) {
-        document.getElementById('adaptedFrom').value = rulesData.adaptedFrom;
-      }
-
-      if (rulesData.selectedRules && Array.isArray(rulesData.selectedRules)) {
-        rulesData.selectedRules.forEach(ruleId => {
-          const checkbox = document.getElementById(ruleId);
-          if (checkbox) {
-            checkbox.checked = true;
-          }
-        });
-      }
-
-      if (rulesData.customRules && Array.isArray(rulesData.customRules)) {
-        rulesData.customRules.forEach(rule => {
-          const container = document.getElementById('custom-rules');
-          const newRule = document.createElement('div');
-          newRule.className = 'checkbox-item';
-          newRule.style.marginTop = 'var(--spacing-sm)';
-          newRule.innerHTML = `
-            <input type="checkbox" id="rule${customRuleCount}" ${rule.checked ? 'checked' : ''}>
-            <div class="custom-rule-wrapper">
-              <input type="text" placeholder="Enter custom rule" value="${rule.text}">
-              <button class="remove-btn" onclick="window.removeItem(this.parentElement.parentElement)">−</button>
-            </div>
-          `;
-          container.appendChild(newRule);
-          
-          newRule.querySelector('input[type="checkbox"]').addEventListener('change', window.autoSaveData);
-          newRule.querySelector('input[type="text"]').addEventListener('input', window.autoSaveData);
-          
-          customRuleCount++;
-        });
-      }
-    }
-
-    function collectFormData() {
-      const covenants = [];
-      document.querySelectorAll('#covenant-list input[type="text"]').forEach(input => {
-        if (input.value.trim()) {
-          covenants.push(input.value.trim());
-        }
-      });
-
-      const selectedRules = [];
-      document.querySelectorAll('.checkbox-list > .checkbox-item input[type="checkbox"]:checked').forEach(cb => {
-        selectedRules.push(cb.id);
-      });
-
-      const customRules = [];
-      document.querySelectorAll('#custom-rules .checkbox-item').forEach(item => {
-        const checkbox = item.querySelector('input[type="checkbox"]');
-        const textInput = item.querySelector('input[type="text"]');
-        if (textInput && textInput.value.trim()) {
-          customRules.push({
-            text: textInput.value.trim(),
-            checked: checkbox.checked
-          });
-        }
-      });
-
-      return {
-        covenants: covenants,
-        adaptedFrom: document.getElementById('adaptedFrom').value,
-        selectedRules: selectedRules,
-        customRules: customRules
-      };
-    }
-
-    async function saveRulesData() {
-      const communityId = localStorage.getItem("communityId");
-      if (!communityId) {
-        console.error("No community ID found");
-        return false;
-      }
-
-      const rulesData = collectFormData();
-
-      const { error } = await supabase
-        .from("communities")
-        .update({ rules_data: rulesData })
-        .eq("id", communityId);
-
-      if (error) {
-        console.error("Error saving rules data:", error);
-        return false;
-      }
-
-      console.log("Rules data saved successfully");
-      return true;
-    }
-
-    let saveTimeout;
-    window.autoSaveData = function() {
-      clearTimeout(saveTimeout);
-      saveTimeout = setTimeout(() => {
-        saveRulesData();
-      }, 1000);
-    };
-
-    window.addCovenant = function() {
-      const list = document.getElementById('covenant-list');
-      const newItem = document.createElement('div');
-      newItem.className = 'covenant-item';
-      newItem.innerHTML = `
-        <input type="text" placeholder="Enter covenant name">
-        <button class="remove-btn" onclick="window.removeItem(this)">−</button>
-      `;
-      list.appendChild(newItem);
-      
-      newItem.querySelector('input').addEventListener('input', window.autoSaveData);
-    };
-
-    window.removeItem = function(button) {
-      button.parentElement.remove();
       window.autoSaveData();
     };
-
-    window.addCustomRule = function() {
-      const container = document.getElementById('custom-rules');
-      const newRule = document.createElement('div');
-      newRule.className = 'checkbox-item';
-      newRule.style.marginTop = 'var(--spacing-sm)';
-      newRule.innerHTML = `
-        <input type="checkbox" id="rule${customRuleCount}">
-        <div class="custom-rule-wrapper">
-          <input type="text" placeholder="Enter custom rule">
-          <button class="remove-btn" onclick="window.removeItem(this.parentElement.parentElement)">−</button>
-        </div>
-      `;
-      container.appendChild(newRule);
-      
-      newRule.querySelector('input[type="checkbox"]').addEventListener('change', window.autoSaveData);
-      newRule.querySelector('input[type="text"]').addEventListener('input', window.autoSaveData);
-      
-      customRuleCount++;
-    };
-
-    document.addEventListener("DOMContentLoaded", () => {
-      loadRulesData();
-
-      document.getElementById('adaptedFrom').addEventListener('input', window.autoSaveData);
-
-      document.querySelectorAll('.checkbox-list > .checkbox-item input[type="checkbox"]').forEach(cb => {
-        cb.addEventListener('change', window.autoSaveData);
-      });
-
-      document.querySelectorAll('#covenant-list input[type="text"]').forEach(input => {
-        input.addEventListener('input', window.autoSaveData);
-      });
-    });
   </script>
 </body>
 </html>
