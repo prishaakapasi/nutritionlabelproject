@@ -65,7 +65,7 @@
       "Legal Compliance": "legalcompliance_data"
     };
     const rulesMappings={
-        
+
     }
     const communityTypeMapping = {
             social: "Social Network",
@@ -342,26 +342,38 @@
     };
 
     window.downloadRecipeImage = async function () {
-            const container = document.getElementById("recipeContent");
-            if (!container) return;
-            const buttons = container.querySelector(".action-buttons");
-            if (buttons) buttons.style.display = "none";
-            const wrapper = document.createElement("div");
-            wrapper.style.padding = "50px"; 
-            wrapper.style.backgroundColor = "#fffaf4;";
-            wrapper.style.display = "inline-block"; 
-            container.parentNode.insertBefore(wrapper, container);
-            wrapper.appendChild(container);
-            const canvas = await html2canvas(wrapper, { scale: 4, backgroundColor: "#ffffff" });
-            const image = canvas.toDataURL("image/png");
-            wrapper.parentNode.insertBefore(container, wrapper);
-            wrapper.remove();
-            if (buttons) buttons.style.display = "flex";
-            const link = document.createElement("a");
-            link.href = image;
-            link.download = "community-recipe.png";
-            link.click();
-            };
+        const container = document.getElementById("recipeContent");
+        if (!container) return;
+
+        const buttons = container.querySelector(".action-buttons");
+        if (buttons) buttons.style.display = "none";
+
+        const wrapper = document.createElement("div");
+        wrapper.style.padding = "50px";
+        wrapper.style.backgroundColor = "#fffaf4";
+        wrapper.style.display = "inline-block";
+        container.parentNode.insertBefore(wrapper, container);
+        wrapper.appendChild(container);
+
+        const canvas = await html2canvas(wrapper, {
+            scale: 5,              
+            backgroundColor: "#fffaf4",
+            useCORS: true,       
+            scrollY: -window.scrollY, 
+        });
+
+        const image = canvas.toDataURL("image/png");
+
+        wrapper.parentNode.insertBefore(container, wrapper);
+        wrapper.remove();
+        if (buttons) buttons.style.display = "flex";
+
+        const link = document.createElement("a");
+        link.href = image;
+        link.download = "community-recipe.png";
+        link.click();
+    };
+
 
     loadRecipe();
   </script>
