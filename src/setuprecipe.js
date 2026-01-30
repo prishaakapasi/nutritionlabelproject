@@ -4,10 +4,7 @@ const supabaseUrl = "https://sewbsumjjlpsbadgwgfk.supabase.co";
 const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const dropdown = document.getElementById("myDropdown");
-const otherInputContainer = document.getElementById("otherInputContainer");
-const otherText = document.getElementById("otherText");
-const saveCategory = document.getElementById("saveCategory");
+const communityTypeInput = document.getElementById("communityTypeInput");
 
 const addModuleBtn = document.getElementById("addModuleBtn");
 const newModuleContainer = document.getElementById("newModuleContainer");
@@ -43,33 +40,22 @@ const modulePages = {
   "Community Processes": "communityprocesses.html"
 };
 
-dropdown.addEventListener("change", async function () {
-  if (this.value === "other") {
-    otherInputContainer.style.display = "block";
-    otherText.focus();
-  } else {
-    otherInputContainer.style.display = "none";
-    otherText.value = "";
-    await saveCommunity(this.value);
-  }
+let saveTimeout;
+communityTypeInput.addEventListener("input", function () {
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(async () => {
+    const type = this.value.trim();
+    if (type) {
+      await saveCommunity(type);
+    }
+  }, 500); 
 });
 
-saveCategory.addEventListener("click", async function () {
-  const newCategory = otherText.value.trim();
-  if (!newCategory) return;
-
-  const newOption = document.createElement("option");
-  newOption.value = newCategory.toLowerCase().replace(/\s+/g, "-");
-  newOption.textContent = newCategory;
-  newOption.selected = true;
-
-  const otherOption = dropdown.querySelector('option[value="other"]');
-  dropdown.insertBefore(newOption, otherOption);
-
-  otherInputContainer.style.display = "none";
-  otherText.value = "";
-
-  await saveCommunity(newCategory);
+communityTypeInput.addEventListener("blur", async function () {
+  const type = this.value.trim();
+  if (type) {
+    await saveCommunity(type);
+  }
 });
 
 async function saveCommunity(type) {
@@ -137,7 +123,7 @@ saveModule.addEventListener("click", async function () {
   
   if (!communityId) {
     console.error("Cannot add module: no communityId. Please select a community type first.");
-    alert("Please select a community type first!");
+    alert("Please enter a community type first!");
     return;
   }
 
@@ -172,14 +158,9 @@ cancelModule.addEventListener("click", function () {
   newModuleText.value = "";
 });
 
-otherText.addEventListener("keypress", function (e) {
-  if (e.key === "Enter") saveCategory.click();
-});
-
 newModuleText.addEventListener("keypress", function (e) {
   if (e.key === "Enter") saveModule.click();
 });
-
 
 async function saveSelectedModules() {
   if (!communityId) {
@@ -227,7 +208,7 @@ async function loadCommunityData() {
   console.log("Loaded community data:", data);
 
   if (data.type) {
-    dropdown.value = data.type;
+    communityTypeInput.value = data.type;
   }
 
   if (data.selected_modules && Array.isArray(data.selected_modules)) {
@@ -251,8 +232,9 @@ function handleNextButton() {
   nextButton.addEventListener('click', function(e) {
     e.preventDefault();
     
-    if (!communityId) {
-      alert("Please select a community type first!");
+    if (!communityId || !communityTypeInput.value.trim()) {
+      alert("Please enter a community type first!");
+      communityTypeInput.focus();
       return;
     }
     

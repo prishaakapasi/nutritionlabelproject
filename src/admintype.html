@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="admintype.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
     <title> Admin Type</title>
 </head>
 <body>
@@ -27,9 +30,9 @@
       <h1>Admin Type</h1>
       <h3>Let people know who administers and moderates the community space.</h3>
       <div id="modulesContainer" class="button-container">
-        <button class="module-btn">Benevolent Dictator</button>
-        <button class="module-btn">Cooperative</button>
         <button class="module-btn">Team</button>
+        <button class="module-btn">Cooperative</button>
+        <button class="module-btn">Benevolent Dictator</button>
         <button id="addModuleBtn">+</button>
       </div>
       
@@ -41,8 +44,9 @@
         </div>
       </div>
 
-      <h2>Add Usernames of Admin</h2>
-      <input type="text" id="username" name="username" placeholder="ex: https://server/@user">
+      <h2>Add Usernames of Admins</h2>
+      <div id="adminList" class="covenant-list"></div>
+      <button id="addAdminBtn" class="add-btn">+ Add Admin</button>
     </main>
   </div>
 
@@ -54,6 +58,43 @@
     const supabaseUrl = "https://sewbsumjjlpsbadgwgfk.supabase.co";
     const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
     const supabase = createClient(supabaseUrl, supabaseKey);
+
+    let admins = [];
+
+    function createAdminItem(username = '') {
+      const item = document.createElement('div');
+      item.className = 'covenant-item';
+      
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.placeholder = 'ex: https://server/@user';
+      input.value = username;
+      input.addEventListener('input', () => {
+        updateAdminsArray();
+        autoSaveData();
+      });
+      
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove-btn';
+      removeBtn.textContent = '−';
+      removeBtn.addEventListener('click', () => {
+        item.remove();
+        updateAdminsArray();
+        autoSaveData();
+      });
+      
+      item.appendChild(input);
+      item.appendChild(removeBtn);
+      
+      return item;
+    }
+
+    function updateAdminsArray() {
+      const adminInputs = document.querySelectorAll('#adminList input');
+      admins = Array.from(adminInputs)
+        .map(input => input.value.trim())
+        .filter(value => value !== '');
+    }
 
     async function loadAdminData() {
       const communityId = localStorage.getItem("communityId");
@@ -75,6 +116,8 @@
 
       if (data && data.admin_data) {
         populateForm(data.admin_data);
+      } else {
+        document.getElementById('adminList').appendChild(createAdminItem());
       }
     }
 
@@ -109,9 +152,18 @@
         });
       }
 
-      if (adminData.username) {
-        document.getElementById('username').value = adminData.username;
+      const adminList = document.getElementById('adminList');
+      adminList.innerHTML = '';
+      
+      if (adminData.usernames && Array.isArray(adminData.usernames) && adminData.usernames.length > 0) {
+        adminData.usernames.forEach(username => {
+          adminList.appendChild(createAdminItem(username));
+        });
+      } else {
+        adminList.appendChild(createAdminItem());
       }
+      
+      updateAdminsArray();
     }
 
     function collectFormData() {
@@ -126,10 +178,12 @@
         }
       });
 
+      updateAdminsArray();
+
       return {
         selectedType: selectedBtn ? selectedBtn.textContent : null,
         customTypes: customTypes,
-        username: document.getElementById('username').value
+        usernames: admins
       };
     }
 
@@ -167,7 +221,9 @@
     document.addEventListener("DOMContentLoaded", () => {
       loadAdminData();
 
-      document.getElementById('username').addEventListener('input', autoSaveData);
+      document.getElementById('addAdminBtn').addEventListener('click', () => {
+        document.getElementById('adminList').appendChild(createAdminItem());
+      });
 
       document.querySelectorAll('.module-btn').forEach(btn => {
         btn.addEventListener('click', function() {

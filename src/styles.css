@@ -1,12 +1,14 @@
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: "Courier New", Courier, monospace;
+  font-family: "IBM Plex Sans", sans-serif;
   background-color: #fffaf4;
   color: #e6e8ef;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
+
+
 
 .navbar {
   display: flex;
@@ -59,17 +61,17 @@ main.hero {
 }
 
 .hero-text {
-  max-width: 600px;
+  max-width: 550px;
   flex-shrink: 0;
 }
 
 .hero h1 {
   margin-bottom: 18px;
-  font-size: clamp(36px, 5vw, 60px);
+  font-size: 90px;
   font-weight: normal;
   color: black;
-  letter-spacing: -0.6px;
   line-height: 1.15;
+  font-family: "Handjet", sans-serif;
 }
 
 
@@ -98,7 +100,6 @@ main.hero {
 .btn {
   display: inline-block;
   font-size: 16px;
-  font-family: "Courier New", Courier, monospace;
   font-weight: normal;
   padding: 12px 24px;
   background:#fffaf4;

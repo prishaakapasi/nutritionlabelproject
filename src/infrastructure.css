@@ -18,7 +18,7 @@
   --spacing-lg: 40px;
   --spacing-xl: 64px;
   
-  --font-primary: "Courier New", Courier, monospace;
+  --font-primary:"IBM Plex Sans", sans-serif;
   --transition-fast: 0.2s ease;
   --transition-standard: 0.3s ease;
 }
@@ -695,18 +695,10 @@ textarea:hover:not(:focus) {
 }
 
 
-.channels-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
-  min-height: 48px;
-}
 
 .channel-item {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
 }
 
 
@@ -782,7 +774,6 @@ textarea:hover:not(:focus) {
 .software-container {
   position: relative;
   max-width: 400px;
-  margin-bottom: var(--spacing-lg);
 }
 
 #software {
@@ -892,4 +883,71 @@ textarea:hover:not(:focus) {
 
 .software-dropdown li:hover {
   background-color: var(--color-accent-light);
+}
+
+#protocols {
+    width: 100%;
+    padding: 12px var(--spacing-sm);
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-border);
+    color: var(--color-text);
+    font-family: var(--font-primary);
+    font-size: 16px;
+    resize: vertical;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    border-radius: 2px;
+    line-height: 1.7;
+}
+
+#protocols ::placeholder {
+    color: var(--color-input-placeholder);
+    opacity: 0.7;
+}
+
+#protocols:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(255, 143, 0, 0.1);
+}
+
+#protocols:hover:not(:focus) {
+    border-color: var(--color-accent);
+}
+
+.costs-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.info-tooltip {
+  position: relative;
+  font-size: 13px;
+  cursor: help;
+  color: var(--color-accent);
+}
+
+.tooltip-text {
+  position: absolute;
+  bottom: 130%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.4;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 10;
+}
+
+.info-tooltip:hover .tooltip-text {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-4px);
 }

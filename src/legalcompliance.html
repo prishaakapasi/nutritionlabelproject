@@ -28,20 +28,19 @@
       <h3>Let people know what laws you need to comply with to keep the community up and running.</h3>
       
       <h2>Based In</h2>
-      <select id="country" name="country">
-        <option value="">Select a country...</option>
-        <option value="US">United States</option>
-        <option value="GB">United Kingdom</option>
-        <option value="CA">Canada</option>
-        <option value="AU">Australia</option>
-        <option value="DE">Germany</option>
-        <option value="FR">France</option>
-        <option value="JP">Japan</option>
-        <option value="NL">Netherlands</option>
-        <option value="SE">Sweden</option>
-        <option value="other">Other</option>
-      </select>
-      <p class="note">This is where your server is located and/or obligated to comply with local laws.</p>
+      <div class="input-container">
+        <input
+          type="text"
+          id="input"
+          placeholder="Start typing to search or type your own"
+          autocomplete="off"
+        />
+        <ul class="input-dropdown" id="countryDropdown">
+          <li class="no-results-msg" id="noResultsMsg" style="display: none;">No countries found</li>
+        </ul>
+        <input type="hidden" id="country" name="country" />
+      </div>
+      <p class="input-hint">This is where your server is located and/or obligated to comply with local laws.</p>
       
       <h2>Relevant Regulations</h2>
       <div id="regulationsContainer" class="button-container">
@@ -79,6 +78,325 @@
 
     const defaultRegulations = ['DMCA', 'GDPR', 'Digital Services Act (DSA)'];
 
+    const country_list = [
+        "Afghanistan",
+        "Åland Islands",
+        "Albania",
+        "Algeria",
+        "American Samoa",
+        "Andorra",
+        "Angola",
+        "Anguilla",
+        "Antarctica",
+        "Antigua and Barbuda",
+        "Argentina",
+        "Armenia",
+        "Aruba",
+        "Australia",
+        "Austria",
+        "Azerbaijan",
+        "Bahamas",
+        "Bahrain",
+        "Bangladesh",
+        "Barbados",
+        "Belarus",
+        "Belgium",
+        "Belize",
+        "Benin",
+        "Bermuda",
+        "Bhutan",
+        "Bolivia (Plurinational State of)",
+        "Bosnia and Herzegovina",
+        "Botswana",
+        "Bouvet Island",
+        "Brazil",
+        "British Indian Ocean Territory",
+        "Brunei Darussalam",
+        "Bulgaria",
+        "Burkina Faso",
+        "Burundi",
+        "Cabo Verde",
+        "Cambodia",
+        "Cameroon",
+        "Canada",
+        "Caribbean Netherlands",
+        "Cayman Islands",
+        "Central African Republic",
+        "Chad",
+        "Chile",
+        "China",
+        "Christmas Island",
+        "Cocos (Keeling) Islands",
+        "Colombia",
+        "Comoros",
+        "Congo",
+        "Congo, Democratic Republic of the",
+        "Cook Islands",
+        "Costa Rica",
+        "Croatia",
+        "Cuba",
+        "Curaçao",
+        "Cyprus",
+        "Czech Republic",
+        "Côte d'Ivoire",
+        "Denmark",
+        "Djibouti",
+        "Dominica",
+        "Dominican Republic",
+        "Ecuador",
+        "Egypt",
+        "El Salvador",
+        "Equatorial Guinea",
+        "Eritrea",
+        "Estonia",
+        "Eswatini (Swaziland)",
+        "Ethiopia",
+        "Falkland Islands (Malvinas)",
+        "Faroe Islands",
+        "Fiji",
+        "Finland",
+        "France",
+        "French Guiana",
+        "French Polynesia",
+        "French Southern Territories",
+        "Gabon",
+        "Gambia",
+        "Georgia",
+        "Germany",
+        "Ghana",
+        "Gibraltar",
+        "Greece",
+        "Greenland",
+        "Grenada",
+        "Guadeloupe",
+        "Guam",
+        "Guatemala",
+        "Guernsey",
+        "Guinea",
+        "Guinea-Bissau",
+        "Guyana",
+        "Haiti",
+        "Heard Island and Mcdonald Islands",
+        "Honduras",
+        "Hong Kong",
+        "Hungary",
+        "Iceland",
+        "India",
+        "Indonesia",
+        "Iran",
+        "Iraq",
+        "Ireland",
+        "Isle of Man",
+        "Israel",
+        "Italy",
+        "Jamaica",
+        "Japan",
+        "Jersey",
+        "Jordan",
+        "Kazakhstan",
+        "Kenya",
+        "Kiribati",
+        "Korea, North",
+        "Korea, South",
+        "Kosovo",
+        "Kuwait",
+        "Kyrgyzstan",
+        "Lao People's Democratic Republic",
+        "Latvia",
+        "Lebanon",
+        "Lesotho",
+        "Liberia",
+        "Libya",
+        "Liechtenstein",
+        "Lithuania",
+        "Luxembourg",
+        "Macao",
+        "Macedonia North",
+        "Madagascar",
+        "Malawi",
+        "Malaysia",
+        "Maldives",
+        "Mali",
+        "Malta",
+        "Marshall Islands",
+        "Martinique",
+        "Mauritania",
+        "Mauritius",
+        "Mayotte",
+        "Mexico",
+        "Micronesia",
+        "Moldova",
+        "Monaco",
+        "Mongolia",
+        "Montenegro",
+        "Montserrat",
+        "Morocco",
+        "Mozambique",
+        "Myanmar (Burma)",
+        "Namibia",
+        "Nauru",
+        "Nepal",
+        "Netherlands",
+        "New Caledonia",
+        "New Zealand",
+        "Nicaragua",
+        "Niger",
+        "Nigeria",
+        "Niue",
+        "Norfolk Island",
+        "Northern Mariana Islands",
+        "Norway",
+        "Oman",
+        "Pakistan",
+        "Palau",
+        "Palestine",
+        "Panama",
+        "Papua New Guinea",
+        "Paraguay",
+        "Peru",
+        "Philippines",
+        "Pitcairn Islands",
+        "Poland",
+        "Portugal",
+        "Puerto Rico",
+        "Qatar",
+        "Reunion",
+        "Romania",
+        "Russian Federation",
+        "Rwanda",
+        "Saint Barthelemy",
+        "Saint Helena",
+        "Saint Kitts and Nevis",
+        "Saint Lucia",
+        "Saint Martin",
+        "Saint Pierre and Miquelon",
+        "Saint Vincent and the Grenadines",
+        "Samoa",
+        "San Marino",
+        "Sao Tome and Principe",
+        "Saudi Arabia",
+        "Senegal",
+        "Serbia",
+        "Seychelles",
+        "Sierra Leone",
+        "Singapore",
+        "Sint Maarten",
+        "Slovakia",
+        "Slovenia",
+        "Solomon Islands",
+        "Somalia",
+        "South Africa",
+        "South Georgia and the South Sandwich Islands",
+        "South Sudan",
+        "Spain",
+        "Sri Lanka",
+        "Sudan",
+        "Suriname",
+        "Svalbard and Jan Mayen",
+        "Sweden",
+        "Switzerland",
+        "Syria",
+        "Taiwan",
+        "Tajikistan",
+        "Tanzania",
+        "Thailand",
+        "Timor-Leste",
+        "Togo",
+        "Tokelau",
+        "Tonga",
+        "Trinidad and Tobago",
+        "Tunisia",
+        "Turkey (Türkiye)",
+        "Turkmenistan",
+        "Turks and Caicos Islands",
+        "Tuvalu",
+        "U.S. Outlying Islands",
+        "Uganda",
+        "Ukraine",
+        "United Arab Emirates",
+        "United Kingdom",
+        "United States",
+        "Uruguay",
+        "Uzbekistan",
+        "Vanuatu",
+        "Vatican City Holy See",
+        "Venezuela",
+        "Vietnam",
+        "Virgin Islands, British",
+        "Virgin Islands, U.S",
+        "Wallis and Futuna",
+        "Western Sahara",
+        "Yemen",
+        "Zambia",
+        "Zimbabwe"
+    ];
+
+    const inputField = document.getElementById('input');
+    const countryDropdown = document.getElementById('countryDropdown');
+    const countryHidden = document.getElementById('country');
+    const noResultsMsg = document.getElementById('noResultsMsg');
+
+    function initializeCountryDropdown() {
+      country_list.forEach(country => {
+        const item = document.createElement('li');
+        item.textContent = country;
+        item.dataset.value = country;
+        
+        item.addEventListener('click', function() {
+          selectCountry(country);
+        });
+        
+        countryDropdown.insertBefore(item, noResultsMsg);
+      });
+    }
+
+    function selectCountry(country) {
+      inputField.value = country;
+      countryHidden.value = country;
+      countryDropdown.style.display = 'none';
+      
+      autoSaveData();
+    }
+
+    function filterCountries(searchTerm) {
+      const term = searchTerm.toLowerCase().trim();
+      let visibleCount = 0;
+      
+      const items = countryDropdown.querySelectorAll('li:not(.no-results-msg)');
+      items.forEach(item => {
+        const countryName = item.textContent.toLowerCase();
+        if (countryName.includes(term)) {
+          item.style.display = '';
+          visibleCount++;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+      
+      if (visibleCount === 0) {
+        noResultsMsg.style.display = '';
+      } else {
+        noResultsMsg.style.display = 'none';
+      }
+    }
+
+    inputField.addEventListener('focus', function() {
+      countryDropdown.style.display = 'block';
+      filterCountries(this.value);
+    });
+
+    inputField.addEventListener('input', function() {
+      countryDropdown.style.display = 'block';
+      filterCountries(this.value);
+      countryHidden.value = this.value;
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!inputField.contains(e.target) && !countryDropdown.contains(e.target)) {
+        countryDropdown.style.display = 'none';
+      }
+    });
+
     async function loadLegalComplianceData() {
       const communityId = localStorage.getItem("communityId");
       if (!communityId) {
@@ -104,7 +422,8 @@
 
     function populateForm(legalData) {
       if (legalData.country) {
-        document.getElementById("country").value = legalData.country;
+        inputField.value = legalData.country;
+        countryHidden.value = legalData.country;
       }
 
       if (legalData.selectedRegulations && Array.isArray(legalData.selectedRegulations)) {
@@ -179,7 +498,7 @@
       };
 
       return {
-        country: document.getElementById('country').value,
+        country: countryHidden.value,
         selectedRegulations,
         customRegulations,
         dmcaAgent
@@ -226,9 +545,11 @@
     const dmcaInfo = document.getElementById('dmcaInfo');
 
     document.addEventListener("DOMContentLoaded", () => {
+      initializeCountryDropdown();
+      
       loadLegalComplianceData();
 
-      document.getElementById('country').addEventListener('change', autoSaveData);
+      inputField.addEventListener('blur', autoSaveData);
       document.getElementById('dmcaAgentName').addEventListener('input', autoSaveData);
       document.getElementById('dmcaAgentAddress').addEventListener('input', autoSaveData);
       document.getElementById('dmcaAgentEmail').addEventListener('input', autoSaveData);

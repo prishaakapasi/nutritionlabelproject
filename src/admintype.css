@@ -11,14 +11,12 @@
   --color-accent-light: #ffae35;
   --color-border: #000000;
   --color-input-placeholder: #4A4A4A;
-  
   --spacing-xs: 8px;
   --spacing-sm: 16px;
   --spacing-md: 24px;
   --spacing-lg: 40px;
   --spacing-xl: 64px;
-  
-  --font-primary: "Courier New", Courier, monospace;
+  --font-primary: "IBM Plex Sans", sans-serif;
   --transition-fast: 0.2s ease;
   --transition-standard: 0.3s ease;
 }
@@ -444,4 +442,86 @@ h3 {
   background-color: var(--color-accent);
   color: var(--color-text);
   
+}
+
+.covenant-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.covenant-item {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+}
+
+.covenant-item input[type="text"] {
+    flex: 1;
+    padding: 12px var(--spacing-sm);
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-border);
+    color: var(--color-text);
+    font-family: var(--font-primary);
+    font-size: 16px;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    border-radius: 2px;
+}
+
+.covenant-item input[type="text"]::placeholder {
+    color: var(--color-input-placeholder);
+    opacity: 0.7;
+}
+
+.covenant-item input[type="text"]:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(255, 143, 0, 0.1);
+}
+
+.covenant-item input[type="text"]:hover:not(:focus) {
+    border-color: var(--color-accent);
+}
+
+.add-btn, .remove-btn {
+    padding: 12px 20px;
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-border);
+    color: var(--color-text);
+    cursor: pointer;
+    font-family: var(--font-primary);
+    font-size: 18px;
+    font-weight: bold;
+    transition: all var(--transition-standard);
+    border-radius: 2px;
+    min-width: 48px;
+}
+
+.add-btn {
+    border-style: dashed;
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    margin-top: var(--spacing-sm);
+}
+
+.add-btn:hover,
+.add-btn:focus-visible {
+    background-color: var(--color-accent);
+    color: var(--color-text);
+    border-style: solid;
+    outline: none;
+}
+
+.remove-btn:hover,
+.remove-btn:focus-visible {
+    background-color: var(--color-accent-light);
+    color: var(--color-text);
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+}
+
+.remove-btn:active,
+.add-btn:active {
+    transform: translateY(1px);
 }

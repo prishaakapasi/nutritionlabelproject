@@ -18,7 +18,7 @@
   --spacing-lg: 40px;
   --spacing-xl: 64px;
   
-  --font-primary: "Courier New", Courier, monospace;
+  --font-primary: "IBM Plex Sans", sans-serif;
   --transition-fast: 0.2s ease;
   --transition-standard: 0.3s ease;
 }
@@ -144,6 +144,7 @@ h1 {
   margin: 10px 0 5px;
   letter-spacing: -0.6px;
   color: var(--color-text);
+  font-family: "Handjet", sans-serif;
   font-weight: normal;
   line-height: 1.2;
 }
@@ -215,7 +216,6 @@ h3 {
   color: #FF8F00;
   border: 2px dashed #FF8F00;
   cursor: pointer;
-  font-family: "Courier New", Courier, monospace;
   transition: all 0.3s ease;
   min-width: 60px;
   font-weight: bold;
@@ -237,7 +237,6 @@ h3 {
   outline: 1px solid #FF8F00;
   outline-offset: -6px;
   cursor: pointer;
-  font-family: "Courier New", Courier, monospace;
   font-weight: normal;
   position: relative;
   overflow: hidden;
@@ -276,7 +275,6 @@ h3 {
   color: #000000;
   border: 2px solid #000000;
   cursor: pointer;
-  font-family: "Courier New", Courier, monospace;
   font-weight: normal;
   transition: background-color 0.3s ease;
 }
@@ -645,4 +643,42 @@ select:hover:not(:focus) {
 .custom-covenant-input {
   width: 100%;
   max-width: 400px;
+}
+
+.costs-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.info-tooltip {
+  position: relative;
+  font-size: 13px;
+  cursor: help;
+  color: var(--color-accent);
+}
+
+.tooltip-text {
+  position: absolute;
+  bottom: 130%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.4;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 10;
+}
+
+.info-tooltip:hover .tooltip-text {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-4px);
 }

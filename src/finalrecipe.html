@@ -1,347 +1,361 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="finalrecipe.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title> Final Recipe </title>
-</head>
-<body>
-  <nav class="navbar">
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="tutorial.html">Tutorial</a></li>
-      <li><a href="setuprecipe.html">Create</a></li>
-      <li><a href="library.html">Library</a></li>
-    </ul>
-  </nav>
-  
-  <div class="recipe-container">
-    <div id="loadingMessage" class="loading">
-      Loading your community recipe...
-    </div>
-    
-    <div id="errorMessage" class="error" style="display: none;">
-      Unable to load recipe. Please go back and complete the setup.
-    </div>
-    
-    <div id="recipeContent" style="display: none;">
-      <div class="recipe-header">
-        <h1>Your Community Governance Recipe</h1>
-        <p class="community-type" id="communityType"></p>
+    <title>Final Recipe</title>
+  </head>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="tutorial.html">Tutorial</a></li>
+        <li><a href="setuprecipe.html">Create</a></li>
+        <li><a href="library.html">Library</a></li>
+      </ul>
+    </nav>
+
+    <div class="recipe-container">
+      <div id="loadingMessage" class="loading">
+        Loading your community recipe...
       </div>
-      
-      <div id="modulesContent"></div>
-      
-      <div class="action-buttons">
-        <button class="btn-download" onclick="downloadRecipe()">Download as Text</button>
-        <button class="btn-download" onclick="downloadRecipeImage()">Download as Image</button>
-        <button class="btn-download" onclick="copyRecipeHTML()">Copy Code</button>
-        <a href="setuprecipe.html" class="btn-edit">Edit Recipe</a>
+
+      <div id="errorMessage" class="error" style="display: none">
+        Unable to load recipe. Please go back and complete the setup.
+      </div>
+
+      <div id="recipeContent" style="display: none">
+        <div class="recipe-header">
+          <h1>Your Community Governance Recipe</h1>
+          <p class="community-type" id="communityType"></p>
+        </div>
+
+        <div id="modulesContent"></div>
+
+        <div class="action-buttons">
+          <button class="btn-download" onclick="downloadRecipe()">
+            Download as Text
+          </button>
+          <button class="btn-download" onclick="downloadRecipeImage()">
+            Download as Image
+          </button>
+          <button class="btn-download" onclick="copyRecipeHTML()">
+            Copy Code
+          </button>
+          <a href="setuprecipe.html" class="btn-edit">Edit Recipe</a>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
-  <script type="module">
-    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    <script type="module">
+      import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-    const supabaseUrl = "https://sewbsumjjlpsbadgwgfk.supabase.co";
-    const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
-    const supabase = createClient(supabaseUrl, supabaseKey);
+      const supabaseUrl = "https://sewbsumjjlpsbadgwgfk.supabase.co";
+      const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
+      const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const communityId = localStorage.getItem("communityId");
+      const communityId = localStorage.getItem("communityId");
 
-    const moduleColumnMappings = {
-      "Infrastructure": "infrastructure_data",
-      "Admin": "admin_data",
-      "Membership": "membership_data",
-      "Rules": "rules_data",
-      "Federation": "federation_data",
-      "Data/Privacy": "dataprivacy_data",
-      "Community Processes": "communityprocesses_data",
-      "Legal Compliance": "legalcompliance_data"
-    };
-    const rulesMappings={
+      const moduleColumnMappings = {
+        Infrastructure: "infrastructure_data",
+        Admin: "admin_data",
+        Membership: "membership_data",
+        Rules: "rules_data",
+        Federation: "federation_data",
+        "Data/Privacy": "dataprivacy_data",
+        "Community Processes": "communityprocesses_data",
+        "Legal Compliance": "legalcompliance_data",
+      };
 
-    }
-    const communityTypeMapping = {
-            social: "Social Network",
-            community: "Online Community",
-            science: "Open Science",
-            archiving: "Archiving",
-    };
-    function fixCommunityName(value) {
-                if (!value) return "Not specified";
-                return communityTypeMapping[value] ?? value;
-    }
+      async function loadRecipe() {
+        console.log("Starting to load recipe...");
+        console.log("Community ID:", communityId);
 
-    async function loadRecipe() {
-      console.log("Starting to load recipe...");
-      console.log("Community ID:", communityId);
-      
-      if (!communityId) {
-        console.error("No community ID found!");
-        showError();
-        return;
-      }
-
-      try {
-        const { data: community, error: communityError } = await supabase
-          .from("communities")
-          .select("*")
-          .eq("id", communityId)
-          .single();
-
-        console.log("Community data:", community);
-        console.log("Community error:", communityError);
-
-        if (communityError || !community) {
-          console.error("Error loading community:", communityError);
+        if (!communityId) {
+          console.error("No community ID found!");
           showError();
           return;
         }
-        document.getElementById("communityType").textContent =
-        `Community Type: ${fixCommunityName(community.type)}`;
-        
-        const modulesContent = document.getElementById("modulesContent");
-        modulesContent.innerHTML = "";
 
-        const selectedModules = community.selected_modules || [];
-        console.log("Selected modules:", selectedModules);
-        
-        if (selectedModules.length === 0) {
-          modulesContent.innerHTML = "<p>No modules selected.</p>";
-          document.getElementById("loadingMessage").style.display = "none";
-          document.getElementById("recipeContent").style.display = "block";
-          return;
-        }
+        try {
+          const { data: community, error: communityError } = await supabase
+            .from("communities")
+            .select("*")
+            .eq("id", communityId)
+            .single();
 
-        for (const moduleName of selectedModules) {
-          console.log("Processing module:", moduleName);
-          const columnName = moduleColumnMappings[moduleName];
-          console.log("Column name:", columnName);
+          console.log("Community data:", community);
+          console.log("Community error:", communityError);
+
+          if (communityError || !community) {
+            console.error("Error loading community:", communityError);
+            showError();
+            return;
+          }
           
-          if (columnName && community[columnName]) {
-            const moduleData = community[columnName];
-            console.log(`Data for ${moduleName}:`, moduleData);
+          // Changed from "Community Type" to "Community Description"
+          document.getElementById("communityType").textContent =
+            `Community Description: ${community.type || "Not specified"}`;
 
-            if (moduleData && typeof moduleData === 'object') {
-              const hasData = hasActualData(moduleData);
-              
-              if (hasData) {
-                displayModuleSection(moduleName, moduleData);
+          const modulesContent = document.getElementById("modulesContent");
+          modulesContent.innerHTML = "";
+
+          const selectedModules = community.selected_modules || [];
+          console.log("Selected modules:", selectedModules);
+
+          if (selectedModules.length === 0) {
+            modulesContent.innerHTML = "<p>No modules selected.</p>";
+            document.getElementById("loadingMessage").style.display = "none";
+            document.getElementById("recipeContent").style.display = "block";
+            return;
+          }
+
+          for (const moduleName of selectedModules) {
+            console.log("Processing module:", moduleName);
+            const columnName = moduleColumnMappings[moduleName];
+            console.log("Column name:", columnName);
+
+            if (columnName && community[columnName]) {
+              const moduleData = community[columnName];
+              console.log(`Data for ${moduleName}:`, moduleData);
+
+              if (moduleData && typeof moduleData === "object") {
+                const hasData = hasActualData(moduleData);
+
+                if (hasData) {
+                  displayModuleSection(moduleName, moduleData);
+                } else {
+                  console.log(`Skipping ${moduleName} - no actual data`);
+                }
               } else {
-                console.log(`Skipping ${moduleName} - no actual data`);
+                console.log(`Skipping ${moduleName} - empty or invalid data`);
               }
             } else {
-              console.log(`Skipping ${moduleName} - empty or invalid data`);
+              console.log(
+                `Skipping ${moduleName} - no column mapping or no data in column`,
+              );
             }
-          } else {
-            console.log(`Skipping ${moduleName} - no column mapping or no data in column`);
           }
+
+          document.getElementById("loadingMessage").style.display = "none";
+          document.getElementById("recipeContent").style.display = "block";
+        } catch (error) {
+          console.error("Error loading recipe:", error);
+          showError();
+        }
+      }
+
+      function hasActualData(obj) {
+        if (obj === null || obj === undefined || obj === "") {
+          return false;
         }
 
-        document.getElementById("loadingMessage").style.display = "none";
-        document.getElementById("recipeContent").style.display = "block";
+        if (Array.isArray(obj)) {
+          if (obj.length === 0) return false;
+          return obj.some((item) => hasActualData(item));
+        }
 
-      } catch (error) {
-        console.error("Error loading recipe:", error);
-        showError();
-      }
-    }
+        if (typeof obj === "object") {
+          const values = Object.values(obj);
+          if (values.length === 0) return false;
+          return values.some((val) => hasActualData(val));
+        }
 
-    function hasActualData(obj) {
-      if (obj === null || obj === undefined || obj === '') {
-        return false;
+        return true;
       }
-      
-      if (Array.isArray(obj)) {
-        if (obj.length === 0) return false;
-        return obj.some(item => hasActualData(item));
-      }
-      
-      if (typeof obj === 'object') {
-        const values = Object.values(obj);
-        if (values.length === 0) return false;
-        return values.some(val => hasActualData(val));
-      }
-      
-      return true;
-    }
 
-    window.copyRecipeHTML = function() {
+      window.copyRecipeHTML = function () {
         const container = document.getElementById("recipeContent");
         if (!container) return;
 
         const html = container.innerHTML;
 
-        navigator.clipboard.writeText(html)
-            .then(() => {
+        navigator.clipboard
+          .writeText(html)
+          .then(() => {
             alert("Recipe HTML copied to clipboard!");
-            })
-            .catch(err => {
+          })
+          .catch((err) => {
             console.error("Failed to copy HTML: ", err);
-            });
-    };
+          });
+      };
 
-    function displayModuleSection(moduleName, data) {
-      const modulesContent = document.getElementById("modulesContent");
-      
-      const section = document.createElement("div");
-      section.className = "module-section";
-      
-      const title = document.createElement("h2");
-      title.textContent = moduleName;
-      section.appendChild(title);
-      
-      const content = document.createElement("div");
-      content.className = "module-content";
-      
-      if (!data || (typeof data === 'object' && Object.keys(data).length === 0)) {
-        content.innerHTML = "<p><em>No data entered for this module yet.</em></p>";
-        section.appendChild(content);
-        modulesContent.appendChild(section);
-        return;
-      }
-      
-      let hasAnyData = false;
-      
-      for (const [key, value] of Object.entries(data)) {
-        if (value === null || value === undefined || value === '') {
-          continue;
+      function displayModuleSection(moduleName, data) {
+        const modulesContent = document.getElementById("modulesContent");
+
+        const section = document.createElement("div");
+        section.className = "module-section";
+
+        const title = document.createElement("h2");
+        title.textContent = moduleName;
+        section.appendChild(title);
+
+        const content = document.createElement("div");
+        content.className = "module-content";
+
+        if (
+          !data ||
+          (typeof data === "object" && Object.keys(data).length === 0)
+        ) {
+          content.innerHTML =
+            "<p><em>No data entered for this module yet.</em></p>";
+          section.appendChild(content);
+          modulesContent.appendChild(section);
+          return;
         }
-        
-        if (Array.isArray(value) && value.length === 0) {
-          continue;
-        }
-        
-        if (typeof value === 'object' && !Array.isArray(value)) {
-          const hasNonEmptyValues = Object.values(value).some(v => 
-            v !== null && v !== undefined && v !== ''
-          );
-          if (!hasNonEmptyValues) {
+
+        let hasAnyData = false;
+
+        for (const [key, value] of Object.entries(data)) {
+          if (value === null || value === undefined || value === "") {
             continue;
           }
-        }
-        
-        hasAnyData = true;
-        
-        const dataItem = document.createElement("div");
-        dataItem.className = "data-item";
-        
-        const label = document.createElement("div");
-        label.className = "data-label";
-        label.textContent = formatFieldName(key) + ":";
-        
-        const valueDiv = document.createElement("div");
-        valueDiv.className = "data-value";
-        
-        if (key === 'channels' && Array.isArray(value)) {
-          const channelLinks = value.map(ch => {
-            if (ch.url) {
-              return `<a href="${ch.url}" target="_blank">${ch.platform || 'Link'}</a>`;
-            }
-            return '';
-          }).filter(Boolean).join(', ');
-          valueDiv.innerHTML = channelLinks || formatValue(value);
-        } 
-        else if (typeof value === 'object' && !Array.isArray(value)) {
-          const nestedContent = document.createElement("div");
-          nestedContent.style.marginLeft = "15px";
-          
-          for (const [nestedKey, nestedValue] of Object.entries(value)) {
-            if (nestedValue !== null && nestedValue !== undefined && nestedValue !== '') {
-              const nestedItem = document.createElement("div");
-              nestedItem.style.margin = "5px 0";
-              nestedItem.innerHTML = `<strong>${formatFieldName(nestedKey)}:</strong> ${nestedValue}`;
-              nestedContent.appendChild(nestedItem);
+
+          if (Array.isArray(value) && value.length === 0) {
+            continue;
+          }
+
+          if (typeof value === "object" && !Array.isArray(value)) {
+            const hasNonEmptyValues = Object.values(value).some(
+              (v) => v !== null && v !== undefined && v !== "",
+            );
+            if (!hasNonEmptyValues) {
+              continue;
             }
           }
-          
-          valueDiv.appendChild(nestedContent);
-        } 
-        else {
-          valueDiv.textContent = formatValue(value);
-        }
-        
-        dataItem.appendChild(label);
-        dataItem.appendChild(valueDiv);
-        content.appendChild(dataItem);
-      }
-      
-      if (!hasAnyData) {
-        content.innerHTML = "<p><em>No data entered for this module yet.</em></p>";
-      }
-      
-      section.appendChild(content);
-      modulesContent.appendChild(section);
-    }
 
-    function formatFieldName(fieldName) {
-      return fieldName
-        .replace(/_/g, " ")
-        .replace(/([a-z])([A-Z])/g, "$1 $2")
-        .split(" ")
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ");
-    }
+          hasAnyData = true;
 
-    function formatValue(value) {
-      if (value === null || value === undefined) {
-        return '';
-      }
-      
-      if (Array.isArray(value)) {
-        const filtered = value.filter(v => v !== null && v !== undefined && v !== '');
-        if (filtered.length === 0) return '';
-        
-        if (filtered.length > 0 && typeof filtered[0] === 'object') {
-          return filtered.map(item => {
-            if (item.url && item.platform) {
-              return `${item.platform}: ${item.url}`;
+          const dataItem = document.createElement("div");
+          dataItem.className = "data-item";
+
+          const label = document.createElement("div");
+          label.className = "data-label";
+          label.textContent = formatFieldName(key) + ":";
+
+          const valueDiv = document.createElement("div");
+          valueDiv.className = "data-value";
+
+          if (key === "channels" && Array.isArray(value)) {
+            const channelLinks = value
+              .map((ch) => {
+                if (ch.url) {
+                  return `<a href="${ch.url}" target="_blank">${ch.platform || "Link"}</a>`;
+                }
+                return "";
+              })
+              .filter(Boolean)
+              .join(", ");
+            valueDiv.innerHTML = channelLinks || formatValue(value);
+          } else if (typeof value === "object" && !Array.isArray(value)) {
+            const nestedContent = document.createElement("div");
+            nestedContent.style.marginLeft = "15px";
+
+            for (const [nestedKey, nestedValue] of Object.entries(value)) {
+              if (
+                nestedValue !== null &&
+                nestedValue !== undefined &&
+                nestedValue !== ""
+              ) {
+                const nestedItem = document.createElement("div");
+                nestedItem.style.margin = "5px 0";
+                nestedItem.innerHTML = `<strong>${formatFieldName(nestedKey)}:</strong> ${nestedValue}`;
+                nestedContent.appendChild(nestedItem);
+              }
             }
-            return JSON.stringify(item);
-          }).join('\n');
+
+            valueDiv.appendChild(nestedContent);
+          } else {
+            valueDiv.textContent = formatValue(value);
+          }
+
+          dataItem.appendChild(label);
+          dataItem.appendChild(valueDiv);
+          content.appendChild(dataItem);
         }
-        
-        return filtered.join(', ');
-      }
-      
-      if (typeof value === 'object') {
-        try {
-          const stringified = JSON.stringify(value, null, 2);
-          if (stringified === '{}' || stringified === '[]') return '';
-          return stringified;
-        } catch (e) {
-          return String(value);
+
+        if (!hasAnyData) {
+          content.innerHTML =
+            "<p><em>No data entered for this module yet.</em></p>";
         }
+
+        section.appendChild(content);
+        modulesContent.appendChild(section);
       }
-      
-      return String(value);
-    }
 
-    function showError() {
-      document.getElementById("loadingMessage").style.display = "none";
-      document.getElementById("errorMessage").style.display = "block";
-    }
+      function formatFieldName(fieldName) {
+        return fieldName
+          .replace(/_/g, " ")
+          .replace(/([a-z])([A-Z])/g, "$1 $2")
+          .split(" ")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ");
+      }
 
-    window.downloadRecipe = function() {
-      const recipeContent = document.getElementById("recipeContent");
-      const text = recipeContent.innerText;
-      
-      const blob = new Blob([text], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'community-recipe.txt';
-      a.click();
-      URL.revokeObjectURL(url);
-    };
+      function formatValue(value) {
+        if (value === null || value === undefined) {
+          return "";
+        }
 
-    window.downloadRecipeImage = async function () {
+        if (Array.isArray(value)) {
+          const filtered = value.filter(
+            (v) => v !== null && v !== undefined && v !== "",
+          );
+          if (filtered.length === 0) return "";
+
+          if (filtered.length > 0 && typeof filtered[0] === "object") {
+            return filtered
+              .map((item) => {
+                if (item.url && item.platform) {
+                  return `${item.platform}: ${item.url}`;
+                }
+                return JSON.stringify(item);
+              })
+              .join("\n");
+          }
+
+          return filtered.join(", ");
+        }
+
+        if (typeof value === "object") {
+          try {
+            const stringified = JSON.stringify(value, null, 2);
+            if (stringified === "{}" || stringified === "[]") return "";
+            return stringified;
+          } catch (e) {
+            return String(value);
+          }
+        }
+
+        return String(value);
+      }
+
+      function showError() {
+        document.getElementById("loadingMessage").style.display = "none";
+        document.getElementById("errorMessage").style.display = "block";
+      }
+
+      window.downloadRecipe = function () {
+        const recipeContent = document.getElementById("recipeContent");
+        const text = recipeContent.innerText;
+
+        const blob = new Blob([text], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "community-recipe.txt";
+        a.click();
+        URL.revokeObjectURL(url);
+      };
+
+      window.downloadRecipeImage = async function () {
         const container = document.getElementById("recipeContent");
         if (!container) return;
 
@@ -356,10 +370,10 @@
         wrapper.appendChild(container);
 
         const canvas = await html2canvas(wrapper, {
-            scale: 5,              
-            backgroundColor: "#fffaf4",
-            useCORS: true,       
-            scrollY: -window.scrollY, 
+          scale: 5,
+          backgroundColor: "#fffaf4",
+          useCORS: true,
+          scrollY: -window.scrollY,
         });
 
         const image = canvas.toDataURL("image/png");
@@ -372,10 +386,9 @@
         link.href = image;
         link.download = "community-recipe.png";
         link.click();
-    };
+      };
 
-
-    loadRecipe();
-  </script>
-</body>
+      loadRecipe();
+    </script>
+  </body>
 </html>

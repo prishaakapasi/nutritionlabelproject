@@ -1,7 +1,7 @@
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: "Courier New", Courier, monospace;
+  font-family: "IBM Plex Sans", sans-serif;
   background-color: #fffaf4;
   color: #000000;
   line-height: 1.7;
@@ -60,10 +60,12 @@ main {
 }
 
 h1 {
-  font-size: 42px;
+  font-size: 52px;
   letter-spacing: -0.6px;
   color: #000000;
   font-weight: normal;
+  font-family: "Handjet", sans-serif;
+
 }
 
 h4 {
@@ -130,7 +132,7 @@ h4 {
   color: #000000;
   border: 2px solid #000000;
   cursor: pointer;
-  font-family: "Courier New", Courier, monospace;
+  font-family: "IBM Plex Sans", sans-serif;
   transition: all 0.3s ease;
   white-space: nowrap;
   position: relative;
@@ -162,7 +164,6 @@ h4 {
   background-color: #FF8F00;
   color: #000000;
   border-color: #000000;
-  font-weight: bold;
   transform: scale(1.05);
 }
 
@@ -194,7 +195,7 @@ h4 {
   color: #FF8F00;
   border: 2px dashed #FF8F00;
   cursor: pointer;
-  font-family: "Courier New", Courier, monospace;
+  font-family: "IBM Plex Sans", sans-serif;
   transition: all 0.3s ease;
   min-width: 60px;
   font-weight: bold;
@@ -216,7 +217,7 @@ h4 {
   outline: 1px solid #FF8F00;
   outline-offset: -6px;
   cursor: pointer;
-  font-family: "Courier New", Courier, monospace;
+  font-family: "IBM Plex Sans", sans-serif;
   font-weight: normal;
   position: relative;
   overflow: hidden;
@@ -255,7 +256,7 @@ h4 {
   color: #000000;
   border: 2px solid #000000;
   cursor: pointer;
-  font-family: "Courier New", Courier, monospace;
+  font-family: "IBM Plex Sans", sans-serif;
   font-weight: normal;
   transition: background-color 0.3s ease;
 }
@@ -272,7 +273,7 @@ h4 {
   display: inline-block;
   margin: 5%;
   font-size: 16px;
-  font-family: "Courier New", Courier, monospace;
+  font-family: "IBM Plex Sans", sans-serif;
   font-weight: normal;
   padding: 12px 24px;
   background: #fffaf4;
@@ -317,4 +318,27 @@ h4 {
 span {
   color: #FF8F00;
   font-weight: bold;
+}
+
+#communityTypeInput, #communityNameInput {
+  width: 100%;
+  max-width: 500px;
+  padding: 12px 20px;
+  font-size: 16px;
+  background-color: #fffaf4;
+  box-shadow: 0 0 0 3px rgba(255, 143, 0, 0.1);
+  color: #000000;
+  border: 2px solid #FF8F00;
+  font-family: "IBM Plex Sans", sans-serif;
+  transition: all 0.3s ease;
+  margin: 20px auto;
+  display: block;
+}
+
+#communityTypeInput, #communityNameInput:focus {
+  outline: none;
+}
+
+#communityTypeInput, #communityNameInput :hover:not(:focus) {
+  border-color: #FF8F00;
 }

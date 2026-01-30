@@ -651,3 +651,81 @@ select:hover:not(:focus) {
   color: var(--color-text);
   border-color: var(--color-accent);
 }
+
+.input-container {
+  position: relative;
+  max-width: 400px;
+  margin-bottom: var(--spacing-lg);
+}
+
+#input {
+  width: 100%;
+  padding: 12px var(--spacing-sm);
+  background-color: var(--color-bg);
+  border: 2px solid var(--color-border);
+  color: var(--color-text);
+  font-family: var(--font-primary);
+  font-size: 16px;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  border-radius: 2px;
+}
+
+#input::placeholder {
+  color: var(--color-input-placeholder);
+  opacity: 0.7;
+}
+
+#input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(255, 143, 0, 0.1);
+}
+
+#input:hover:not(:focus) {
+  border-color: var(--color-accent);
+}
+
+.input-hint {
+  margin-top: var(--spacing-xs);
+  color: var(--color-input-placeholder);
+  font-size: 14px;
+  opacity: 0.7;
+  font-style: italic;
+}
+
+.input-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 200px;
+  background: var(--color-bg);
+  border: 2px solid var(--color-accent);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  z-index: 10;
+  margin-top: 4px;
+  list-style: none;
+  padding: 0;
+  display: none;
+  border-radius: 2px;
+}
+
+.input-dropdown li {
+  padding: 12px 14px;
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-size: 16px;
+  transition: background-color var(--transition-fast);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.input-dropdown li:last-child {
+  border-bottom: none;
+}
+
+.input-dropdown li:hover,
+.input-dropdown li:focus {
+  background-color: var(--color-accent-light);
+  color: var(--color-text);
+}

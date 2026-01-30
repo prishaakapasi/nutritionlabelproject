@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
   <title>Community</title>
   <link rel="stylesheet" href="setuprecipe.css" />
 </head>
@@ -20,27 +23,12 @@
 
   <main>
     <div class="items">
-
-      <h1>DESCRIBE YOUR COMMUNITY TYPE</h1>
-      <h4>Select the types of decisions relevant for your community</h4>
-
-      <select id="myDropdown">
-        <option value="">Select a Type</option>
-        <option value="social">Social network</option>
-        <option value="community">Online community</option>
-        <option value="science">Open Science</option>
-        <option value="archiving">Archiving</option>
-        <option value="other">Other</option>
-      </select>
-
-      <div id="otherInputContainer" style="display:none; margin-top:10px;">
-        <input
-          type="text"
-          id="otherText"
-          placeholder="Enter new category name"
-        />
-        <button id="saveCategory">Save Category</button>
-      </div>
+      <h1> Community Name </h1>
+        <input type="text" id="communityNameInput"
+      />
+      <h1>DESCRIBE YOUR COMMUNITY</h1>
+      <input type="text" id="communityTypeInput"
+      />
 
       <h1>SELECT CATEGORY MODULES</h1>
 

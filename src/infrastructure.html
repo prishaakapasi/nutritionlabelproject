@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="infrastructure.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Infrastructure</title>
@@ -28,7 +31,7 @@
       <h3>Give people some insight into the technical infrastructure that your community sits on.</h3>
       
       <h2>Protocol</h2>
-      <textarea id="protocols" name="protocols" placeholder="Describe the protocol(s) your community uses..."></textarea>
+      <input id="protocols" name="protocols" placeholder="Describe the protocol(s) your community uses..."></input>
       <h2>Software</h2>
       <div class="software-container">
         <input
@@ -51,14 +54,20 @@
         <input type="text" id="hostingDetails" placeholder=" e.g in admin basement">
       </div>
       
-      <h2>Costs</h2>
+            <h2 class="costs-label">
+            Costs
+        <span class="info-tooltip">
+          ⓘ
+          <span class="tooltip-text"> Cost of running the server          </span>
+        </span>
+      </h2>
       <textarea id="costs" name="costs" placeholder="Funded by admin"></textarea>
       
-      <h2>Other Channels</h2>
+      <h2> Community Links </h2>
       <div id="channelsList" class="channels-list"></div>
       <div class="channel-input-container">
         <input type="url" id="channelUrl" placeholder="https://discord.gg/example or https://loomio.org/example">
-        <button id="addChannel" class="save-module">Add Channel</button>
+        <button id="addChannel" class="save-module">Add Community Links </button>
       </div>
     </main>
   </div>

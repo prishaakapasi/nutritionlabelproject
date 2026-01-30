@@ -18,7 +18,7 @@
   --spacing-lg: 40px;
   --spacing-xl: 64px;
   
-  --font-primary: "Courier New", Courier, monospace;
+  --font-primary:"IBM Plex Sans", sans-serif;
   --transition-fast: 0.2s ease;
   --transition-standard: 0.3s ease;
 }
