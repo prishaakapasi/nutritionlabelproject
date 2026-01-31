@@ -1,3 +1,6 @@
+h1{
+  font-family: "IBM Plex Sans", sans-serif !important;
+}
 .button-container {
   display: flex;
   gap: var(--spacing-sm);
@@ -169,8 +172,6 @@
 
 #username {
   width: 100%;
-  max-width: 400px;
-  padding: 12px var(--spacing-sm);
   background-color: var(--color-bg);
   border: 2px solid var(--color-border);
   color: var(--color-text);
@@ -288,12 +289,15 @@
     flex-direction: column;
     gap: var(--spacing-sm);
     margin-bottom: var(--spacing-sm);
+    width: 100%;
+    max-width: 900px;
 }
 
 .covenant-item {
     display: flex;
     gap: var(--spacing-sm);
     align-items: center;
+    width: 100%;
 }
 
 .covenant-item input[type="text"] {

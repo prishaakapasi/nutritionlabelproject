@@ -145,6 +145,7 @@ h1 {
   color: var(--color-text);
   font-weight: normal;
   line-height: 1.2;
+  font-family: "IBM Plex Sans", sans-serif !important;
 }
 
 h2 {

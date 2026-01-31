@@ -2,13 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="createrecipe.css" />
+    <link rel="stylesheet" href="admintype.css" />
     <link rel="stylesheet" href="mastersheet.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
     <title> Admin Type</title>
+    <style>
+      .admin-section {
+        width: 100%;
+        max-width: 900px;
+      }
+    </style>
 </head>
 <body>
   <nav class="navbar">
@@ -45,9 +51,11 @@
         </div>
       </div>
 
-      <h2>Add Usernames of Admins</h2>
-      <div id="adminList" class="covenant-list"></div>
-      <button id="addAdminBtn" class="add-btn">+ Add Admin</button>
+      <div class="admin-section">
+        <h2>Add Usernames of Admins</h2>
+        <div id="adminList" class="covenant-list"></div>
+        <button id="addAdminBtn" class="add-btn">+ Add Admin</button>
+      </div>
     </main>
   </div>
 
