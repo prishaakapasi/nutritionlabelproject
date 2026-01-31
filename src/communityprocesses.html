@@ -28,13 +28,7 @@
       <h3>Set a shared understanding about how governance works in your community. Can people submit proposals, and if so how? Who can be involved in the decision-making? Is there a deliberation process? How are your rules enforced?</h3>
       
       <h2>Moderation</h2>
-      <textarea id="moderation" name="moderation" placeholder="Describe your moderation process, disciplinary steps, warning system, etc."></textarea>
-      
-      <h2>Reporting</h2>
-      <textarea id="reporting" name="reporting" placeholder="Explain how people can report problems, who to contact, and what to expect."></textarea>
-      
-      <h2>Conflict</h2>
-      <textarea id="conflict" name="conflict" placeholder="Describe how conflicts are mediated and resolved in your community."></textarea>
+      <textarea id="moderation" name="moderation" placeholder="Describe your moderation process, reporting procedures, conflict resolution, disciplinary steps, warning system, etc."></textarea>
       
       <h2>Decision-making</h2>
       <textarea id="decisionMaking" name="decisionMaking" placeholder="Explain how decisions about rules, infrastructure changes, and community direction are made."></textarea>
@@ -84,14 +78,6 @@
         document.getElementById("moderation").value = processesData.moderation;
       }
 
-      if (processesData.reporting) {
-        document.getElementById("reporting").value = processesData.reporting;
-      }
-
-      if (processesData.conflict) {
-        document.getElementById("conflict").value = processesData.conflict;
-      }
-
       if (processesData.decisionMaking) {
         document.getElementById("decisionMaking").value = processesData.decisionMaking;
       }
@@ -108,8 +94,6 @@
     function collectFormData() {
       return {
         moderation: document.getElementById("moderation").value,
-        reporting: document.getElementById("reporting").value,
-        conflict: document.getElementById("conflict").value,
         decisionMaking: document.getElementById("decisionMaking").value,
         updates: document.getElementById("updates").value,
         feedback: document.getElementById("feedback").value
@@ -151,8 +135,6 @@
       loadCommunityProcessesData();
 
       document.getElementById("moderation").addEventListener("input", autoSaveData);
-      document.getElementById("reporting").addEventListener("input", autoSaveData);
-      document.getElementById("conflict").addEventListener("input", autoSaveData);
       document.getElementById("decisionMaking").addEventListener("input", autoSaveData);
       document.getElementById("updates").addEventListener("input", autoSaveData);
       document.getElementById("feedback").addEventListener("input", autoSaveData);
