@@ -100,10 +100,12 @@
             return;
           }
           
+          // Display community name with "Community Recipe" suffix
           const communityName = community.name || "Your Community Governance";
           document.getElementById("communityName").textContent =
             `${communityName} Community Recipe`;
           
+          // Display community description
           document.getElementById("communityType").textContent =
             community.type || "No description provided";
 
@@ -257,16 +259,25 @@
               .filter(Boolean)
               .join(", ");
             valueDiv.innerHTML = channelLinks || formatValue(value);
+          } else if (Array.isArray(value)) {
+            const listItems = value.filter(v => v !== null && v !== undefined && v !== "");
+            if (listItems.length > 0) {
+              valueDiv.textContent = listItems.join("; ");
+            } else {
+              valueDiv.textContent = formatValue(value);
+            }
           } else if (typeof value === "object" && !Array.isArray(value)) {
             const nestedContent = document.createElement("div");
             nestedContent.style.marginLeft = "15px";
 
+            let hasNestedData = false;
             for (const [nestedKey, nestedValue] of Object.entries(value)) {
               if (
                 nestedValue !== null &&
                 nestedValue !== undefined &&
                 nestedValue !== ""
               ) {
+                hasNestedData = true;
                 const nestedItem = document.createElement("div");
                 nestedItem.style.margin = "5px 0";
                 nestedItem.innerHTML = `<strong>${formatFieldName(nestedKey)}:</strong> ${nestedValue}`;
@@ -274,7 +285,14 @@
               }
             }
 
-            valueDiv.appendChild(nestedContent);
+            if (hasNestedData) {
+              if (key === "dmcaAgent") {
+                label.textContent = "DMCA Registered Agent Information:";
+              }
+              valueDiv.appendChild(nestedContent);
+            } else {
+              continue;
+            }
           } else {
             valueDiv.textContent = formatValue(value);
           }
