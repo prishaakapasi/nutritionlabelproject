@@ -682,3 +682,18 @@ select:hover:not(:focus) {
   opacity: 1;
   transform: translateX(-50%) translateY(-4px);
 }
+#section1Title {
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-border);
+    color: var(--color-text);
+    font-family: var(--font-primary);
+    font-size: 16px;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    width: 200px;       
+    height: 30px;       
+    padding: 4px 8px;  
+    border-radius: 2px;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    box-sizing: border-box;
+}

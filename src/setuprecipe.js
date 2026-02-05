@@ -4,6 +4,7 @@ const supabaseUrl = "https://sewbsumjjlpsbadgwgfk.supabase.co";
 const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+const communityNameInput = document.getElementById("communityNameInput");
 const communityTypeInput = document.getElementById("communityTypeInput");
 
 const addModuleBtn = document.getElementById("addModuleBtn");
@@ -40,13 +41,33 @@ const modulePages = {
   "Community Processes": "communityprocesses.html"
 };
 
+// Save community name with debouncing
+let saveNameTimeout;
+communityNameInput.addEventListener("input", function () {
+  clearTimeout(saveNameTimeout);
+  saveNameTimeout = setTimeout(async () => {
+    const name = this.value.trim();
+    if (name) {
+      await saveCommunity({ name });
+    }
+  }, 500); 
+});
+
+communityNameInput.addEventListener("blur", async function () {
+  const name = this.value.trim();
+  if (name) {
+    await saveCommunity({ name });
+  }
+});
+
+// Save community type with debouncing
 let saveTimeout;
 communityTypeInput.addEventListener("input", function () {
   clearTimeout(saveTimeout);
   saveTimeout = setTimeout(async () => {
     const type = this.value.trim();
     if (type) {
-      await saveCommunity(type);
+      await saveCommunity({ type });
     }
   }, 500); 
 });
@@ -54,17 +75,17 @@ communityTypeInput.addEventListener("input", function () {
 communityTypeInput.addEventListener("blur", async function () {
   const type = this.value.trim();
   if (type) {
-    await saveCommunity(type);
+    await saveCommunity({ type });
   }
 });
 
-async function saveCommunity(type) {
-  console.log("Saving community type:", type, "with ID:", communityId);
+async function saveCommunity(updates) {
+  console.log("Saving community with updates:", updates, "and ID:", communityId);
   
   if (communityId) {
     const { data, error } = await supabase
       .from("communities")
-      .update({ type })
+      .update(updates)
       .eq("id", communityId)
       .select();
     
@@ -76,7 +97,7 @@ async function saveCommunity(type) {
   } else {
     const { data, error } = await supabase
       .from("communities")
-      .insert({ type })
+      .insert(updates)
       .select()
       .single();
 
@@ -123,7 +144,7 @@ saveModule.addEventListener("click", async function () {
   
   if (!communityId) {
     console.error("Cannot add module: no communityId. Please select a community type first.");
-    alert("Please enter a community type first!");
+    alert("Please enter a community name or type first!");
     return;
   }
 
@@ -207,6 +228,10 @@ async function loadCommunityData() {
 
   console.log("Loaded community data:", data);
 
+  if (data.name) {
+    communityNameInput.value = data.name;
+  }
+
   if (data.type) {
     communityTypeInput.value = data.type;
   }
@@ -232,8 +257,14 @@ function handleNextButton() {
   nextButton.addEventListener('click', function(e) {
     e.preventDefault();
     
-    if (!communityId || !communityTypeInput.value.trim()) {
-      alert("Please enter a community type first!");
+    if (!communityId || !communityNameInput.value.trim()) {
+      alert("Please enter a community name first!");
+      communityNameInput.focus();
+      return;
+    }
+    
+    if (!communityTypeInput.value.trim()) {
+      alert("Please describe your community first!");
       communityTypeInput.focus();
       return;
     }

@@ -31,7 +31,7 @@
 
       <div id="recipeContent" style="display: none">
         <div class="recipe-header">
-          <h1>Your Community Governance Recipe</h1>
+          <h1 id="communityName"></h1>
           <p class="community-type" id="communityType"></p>
         </div>
 
@@ -100,9 +100,12 @@
             return;
           }
           
-          // Changed from "Community Type" to "Community Description"
+          const communityName = community.name || "Your Community Governance";
+          document.getElementById("communityName").textContent =
+            `${communityName} Community Recipe`;
+          
           document.getElementById("communityType").textContent =
-            `Community Description: ${community.type || "Not specified"}`;
+            community.type || "No description provided";
 
           const modulesContent = document.getElementById("modulesContent");
           modulesContent.innerHTML = "";
@@ -392,3 +395,4 @@
     </script>
   </body>
 </html>
+</document_content>
