@@ -10,9 +10,7 @@ const moduleOrder = [
   "Membership",
   "Rules",
   "Federation",
-  "Data/Privacy",
   "Community Processes",
-  "Legal Compliance"
 ];
 
 const modulePages = {

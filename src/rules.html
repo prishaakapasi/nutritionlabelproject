@@ -20,95 +20,178 @@
   
   <div class="content-wrapper">
     <aside class="sidebar">
-      <nav class="sidebar-nav" id="dynamicNav">
-      </nav>
+      <nav class="sidebar-nav" id="dynamicNav"></nav>
     </aside>
     <main>
-     <h1>Rules</h1>
-     <h3>Give people a quick overview of your community's rules, including broader covenants or norms you subscribe to or community-specific rules.</h3>
-     <div class="container">
-         <h2 class="costs-label">
+      <h1>Rules</h1>
+      <h3>Give people a quick overview of your community's rules, including broader covenants or norms you subscribe to or community-specific rules.</h3>
+
+      <div class="container">
+
+        <div class="section">
+          <h2 class="costs-label">
             Covenants + Guidelines
-        <span class="info-tooltip">
-          ⓘ
-          <span class="tooltip-text"> Any broadly shared XYZ your community adheres to </span>
-        </span>
-      </h2>
-        
-        <div class="section">
-            <div class="covenant-list" id="covenant-list">
-                <div class="covenant-item">
-                    <select onchange="window.handleCovenantChange(this)">
-                        <option value="">Select a covenant...</option>
-                        <option value="Mastodon Server Covenant">Mastodon Server Covenant</option>
-                        <option value="Discord Community Guidelines">Discord Community Guidelines</option>
-                        <option value="Bonfire Community Guidelines">Bonfire Community Guidelines</option>
-                        <option value="Bluesky Community Guidelines">Bluesky Community Guidelines</option>
-                        <option value="custom">Custom</option>
-                    </select>
-                    <input type="text" class="custom-covenant-input" placeholder="Enter custom covenant name" style="display: none; margin-top: var(--spacing-sm); width: 100%; flex-basis: 100%;">
-                </div>
+            <span class="info-tooltip">
+              ⓘ
+              <span class="tooltip-text">Any broadly shared guidelines your community adheres to</span>
+            </span>
+          </h2>
+          <div class="covenant-list" id="covenant-list">
+            <div class="covenant-item">
+              <select onchange="window.handleCovenantChange(this)">
+                <option value="">Select a covenant...</option>
+                <option value="Mastodon Server Covenant">Mastodon Server Covenant</option>
+                <option value="Discord Community Guidelines">Discord Community Guidelines</option>
+                <option value="Bonfire Community Guidelines">Bonfire Community Guidelines</option>
+                <option value="Bluesky Community Guidelines">Bluesky Community Guidelines</option>
+                <option value="custom">Custom</option>
+              </select>
+              <input type="text" class="custom-covenant-input" placeholder="Enter custom covenant name" style="display: none; margin-top: var(--spacing-sm); width: 100%; flex-basis: 100%;">
             </div>
+          </div>
         </div>
 
         <div class="section">
-            <h2>Adapted From</h2>
-            <div class="description">Optional: Indicate where you've copied rules from, if relevant</div>
-            <textarea id="adaptedFrom" placeholder="Enter source information here..."></textarea>
+          <h2>Adapted From</h2>
+          <div class="description">Optional: Indicate where you've copied rules from, if relevant</div>
+          <textarea id="adaptedFrom" placeholder="Enter source information here..."></textarea>
         </div>
 
         <div class="section">
-            <h2>Community Rules</h2>
-            <div class="checkbox-list">
-                <div class="checkbox-item">
-                    <input type="checkbox" id="rule1">
-                    <label for="rule1">No harmful, offensive, or abusive language</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="rule2">
-                    <label for="rule2">No harassment</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="rule3">
-                    <label for="rule3">No NSFW</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="rule4">
-                    <label for="rule4">Content Warnings required</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="rule5">
-                    <label for="rule5">No spam</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="rule6">
-                    <label for="rule6">No violence or threats thereof</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="rule7">
-                    <label for="rule7">No doxxing / sharing PII about others</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="rule8">
-                    <label for="rule8">No promotion or ads</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="rule9">
-                    <label for="rule9">No illegal content</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="rule10">
-                    <label for="rule10">No AI-generated content</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="rule11">
-                    <label for="rule11">Bots restricted</label>
-                </div>
+          <h2>Community Rules</h2>
+
+          <div class="rules-category">
+            <h3>Behavioral</h3>
+
+            <div class="checkbox-item">
+              <div class="checkbox-row">
+                <input type="checkbox" id="rule-civility">
+                <label for="rule-civility"> Civility & Good-faith Participation</label>
+              </div>
+              <div class="rule-detail">
+                <textarea placeholder="e.g.Be kind, be respectful, no bullying, no impersonation, agree to Code of Conduct"></textarea> 
             </div>
-            <div id="custom-rules"></div>
-            <button class="add-btn" onclick="window.addCustomRule()" style="margin-top: var(--spacing-md);">+</button>
+
+            <div class="checkbox-item">
+              <div class="checkbox-row">
+                <input type="checkbox" id="rule-discrimination">
+                <label for="rule-discrimination"> Anti-discrimination / Protected-class Harassment</label>
+              </div>
+              <div class="rule-detail">
+                <textarea placeholder="Explicit bans on racism/sexism/homophobia/transphobia/ableism/xenophobia/casteism, etc."></textarea>
+              </div>
+            </div>
+
+            <div class="checkbox-item">
+              <div class="checkbox-row">
+                <input type="checkbox" id="rule-spam">
+                <label for="rule-spam"> Platform misuse: spam, ads, unsolicited promotion</label>
+              </div>
+              <div class="rule-detail">
+                <textarea placeholder="e.g. Posting advertisements, affiliate links, or unsolicited promotional content without prior approval is not allowed. Repeat offenders will be banned."></textarea>
+              </div>
+            </div>
+
+            <div class="checkbox-item">
+              <div class="checkbox-row">
+                <input type="checkbox" id="rule-harassment">
+                <label for="rule-harassment"> Harassment & safety: dogpiling, doxxing, block evasion, stalking </label>
+              </div>
+              <div class="rule-detail">
+                <textarea placeholder="e.g. Coordinated pile-ons, sharing private information without consent, circumventing blocks, and any form of stalking or sustained targeting of individuals will result in an immediate ban."></textarea>
+              </div>
+            </div>
+
+            <div class="checkbox-item">
+              <div class="checkbox-row">
+                <input type="checkbox" id="rule-age">
+                <label for="rule-age">Instance access & Onboarding Constraints</label>
+              </div>
+              <div class="rule-detail">
+                <textarea placeholder="e.g. Age limit (18+), Age limit (18+), 3 strikes and you are out rule, language used in instance, "></textarea>
+              </div>
+            </div>
+
+            <div class="checkbox-item">
+              <div class="checkbox-row">
+                <input type="checkbox" id="rule-identity">
+                <label for="rule-identity">Identity & Account Integrity </label>
+              </div>
+              <div class="rule-detail">
+                <textarea placeholder="e.g. No impersonation unless parody, Bots must be labeled, No SEO accounts"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="rules-category">
+            <h3>Content</h3>
+
+            <div class="checkbox-item">
+              <div class="checkbox-row">
+                <input type="checkbox" id="rule-ai">
+                <label for="rule-ai">AI / generated media + attribution / copyright</label>
+              </div>
+              <div class="rule-detail">
+                <textarea placeholder="e.g. Disclosure of AI-gen, bans on AI content, attribution requirements, copyright/fair use."></textarea>
+              </div>
+            </div>
+
+            <div class="checkbox-item">
+              <div class="checkbox-row">
+                <input type="checkbox" id="rule-cw">
+                <label for="rule-cw">Content warnings & sensitive media labeling</label>
+              </div>
+              <div class="rule-detail">
+                <textarea placeholder="e.g. Use content warnings for topics including but not limited to: violence, mental health, food/eating disorders, politics, and explicit imagery. All sensitive media must be marked appropriately before posting."></textarea>
+              </div>
+            </div>
+
+            <div class="checkbox-item">
+              <div class="checkbox-row">
+                <input type="checkbox" id="rule-threats">
+                <label for="rule-threats">Threats & Incitement, Extremist Content </label>
+              </div>
+              <div class="rule-detail">
+                <textarea placeholder="e.g. advocacy of violence / violent ideologies/ hate speech"></textarea>
+              </div>
+            </div>
+
+            <div class="checkbox-item">
+              <div class="checkbox-row">
+                <input type="checkbox" id="rule-illegal">
+                <label for="rule-illegal">Illegal / jurisdiction-specific prohibited content</label>
+              </div>
+              <div class="rule-detail">
+                <textarea placeholder="e.g. Illegal in EU/Germany/Canada/HK…, holocaust denial/Nazi symbols (jurisdiction framed), etc."></textarea>
+              </div>
+            </div>
+
+            <div class="checkbox-item">
+              <div class="checkbox-row">
+                <input type="checkbox" id="rule-nsfw">
+                <label for="rule-nsfw">Adult / explicit content rules (NSFW boundaries & consent)</label>
+              </div>
+              <div class="rule-detail">
+                <textarea placeholder="Sexual content allowed/forbidden rules, consent, “no explicit content”, “mark NSFW”, etc."></textarea>
+              </div>
+            </div>
+
+            <div class="checkbox-item">
+              <div class="checkbox-row">
+                <input type="checkbox" id="rule-misinfo">
+                <label for="rule-misinfo">No misinformation or conspiracy content</label>
+              </div>
+              <div class="rule-detail">
+                <textarea placeholder="e.g. Do not post health misinformation, election disinformation, or debunked conspiracy theories presented as fact. Satire and parody must be clearly labeled to avoid confusion."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div id="custom-rules"></div>
+          <button class="add-btn" onclick="window.addCustomRule()" style="margin-top: var(--spacing-md);">+</button>
         </div>
-    </div>
+
+      </div>
+    </main>
   </div>
 
   <script type="module" src="navigation.js"></script>
@@ -120,14 +203,22 @@
     const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    let customRuleCount = 12;
+    let customRuleCount = 100;
+
+    function initRuleToggle(checkbox) {
+      const detail = checkbox.closest('.checkbox-item').querySelector('.rule-detail');
+      if (!detail) return;
+      checkbox.addEventListener('change', () => {
+        detail.style.display = checkbox.checked ? 'block' : 'none';
+        if (checkbox.checked) detail.querySelector('textarea').focus();
+        window.autoSaveData();
+      });
+      detail.querySelector('textarea').addEventListener('input', window.autoSaveData);
+    }
 
     async function loadRulesData() {
       const communityId = localStorage.getItem("communityId");
-      if (!communityId) {
-        console.error("No community ID found");
-        return;
-      }
+      if (!communityId) { console.error("No community ID found"); return; }
 
       const { data, error } = await supabase
         .from("communities")
@@ -135,34 +226,20 @@
         .eq("id", communityId)
         .single();
 
-      if (error) {
-        console.error("Error loading rules data:", error);
-        return;
-      }
-
-      if (data && data.rules_data) {
-        populateForm(data.rules_data);
-      }
+      if (error) { console.error("Error loading rules data:", error); return; }
+      if (data && data.rules_data) populateForm(data.rules_data);
     }
 
-    function populateForm(rulesData) {
-      if (rulesData.covenants && Array.isArray(rulesData.covenants)) {
+    function populateForm(d) {
+      if (d.covenants && Array.isArray(d.covenants)) {
         const covenantList = document.getElementById('covenant-list');
         covenantList.innerHTML = '';
-        
-        rulesData.covenants.forEach(covenant => {
+        const predefined = ["Mastodon Server Covenant","Discord Community Guidelines","Bonfire Community Guidelines","Bluesky Community Guidelines"];
+
+        d.covenants.forEach(covenant => {
+          const isCustom = !predefined.includes(covenant);
           const newItem = document.createElement('div');
           newItem.className = 'covenant-item';
-          
-          const predefinedCovenants = [
-            "Mastodon Server Covenant",
-            "Discord Community Guidelines",
-            "Bonfire Community Guidelines",
-            "Bluesky Community Guidelines"
-          ];
-          
-          const isCustom = !predefinedCovenants.includes(covenant);
-          
           newItem.innerHTML = `
             <select onchange="window.handleCovenantChange(this)">
               <option value="">Select a covenant...</option>
@@ -175,41 +252,41 @@
             <input type="text" class="custom-covenant-input" placeholder="Enter custom covenant name" value="${isCustom ? covenant : ''}" style="display: ${isCustom ? 'block' : 'none'}; margin-top: var(--spacing-sm); width: 100%; flex-basis: 100%;">
           `;
           covenantList.appendChild(newItem);
-          
           newItem.querySelector('.custom-covenant-input').addEventListener('input', window.autoSaveData);
         });
       }
 
-      if (rulesData.adaptedFrom) {
-        document.getElementById('adaptedFrom').value = rulesData.adaptedFrom;
-      }
+      if (d.adaptedFrom) document.getElementById('adaptedFrom').value = d.adaptedFrom;
 
-      if (rulesData.selectedRules && Array.isArray(rulesData.selectedRules)) {
-        rulesData.selectedRules.forEach(ruleText => {
-          document.querySelectorAll('.checkbox-list > .checkbox-item').forEach(item => {
-            const checkbox = item.querySelector('input[type="checkbox"]');
-            const label = item.querySelector('label');
-            if (label && label.textContent === ruleText) {
-              checkbox.checked = true;
+      if (d.selectedRules && Array.isArray(d.selectedRules)) {
+        d.selectedRules.forEach(entry => {
+          const id = typeof entry === 'string' ? entry : entry.id;
+          const detail = typeof entry === 'object' ? entry.detail : '';
+          const cb = document.getElementById(id);
+          if (cb) {
+            cb.checked = true;
+            const detailEl = cb.closest('.checkbox-item').querySelector('.rule-detail');
+            if (detailEl) {
+              detailEl.style.display = 'block';
+              if (detail) detailEl.querySelector('textarea').value = detail;
             }
-          });
+          }
         });
       }
-      if (rulesData.customRules && Array.isArray(rulesData.customRules)) {
-        rulesData.customRules.forEach(rule => {
+
+      if (d.customRules && Array.isArray(d.customRules)) {
+        d.customRules.forEach(rule => {
           const container = document.getElementById('custom-rules');
           const newRule = document.createElement('div');
           newRule.className = 'checkbox-item';
           newRule.style.marginTop = 'var(--spacing-sm)';
           newRule.innerHTML = `
             <input type="checkbox" id="rule${customRuleCount}" ${rule.checked ? 'checked' : ''}>
-            <input type="text" placeholder="Enter custom rule" value="${rule.text}" style="flex: 1; margin-left: var(--spacing-sm);">
+            <input type="text" placeholder="Enter custom rule" value="${rule.text}">
           `;
           container.appendChild(newRule);
-          
           newRule.querySelector('input[type="checkbox"]').addEventListener('change', window.autoSaveData);
           newRule.querySelector('input[type="text"]').addEventListener('input', window.autoSaveData);
-          
           customRuleCount++;
         });
       }
@@ -220,7 +297,6 @@
       document.querySelectorAll('#covenant-list .covenant-item').forEach(item => {
         const select = item.querySelector('select');
         const customInput = item.querySelector('.custom-covenant-input');
-        
         if (select.value === 'custom' && customInput.value.trim()) {
           covenants.push(customInput.value.trim());
         } else if (select.value && select.value !== 'custom') {
@@ -229,10 +305,10 @@
       });
 
       const selectedRules = [];
-      document.querySelectorAll('.checkbox-list > .checkbox-item input[type="checkbox"]:checked').forEach(cb => {
-        const label = cb.nextElementSibling;
-        if (label) {
-          selectedRules.push(label.textContent);
+      document.querySelectorAll('.checkbox-item input[type="checkbox"]:checked').forEach(cb => {
+        if (!cb.closest('#custom-rules')) {
+          const detail = cb.closest('.checkbox-item').querySelector('.rule-detail textarea');
+          selectedRules.push({ id: cb.id, detail: detail ? detail.value : '' });
         }
       });
 
@@ -241,51 +317,36 @@
         const checkbox = item.querySelector('input[type="checkbox"]');
         const textInput = item.querySelector('input[type="text"]');
         if (textInput && textInput.value.trim()) {
-          customRules.push({
-            text: textInput.value.trim(),
-            checked: checkbox.checked
-          });
+          customRules.push({ text: textInput.value.trim(), checked: checkbox.checked });
         }
       });
 
       return {
-        covenants: covenants,
+        covenants,
         adaptedFrom: document.getElementById('adaptedFrom').value,
-        selectedRules: selectedRules,
-        customRules: customRules
+        selectedRules,
+        customRules
       };
     }
 
     async function saveRulesData() {
       const communityId = localStorage.getItem("communityId");
-      if (!communityId) {
-        console.error("No community ID found");
-        return false;
-      }
-
-      const rulesData = collectFormData();
-      console.log("Saving rules data:", rulesData);
+      if (!communityId) { console.error("No community ID found"); return false; }
 
       const { error } = await supabase
         .from("communities")
-        .update({ rules_data: rulesData })
+        .update({ rules_data: collectFormData() })
         .eq("id", communityId);
 
-      if (error) {
-        console.error("Error saving rules data:", error);
-        return false;
-      }
-
-      console.log("Rules data saved successfully");
+      if (error) { console.error("Error saving rules data:", error); return false; }
+      console.log("Rules data saved");
       return true;
     }
 
     let saveTimeout;
     window.autoSaveData = function() {
       clearTimeout(saveTimeout);
-      saveTimeout = setTimeout(() => {
-        saveRulesData();
-      }, 1000);
+      saveTimeout = setTimeout(saveRulesData, 1000);
     };
 
     window.handleCovenantChange = function(select) {
@@ -316,13 +377,7 @@
         <input type="text" class="custom-covenant-input" placeholder="Enter custom covenant name" style="display: none; margin-top: var(--spacing-sm); width: 100%; flex-basis: 100%;">
       `;
       list.appendChild(newItem);
-      
       newItem.querySelector('.custom-covenant-input').addEventListener('input', window.autoSaveData);
-    };
-
-    window.removeItem = function(element) {
-      element.remove();
-      window.autoSaveData();
     };
 
     window.addCustomRule = function() {
@@ -332,13 +387,11 @@
       newRule.style.marginTop = 'var(--spacing-sm)';
       newRule.innerHTML = `
         <input type="checkbox" id="rule${customRuleCount}">
-        <input type="text" placeholder="Enter custom rule" style="flex: 1; margin-left: var(--spacing-sm);">
+        <input type="text" placeholder="Enter custom rule">
       `;
       container.appendChild(newRule);
-      
       newRule.querySelector('input[type="checkbox"]').addEventListener('change', window.autoSaveData);
       newRule.querySelector('input[type="text"]').addEventListener('input', window.autoSaveData);
-      
       customRuleCount++;
     };
 
@@ -347,9 +400,7 @@
 
       document.getElementById('adaptedFrom').addEventListener('input', window.autoSaveData);
 
-      document.querySelectorAll('.checkbox-list > .checkbox-item input[type="checkbox"]').forEach(cb => {
-        cb.addEventListener('change', window.autoSaveData);
-      });
+      document.querySelectorAll('.checkbox-item input[type="checkbox"]').forEach(initRuleToggle);
     });
   </script>
 </body>

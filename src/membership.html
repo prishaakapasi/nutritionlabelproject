@@ -31,6 +31,15 @@
         <button class="module-btn">Open Membership</button>
         <button class="module-btn">Closed Membership</button>
       </div>
+
+      <div id="memberTypesSection">
+        <h2>Member Types</h2>
+        <textarea
+          id="memberTypes"
+          placeholder="Describe (if any) the different types of members and what each can do."
+          rows="6"
+        ></textarea>
+      </div>
     </main>
   </div>
 
@@ -43,12 +52,15 @@
     const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
     const supabase = createClient(supabaseUrl, supabaseKey);
 
+    const memberTypesSection = document.getElementById('memberTypesSection');
+
+    function showMemberTypes(show) {
+      memberTypesSection.style.display = show ? 'block' : 'none';
+    }
+
     async function loadMembershipData() {
       const communityId = localStorage.getItem("communityId");
-      if (!communityId) {
-        console.error("No community ID found");
-        return;
-      }
+      if (!communityId) { console.error("No community ID found"); return; }
 
       const { data, error } = await supabase
         .from("communities")
@@ -56,54 +68,40 @@
         .eq("id", communityId)
         .single();
 
-      if (error) {
-        console.error("Error loading membership data:", error);
-        return;
-      }
-
-      if (data && data.membership_data) {
-        populateForm(data.membership_data);
-      }
+      if (error) { console.error("Error loading membership data:", error); return; }
+      if (data && data.membership_data) populateForm(data.membership_data);
     }
 
-    function populateForm(membershipData) {
-      if (membershipData.selectedType) {
-        const buttons = document.querySelectorAll('.module-btn');
-        buttons.forEach(btn => {
-          if (btn.textContent === membershipData.selectedType) {
-            btn.classList.add('selected');
-          }
+    function populateForm(d) {
+      if (d.selectedType) {
+        document.querySelectorAll('.module-btn').forEach(btn => {
+          if (btn.textContent === d.selectedType) btn.classList.add('selected');
         });
+        showMemberTypes(d.selectedType === 'Closed Membership');
+      }
+      if (d.memberTypes) {
+        document.getElementById('memberTypes').value = d.memberTypes;
       }
     }
 
     function collectFormData() {
       const selectedBtn = document.querySelector('.module-btn.selected');
-      
       return {
-        selectedType: selectedBtn ? selectedBtn.textContent : null
+        selectedType: selectedBtn ? selectedBtn.textContent : null,
+        memberTypes:  document.getElementById('memberTypes').value
       };
     }
 
     async function saveMembershipData() {
       const communityId = localStorage.getItem("communityId");
-      if (!communityId) {
-        console.error("No community ID found");
-        return false;
-      }
-
-      const membershipData = collectFormData();
+      if (!communityId) { console.error("No community ID found"); return false; }
 
       const { error } = await supabase
         .from("communities")
-        .update({ membership_data: membershipData })
+        .update({ membership_data: collectFormData() })
         .eq("id", communityId);
 
-      if (error) {
-        console.error("Error saving membership data:", error);
-        return false;
-      }
-
+      if (error) { console.error("Error saving membership data:", error); return false; }
       console.log("Membership data saved successfully");
       return true;
     }
@@ -111,9 +109,7 @@
     let saveTimeout;
     function autoSaveData() {
       clearTimeout(saveTimeout);
-      saveTimeout = setTimeout(() => {
-        saveMembershipData();
-      }, 1000);
+      saveTimeout = setTimeout(saveMembershipData, 1000);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -123,9 +119,12 @@
         btn.addEventListener('click', function() {
           document.querySelectorAll('.module-btn').forEach(b => b.classList.remove('selected'));
           this.classList.add('selected');
+          showMemberTypes(this.textContent === 'Closed Membership');
           autoSaveData();
         });
       });
+
+      document.getElementById('memberTypes').addEventListener('input', autoSaveData);
     });
   </script>
 </body>

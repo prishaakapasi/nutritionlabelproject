@@ -7,6 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="mastersheet.css" /> 
     <link rel="stylesheet" href="infrastructure.css" />
+    <link rel="stylesheet" href="dataprivacy.css" />
+    <link rel="stylesheet" href="legalcompliance.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Infrastructure</title>
 </head>
@@ -21,19 +23,23 @@
     </ul>
   </nav>
   
- <div class="content-wrapper">
+  <div class="content-wrapper">
     <aside class="sidebar">
       <nav class="sidebar-nav" id="dynamicNav">
       </nav>
     </aside>
 
     <main>
+
+      <!-- ── INFRASTRUCTURE ── -->
       <h1>Infrastructure</h1>
       <h3>Give people some insight into the technical infrastructure that your community sits on.</h3>
       
       <h2>Protocol</h2>
-      <input id="protocols" name="protocols" placeholder="Describe the protocol(s) your community uses..."></input>
+      <input id="protocols" name="protocols" placeholder="Describe the protocol(s) your community uses...">
+
       <h2>Software</h2>
+       <div class="software-hint">Choose one or type your own software</div>
       <div class="software-container">
         <input
           type="text"
@@ -41,8 +47,15 @@
           placeholder="Start typing to search or type your own"
           autocomplete="off"
         />
-        <div class="software-hint">Choose one or type your own software</div>
         <ul id="software-dropdown" class="software-dropdown"></ul>
+      </div>
+      <div id="softwareVersionWrapper" style="display:none; margin-top: 8px;">
+        <input
+          type="text"
+          id="softwareVersion"
+          placeholder="Version (e.g. 4.2.1) — optional"
+          autocomplete="off"
+        />
       </div>
 
       <h2>Hosting</h2>
@@ -50,31 +63,133 @@
         <button class="hosting-btn" data-type="physical">Physical</button>
         <button class="hosting-btn" data-type="cloud">Cloud</button>
       </div>
-      
       <div id="hostingDescription" style="display: none;">
-        <input type="text" id="hostingDetails" placeholder=" e.g in admin basement">
+        <input type="text" id="hostingDetails" placeholder="e.g. in admin basement">
       </div>
-      
-            <h2 class="costs-label">
-            Costs
+
+      <h2 class="costs-label">
+        Costs
         <span class="info-tooltip">
           ⓘ
-          <span class="tooltip-text"> Cost of running the server          </span>
+          <span class="tooltip-text">Cost of running the server</span>
         </span>
       </h2>
       <textarea id="costs" name="costs" placeholder="Funded by admin"></textarea>
-      
-      <h2> Community Links</h2>
+
+      <h2>Community Links</h2>
       <div id="channelsList" class="channels-list"></div>
       <div class="channel-input-container">
         <input type="url" id="channelUrl" placeholder="https://discord.gg/example or https://loomio.org/example">
-        <button id="addChannel" class="save-module">Add Links <Channel></button>
+        <button id="addChannel" class="save-module">Add Link</button>
       </div>
+
+      <!-- ── DATA / PRIVACY ── -->
+      <h1>Data / Privacy</h1>
+      <h3>Help people understand what they can expect in terms of data protections and privacy.</h3>
+
+      <h2>Privacy Policy</h2>
+      <input type="url" id="privacyPolicyUrl" name="privacyPolicyUrl" placeholder="https://example.com/privacy-policy">
+
+      <h2>Log Data Retention</h2>
+      <div class="input-with-label">
+        <input type="number" id="logRetention" name="logRetention" min="0" placeholder="90">
+        <span class="input-suffix">days</span>
+      </div>
+
+      <h2>Protection Measures</h2>
+      <textarea id="protectionMeasures" name="protectionMeasures" placeholder="Describe your data protection measures..."></textarea>
+
+      <!-- ── LEGAL COMPLIANCE ── -->
+      <h1>Legal Compliance</h1>
+      <h3>Let people know what laws you need to comply with to keep the community up and running.</h3>
+
+      <h2>Based In</h2>
+      <div class="input-container">
+        <div class="country-search-wrapper">
+          <span class="country-search-icon">🔍</span>
+          <input
+            type="text"
+            id="countryInput"
+            placeholder="Search countries…"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <span class="country-clear-btn" id="countryClearBtn" style="display:none;" title="Clear">✕</span>
+        </div>
+        <ul class="input-dropdown" id="countryDropdown">
+          <li class="country-result-count" id="countryResultCount" style="display:none;"></li>
+          <li class="no-results-msg" id="noResultsMsg" style="display: none;">No countries found</li>
+        </ul>
+        <input type="hidden" id="country" name="country" />
+      </div>
+      <p class="input-hint">This is where your server is located and/or obligated to comply with local laws.</p>
+
+      <style>
+        .country-search-wrapper {
+          position: relative;
+          display: flex;
+          align-items: center;
+        }
+        .country-search-icon {
+          position: absolute;
+          left: 10px;
+          font-size: 14px;
+          pointer-events: none;
+          opacity: 0.5;
+        }
+        #countryInput {
+          padding-left: 32px !important;
+          padding-right: 32px !important;
+        }
+        .country-clear-btn {
+          position: absolute;
+          right: 10px;
+          cursor: pointer;
+          opacity: 0.4;
+          font-size: 13px;
+          line-height: 1;
+          user-select: none;
+        }
+        .country-clear-btn:hover { opacity: 0.8; }
+        .country-result-count {
+          font-size: 11px;
+          opacity: 0.5;
+          padding: 4px 10px 2px;
+          pointer-events: none;
+          border-bottom: 1px solid rgba(255,255,255,0.08);
+          letter-spacing: 0.03em;
+        }
+        .country-match { font-weight: bold; text-decoration: underline; }
+      </style>
+
+      <h2>Relevant Regulations</h2>
+      <div id="regulationsContainer" class="button-container">
+        <button class="regulation-btn" data-regulation="dmca">DMCA</button>
+        <button class="regulation-btn" data-regulation="gdpr">GDPR</button>
+        <button class="regulation-btn" data-regulation="dsa">Digital Services Act (DSA)</button>
+        <button class="add-module-btn" id="addRegulationBtn">+</button>
+      </div>
+      <div class="new-module-container" id="regulationNewModuleContainer" style="display: none;">
+        <input type="text" class="new-module-text" id="regulationNewModuleText" placeholder="Enter new regulation...">
+        <div class="button-group">
+          <button class="save-module" id="regulationSaveBtn">Save</button>
+          <button class="cancel-module" id="regulationCancelBtn">Cancel</button>
+        </div>
+      </div>
+
+      <div id="dmcaInfo" class="regulation-info" style="display: none;">
+        <h2>DMCA Registered Agent Information</h2>
+        <input type="text" id="dmcaAgentName" placeholder="Agent Name">
+        <input type="text" id="dmcaAgentAddress" placeholder="Address">
+        <input type="email" id="dmcaAgentEmail" placeholder="Email">
+        <input type="tel" id="dmcaAgentPhone" placeholder="Phone">
+      </div>
+
     </main>
   </div>
 
   <script type="module" src="navigation.js"></script>
-  
+
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -82,282 +197,465 @@
     const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const hostingBtns = document.querySelectorAll('.hosting-btn');
-    const hostingDescription = document.getElementById('hostingDescription');
-    const hostingDetails = document.getElementById('hostingDetails');
-    const channelUrl = document.getElementById('channelUrl');
-    const addChannelBtn = document.getElementById('addChannel');
-    const channelsList = document.getElementById('channelsList');
-    function normalizeUrl(url) {
-          if (!/^https?:\/\//i.test(url)) {
-            return "https://" + url;
-          }
-          return url;
-        }
+    const defaultRegulations = ['DMCA', 'GDPR', 'Digital Services Act (DSA)'];
 
+    const country_list = [
+      "Afghanistan","Åland Islands","Albania","Algeria","American Samoa","Andorra","Angola",
+      "Anguilla","Antarctica","Antigua and Barbuda","Argentina","Armenia","Aruba","Australia",
+      "Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium",
+      "Belize","Benin","Bermuda","Bhutan","Bolivia (Plurinational State of)",
+      "Bosnia and Herzegovina","Botswana","Bouvet Island","Brazil",
+      "British Indian Ocean Territory","Brunei Darussalam","Bulgaria","Burkina Faso","Burundi",
+      "Cabo Verde","Cambodia","Cameroon","Canada","Caribbean Netherlands","Cayman Islands",
+      "Central African Republic","Chad","Chile","China","Christmas Island",
+      "Cocos (Keeling) Islands","Colombia","Comoros","Congo",
+      "Congo, Democratic Republic of the","Cook Islands","Costa Rica","Croatia","Cuba",
+      "Curaçao","Cyprus","Czech Republic","Côte d'Ivoire","Denmark","Djibouti","Dominica",
+      "Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea",
+      "Estonia","Eswatini (Swaziland)","Ethiopia","Falkland Islands (Malvinas)",
+      "Faroe Islands","Fiji","Finland","France","French Guiana","French Polynesia",
+      "French Southern Territories","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar",
+      "Greece","Greenland","Grenada","Guadeloupe","Guam","Guatemala","Guernsey","Guinea",
+      "Guinea-Bissau","Guyana","Haiti","Heard Island and Mcdonald Islands","Honduras",
+      "Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland",
+      "Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya",
+      "Kiribati","Korea, North","Korea, South","Kosovo","Kuwait","Kyrgyzstan",
+      "Lao People's Democratic Republic","Latvia","Lebanon","Lesotho","Liberia","Libya",
+      "Liechtenstein","Lithuania","Luxembourg","Macao","Macedonia North","Madagascar",
+      "Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Martinique",
+      "Mauritania","Mauritius","Mayotte","Mexico","Micronesia","Moldova","Monaco","Mongolia",
+      "Montenegro","Montserrat","Morocco","Mozambique","Myanmar (Burma)","Namibia","Nauru",
+      "Nepal","Netherlands","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria",
+      "Niue","Norfolk Island","Northern Mariana Islands","Norway","Oman","Pakistan","Palau",
+      "Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines",
+      "Pitcairn Islands","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania",
+      "Russian Federation","Rwanda","Saint Barthelemy","Saint Helena",
+      "Saint Kitts and Nevis","Saint Lucia","Saint Martin","Saint Pierre and Miquelon",
+      "Saint Vincent and the Grenadines","Samoa","San Marino","Sao Tome and Principe",
+      "Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore",
+      "Sint Maarten","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa",
+      "South Georgia and the South Sandwich Islands","South Sudan","Spain","Sri Lanka",
+      "Sudan","Suriname","Svalbard and Jan Mayen","Sweden","Switzerland","Syria","Taiwan",
+      "Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tokelau","Tonga",
+      "Trinidad and Tobago","Tunisia","Turkey (Türkiye)","Turkmenistan",
+      "Turks and Caicos Islands","Tuvalu","U.S. Outlying Islands","Uganda","Ukraine",
+      "United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan",
+      "Vanuatu","Vatican City Holy See","Venezuela","Vietnam","Virgin Islands, British",
+      "Virgin Islands, U.S","Wallis and Futuna","Western Sahara","Yemen","Zambia","Zimbabwe"
+    ];
 
-    function detectPlatform(url) {
-      url = url.toLowerCase();
-      
-      if (url.includes('discord')) return 'Discord';
-      if (url.includes('loomio')) return 'Loomio';
-      if (url.includes('slack')) return 'Slack';
-      if (url.includes('telegram')) return 'Telegram';
-      if (url.includes('matrix')) return 'Matrix';
-      if (url.includes('github')) return 'GitHub';
-      if (url.includes('gitlab')) return 'GitLab';
-      if (url.includes('reddit')) return 'Reddit';
-      if (url.includes('twitter') || url.includes('x.com')) return 'Twitter/X';
-      if (url.includes('facebook')) return 'Facebook';
-      
-      return 'Link';
-    }
-
-    async function loadInfrastructureData() {
-      const communityId = localStorage.getItem("communityId");
-      if (!communityId) {
-        console.error("No community ID found");
-        return;
-      }
-
-      const { data, error } = await supabase
-        .from("communities")
-        .select("infrastructure_data")
-        .eq("id", communityId)
-        .single();
-
-      if (error) {
-        console.error("Error loading infrastructure data:", error);
-        return;
-      }
-
-      if (data && data.infrastructure_data) {
-        populateForm(data.infrastructure_data);
-      }
-    }
-
-    function populateForm(infrastructureData) {
-      if (infrastructureData.protocol) {
-        document.getElementById("protocols").value = infrastructureData.protocol;
-      }
-
-      if (infrastructureData.software) {
-        document.getElementById("software").value = infrastructureData.software;
-      }
-
-      if (infrastructureData.hostingType) {
-        const hostingBtn = document.querySelector(`[data-type="${infrastructureData.hostingType}"]`);
-        if (hostingBtn) {
-          hostingBtn.click();
-        }
-      }
-
-      if (infrastructureData.hostingDetails) {
-        document.getElementById("hostingDetails").value = infrastructureData.hostingDetails;
-      }
-
-      if (infrastructureData.costs) {
-        document.getElementById("costs").value = infrastructureData.costs;
-      }
-
-      if (infrastructureData.channels && Array.isArray(infrastructureData.channels)) {
-        infrastructureData.channels.forEach(channel => {
-          const platform = detectPlatform(channel.url);
-          
-          const channelItem = document.createElement("div");
-          channelItem.className = "channel-item";
-          
-          const channelBtn = document.createElement("a");
-          channelBtn.className = "channel-btn";
-          channelBtn.href = normalizeUrl(channel.url);
-          channelBtn.target = "_blank";
-          channelBtn.textContent = platform.toUpperCase();
-          
-          const removeBtn = document.createElement("button");
-          removeBtn.className = "remove-channel-btn";
-          removeBtn.textContent = "×";
-          removeBtn.addEventListener("click", function() {
-            channelItem.remove();
-            autoSaveData();
-          });
-          
-          channelItem.appendChild(channelBtn);
-          channelItem.appendChild(removeBtn);
-          channelsList.appendChild(channelItem);
-        });
-      }
-    }
-
-    function collectFormData() {
-      const channels = [];
-      document.querySelectorAll(".channel-item").forEach(item => {
-        const link = item.querySelector(".channel-btn");
-        if (link) {
-          channels.push({
-            url: link.href,
-            platform: link.textContent
-          });
-        }
-      });
-
-      const hostingType = document.querySelector(".hosting-btn.selected")?.dataset.type || null;
-
-      return {
-        protocol: document.getElementById("protocols").value,
-        software: document.getElementById("software").value,
-        hostingType: hostingType,
-        hostingDetails: document.getElementById("hostingDetails").value,
-        costs: document.getElementById("costs").value,
-        channels: channels
-      };
-    }
-
-    async function saveInfrastructureData() {
-      const communityId = localStorage.getItem("communityId");
-      if (!communityId) {
-        console.error("No community ID found");
-        return false;
-      }
-
-      const infrastructureData = collectFormData();
-
-      const { error } = await supabase
-        .from("communities")
-        .update({ infrastructure_data: infrastructureData })
-        .eq("id", communityId);
-
-      if (error) {
-        console.error("Error saving infrastructure data:", error);
-        return false;
-      }
-
-      console.log("Infrastructure data saved successfully");
-      return true;
-    }
-
+    // ── Auto-save debounce ──────────────────────────────────────────
     let saveTimeout;
     function autoSaveData() {
       clearTimeout(saveTimeout);
-      saveTimeout = setTimeout(() => {
-        saveInfrastructureData();
-      }, 1000);
+      saveTimeout = setTimeout(saveAllData, 1000);
     }
 
-    hostingBtns.forEach(btn => {
-      btn.addEventListener('click', function() {
-        hostingBtns.forEach(b => b.classList.remove('selected'));
-        this.classList.add('selected');
-        
-        hostingDescription.style.display = 'block';
-        
-        if (this.dataset.type === 'physical') {
-          hostingDetails.placeholder = 'e.g. in admin basement';
-        } else {
-          hostingDetails.placeholder = 'e.g., AWS, Google Cloud, Co-op Cloud';
+    // ── Collect all form data ───────────────────────────────────────
+    function collectAllData() {
+      // Infrastructure
+      const channels = [];
+      document.querySelectorAll(".channel-item").forEach(item => {
+        const link = item.querySelector(".channel-btn");
+        if (link) channels.push({ url: link.href, platform: link.textContent });
+      });
+
+      const infrastructure_data = {
+        protocol:       document.getElementById("protocols").value,
+        software:       document.getElementById("software").value,
+        softwareVersion: document.getElementById("softwareVersion").value,
+        hostingType:    document.querySelector(".hosting-btn.selected")?.dataset.type || null,
+        hostingDetails: document.getElementById("hostingDetails").value,
+        costs:          document.getElementById("costs").value,
+        channels
+      };
+
+      // Data/Privacy
+      const dataprivacy_data = {
+        privacyPolicyUrl:   document.getElementById("privacyPolicyUrl").value,
+        logRetention:       document.getElementById("logRetention").value,
+        protectionMeasures: document.getElementById("protectionMeasures").value
+      };
+
+      // Legal Compliance
+      const selectedRegulations = [...document.querySelectorAll('.regulation-btn.selected')].map(b => b.textContent);
+      const customRegulations   = [...document.querySelectorAll('.regulation-btn')]
+        .map(b => b.textContent).filter(t => !defaultRegulations.includes(t) && t !== '+');
+
+      const legalcompliance_data = {
+        country: document.getElementById("country").value,
+        selectedRegulations,
+        customRegulations,
+        dmcaAgent: {
+          name:    document.getElementById("dmcaAgentName").value,
+          address: document.getElementById("dmcaAgentAddress").value,
+          email:   document.getElementById("dmcaAgentEmail").value,
+          phone:   document.getElementById("dmcaAgentPhone").value,
         }
-        
-        hostingDetails.value = '';
-        autoSaveData();
-      });
-    });
+      };
 
-        addChannelBtn.addEventListener('click', function() {
-      let url = channelUrl.value.trim();
-      if (!url) return;
+      return { infrastructure_data, dataprivacy_data, legalcompliance_data };
+    }
 
+    // ── Save all data in one update ────────────────────────────────
+    async function saveAllData() {
+      const communityId = localStorage.getItem("communityId");
+      if (!communityId) { console.error("No community ID found"); return false; }
+
+      const payload = collectAllData();
+      const { error } = await supabase.from("communities").update(payload).eq("id", communityId);
+      if (error) { console.error("Error saving data:", error); return false; }
+      console.log("All data saved successfully");
+      return true;
+    }
+
+    // ── Load & populate ────────────────────────────────────────────
+    async function loadAllData() {
+      const communityId = localStorage.getItem("communityId");
+      if (!communityId) { console.error("No community ID found"); return; }
+
+      const { data, error } = await supabase
+        .from("communities")
+        .select("infrastructure_data, dataprivacy_data, legalcompliance_data")
+        .eq("id", communityId)
+        .single();
+
+      if (error) { console.error("Error loading data:", error); return; }
+
+      if (data.infrastructure_data)    populateInfrastructure(data.infrastructure_data);
+      if (data.dataprivacy_data)       populateDataPrivacy(data.dataprivacy_data);
+      if (data.legalcompliance_data)   populateLegal(data.legalcompliance_data);
+    }
+
+    function populateInfrastructure(d) {
+      if (d.protocol)  document.getElementById("protocols").value = d.protocol;
+      if (d.software) {
+        document.getElementById("software").value = d.software;
+        document.getElementById("softwareVersionWrapper").style.display = "block";
+      }
+      if (d.softwareVersion) document.getElementById("softwareVersion").value = d.softwareVersion;
+
+      if (d.hostingType) {
+        const btn = document.querySelector(`[data-type="${d.hostingType}"]`);
+        if (btn) btn.click();
+      }
+      if (d.hostingDetails) document.getElementById("hostingDetails").value = d.hostingDetails;
+      if (d.costs)          document.getElementById("costs").value           = d.costs;
+
+      if (d.channels && Array.isArray(d.channels)) {
+        d.channels.forEach(ch => addChannelItem(ch.url, ch.platform));
+      }
+    }
+
+    function populateDataPrivacy(d) {
+      if (d.privacyPolicyUrl)   document.getElementById("privacyPolicyUrl").value   = d.privacyPolicyUrl;
+      if (d.logRetention)       document.getElementById("logRetention").value        = d.logRetention;
+      if (d.protectionMeasures) document.getElementById("protectionMeasures").value  = d.protectionMeasures;
+    }
+
+    function populateLegal(d) {
+      if (d.country) {
+        document.getElementById("countryInput").value = d.country;
+        document.getElementById("country").value      = d.country;
+        const clearBtn = document.getElementById("countryClearBtn");
+        if (clearBtn) clearBtn.style.display = 'block';
+      }
+
+      if (d.selectedRegulations) {
+        d.selectedRegulations.forEach(reg => {
+          const btn = [...document.querySelectorAll('.regulation-btn')].find(b => b.textContent === reg);
+          if (btn) {
+            btn.classList.add('selected');
+            if (btn.dataset.regulation === 'dmca') document.getElementById('dmcaInfo').style.display = 'block';
+          }
+        });
+      }
+
+      if (d.customRegulations) {
+        const container = document.getElementById('regulationsContainer');
+        const addBtn    = document.getElementById('addRegulationBtn');
+        d.customRegulations.forEach(reg => {
+          const btn = makeRegulationBtn(reg, d.selectedRegulations?.includes(reg));
+          container.insertBefore(btn, addBtn);
+        });
+      }
+
+      if (d.dmcaAgent) {
+        if (d.dmcaAgent.name)    document.getElementById("dmcaAgentName").value    = d.dmcaAgent.name;
+        if (d.dmcaAgent.address) document.getElementById("dmcaAgentAddress").value = d.dmcaAgent.address;
+        if (d.dmcaAgent.email)   document.getElementById("dmcaAgentEmail").value   = d.dmcaAgent.email;
+        if (d.dmcaAgent.phone)   document.getElementById("dmcaAgentPhone").value   = d.dmcaAgent.phone;
+      }
+    }
+
+    // ── Helpers ────────────────────────────────────────────────────
+    function normalizeUrl(url) {
+      return /^https?:\/\//i.test(url) ? url : "https://" + url;
+    }
+
+    function detectPlatform(url) {
+      url = url.toLowerCase();
+      if (url.includes('discord'))                   return 'Discord';
+      if (url.includes('loomio'))                    return 'Loomio';
+      if (url.includes('slack'))                     return 'Slack';
+      if (url.includes('telegram'))                  return 'Telegram';
+      if (url.includes('matrix'))                    return 'Matrix';
+      if (url.includes('github'))                    return 'GitHub';
+      if (url.includes('gitlab'))                    return 'GitLab';
+      if (url.includes('reddit'))                    return 'Reddit';
+      if (url.includes('twitter') || url.includes('x.com')) return 'Twitter/X';
+      if (url.includes('facebook'))                  return 'Facebook';
+      return 'Link';
+    }
+
+    function addChannelItem(url, platformLabel) {
       url = normalizeUrl(url);
-      const platform = detectPlatform(url);
+      const label = platformLabel || detectPlatform(url);
+      const channelsList = document.getElementById("channelsList");
 
-      const channelItem = document.createElement('div');
-      channelItem.className = 'channel-item';
+      const channelItem = document.createElement("div");
+      channelItem.className = "channel-item";
 
-      const channelBtn = document.createElement('a');
-      channelBtn.className = 'channel-btn';
+      const channelBtn = document.createElement("a");
+      channelBtn.className = "channel-btn";
       channelBtn.href = url;
-      channelBtn.target = '_blank';
-      channelBtn.rel = 'noopener noreferrer';
-      channelBtn.textContent = platform.toUpperCase();
+      channelBtn.target = "_blank";
+      channelBtn.rel = "noopener noreferrer";
+      channelBtn.textContent = label.toUpperCase();
 
-      const removeBtn = document.createElement('button');
-      removeBtn.className = 'remove-channel-btn';
-      removeBtn.textContent = '×';
-      removeBtn.addEventListener('click', function() {
-        channelItem.remove();
-        autoSaveData();
-      });
+      const removeBtn = document.createElement("button");
+      removeBtn.className = "remove-channel-btn";
+      removeBtn.textContent = "×";
+      removeBtn.addEventListener("click", () => { channelItem.remove(); autoSaveData(); });
 
       channelItem.appendChild(channelBtn);
       channelItem.appendChild(removeBtn);
       channelsList.appendChild(channelItem);
+    }
 
-      channelUrl.value = '';
-      autoSaveData();
-    });
+    function makeRegulationBtn(text, isSelected = false) {
+      const btn = document.createElement('button');
+      btn.className = 'regulation-btn' + (isSelected ? ' selected' : '');
+      btn.textContent = text;
+      btn.addEventListener('click', () => { btn.classList.toggle('selected'); autoSaveData(); });
+      return btn;
+    }
 
-    channelUrl.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        addChannelBtn.click();
-      }
-    });
+    // ── Country dropdown ───────────────────────────────────────────
+    function initCountryDropdown() {
+      const inputField  = document.getElementById('countryInput');
+      const dropdown    = document.getElementById('countryDropdown');
+      const hiddenField = document.getElementById('country');
+      const noResults   = document.getElementById('noResultsMsg');
+      const resultCount = document.getElementById('countryResultCount');
+      const clearBtn    = document.getElementById('countryClearBtn');
 
-    const softwareOptions = [
-      "Mastodon", "Pixelfed", "Lemmy", "PeerTube", "WordPress", "Misskey",
-      "Pleroma", "WriteFreely", "Fedibird", "NodeBB", "Activity Relay",
-      "Micro.blog", "Akkoma", "Firefish", "BookWyrm", "Sharkey",
-      "Hometown", "Friendica", "Loops", "PieFed", "NeoDB", "Hubzilla",
-      "Forgejo", "Mbin", "Iceshrimp", "Wafrn", "Funkwhale", "KmyBlue",
-      "Owncast", "FoundKey", "Gitea", "GNU social", "Mitra", "CherryPick",
-      "Meisskey", "Vernissage", "Smithereen", "Hollo", "Ghost", "Snac",
-      "GoToSocial", "Postmarks", "Betula", "Microblog.pub", "Manyfold",
-      "Hackers' Pub", "Ktistec", "Takahē", "Stegodon", "Mobilizon",
-      "Frequency", "Gancio", "Drupal", "Plume", "Flipboard", "Loforo",
-      "Brutalinks", "Zap", "Ecko", "Irwin", "Honk", "Lotide", "Emissary",
-      "Bonfire", "Bridgy Fed"
-    ];
-
-    const softwareInput = document.getElementById("software");
-    const softwareDropdown = document.getElementById("software-dropdown");
-
-    softwareInput.addEventListener("input", () => {
-      const value = softwareInput.value.toLowerCase();
-      softwareDropdown.innerHTML = "";
-
-      if (!value) {
-        softwareDropdown.style.display = "none";
-        return;
-      }
-
-      const filtered = softwareOptions.filter(opt =>
-        opt.toLowerCase().includes(value)
-      );
-
-      filtered.forEach(opt => {
-        const li = document.createElement("li");
-        li.textContent = opt;
-        li.addEventListener("click", () => {
-          softwareInput.value = opt;
-          softwareDropdown.style.display = "none";
+      // Build list items (hidden by default, shown on focus/input)
+      country_list.forEach(country => {
+        const li = document.createElement('li');
+        li.dataset.country = country;
+        li.addEventListener('click', () => {
+          inputField.value  = country;
+          hiddenField.value = country;
+          clearBtn.style.display = 'block';
+          dropdown.style.display = 'none';
           autoSaveData();
         });
-        softwareDropdown.appendChild(li);
+        dropdown.insertBefore(li, noResults);
       });
 
-      softwareDropdown.style.display = filtered.length ? "block" : "none";
-    });
-
-    document.addEventListener("click", (e) => {
-      if (!e.target.closest(".software-container")) {
-        softwareDropdown.style.display = "none";
+      function highlight(text, term) {
+        if (!term) return document.createTextNode(text);
+        const idx = text.toLowerCase().indexOf(term.toLowerCase());
+        if (idx === -1) return document.createTextNode(text);
+        const frag = document.createDocumentFragment();
+        frag.appendChild(document.createTextNode(text.slice(0, idx)));
+        const mark = document.createElement('span');
+        mark.className = 'country-match';
+        mark.textContent = text.slice(idx, idx + term.length);
+        frag.appendChild(mark);
+        frag.appendChild(document.createTextNode(text.slice(idx + term.length)));
+        return frag;
       }
-    });
 
+      function filter(term) {
+        const t = term.trim();
+        let visible = 0;
+        dropdown.querySelectorAll('li[data-country]').forEach(li => {
+          const country = li.dataset.country;
+          const show = country.toLowerCase().includes(t.toLowerCase());
+          li.style.display = show ? '' : 'none';
+          if (show) {
+            li.textContent = '';
+            li.appendChild(highlight(country, t));
+            visible++;
+          }
+        });
+        noResults.style.display = visible === 0 ? '' : 'none';
+        if (t) {
+          resultCount.textContent = `${visible} result${visible !== 1 ? 's' : ''}`;
+          resultCount.style.display = '';
+        } else {
+          resultCount.style.display = 'none';
+        }
+      }
+
+      clearBtn.addEventListener('click', () => {
+        inputField.value  = '';
+        hiddenField.value = '';
+        clearBtn.style.display = 'none';
+        filter('');
+        inputField.focus();
+        autoSaveData();
+      });
+
+      inputField.addEventListener('focus', () => {
+        dropdown.style.display = 'block';
+        filter(inputField.value);
+      });
+      inputField.addEventListener('input', () => {
+        dropdown.style.display = 'block';
+        hiddenField.value = inputField.value;
+        clearBtn.style.display = inputField.value ? 'block' : 'none';
+        filter(inputField.value);
+      });
+      inputField.addEventListener('blur', autoSaveData);
+      document.addEventListener('click', e => {
+        if (!inputField.contains(e.target) && !dropdown.contains(e.target) && !clearBtn.contains(e.target)) {
+          dropdown.style.display = 'none';
+        }
+      });
+    }
+
+    // ── Software dropdown ──────────────────────────────────────────
+    function initSoftwareDropdown() {
+      const softwareOptions = [
+        "Mastodon","Pixelfed","Lemmy","PeerTube","WordPress","Misskey","Pleroma","WriteFreely",
+        "Fedibird","NodeBB","Activity Relay","Micro.blog","Akkoma","Firefish","BookWyrm",
+        "Sharkey","Hometown","Friendica","Loops","PieFed","NeoDB","Hubzilla","Forgejo","Mbin",
+        "Iceshrimp","Wafrn","Funkwhale","KmyBlue","Owncast","FoundKey","Gitea","GNU social",
+        "Mitra","CherryPick","Meisskey","Vernissage","Smithereen","Hollo","Ghost","Snac",
+        "GoToSocial","Postmarks","Betula","Microblog.pub","Manyfold","Hackers' Pub","Ktistec",
+        "Takahē","Stegodon","Mobilizon","Frequency","Gancio","Drupal","Plume","Flipboard",
+        "Loforo","Brutalinks","Zap","Ecko","Irwin","Honk","Lotide","Emissary","Bonfire",
+        "Bridgy Fed"
+      ];
+
+      const softwareInput    = document.getElementById("software");
+      const softwareDropdown = document.getElementById("software-dropdown");
+
+      softwareInput.addEventListener("input", () => {
+        const value = softwareInput.value.toLowerCase();
+        softwareDropdown.innerHTML = "";
+        if (!value) { softwareDropdown.style.display = "none"; return; }
+
+        const filtered = softwareOptions.filter(opt => opt.toLowerCase().includes(value));
+        filtered.forEach(opt => {
+          const li = document.createElement("li");
+          li.textContent = opt;
+          li.addEventListener("click", () => {
+            softwareInput.value = opt;
+            softwareDropdown.style.display = "none";
+            document.getElementById("softwareVersionWrapper").style.display = "block";
+            document.getElementById("softwareVersion").focus();
+            autoSaveData();
+          });
+          softwareDropdown.appendChild(li);
+        });
+        softwareDropdown.style.display = filtered.length ? "block" : "none";
+      });
+
+      document.addEventListener("click", e => {
+        if (!e.target.closest(".software-container")) softwareDropdown.style.display = "none";
+      });
+    }
+
+    // ── Boot ───────────────────────────────────────────────────────
     document.addEventListener("DOMContentLoaded", () => {
-      loadInfrastructureData();
+      loadAllData();
+      initCountryDropdown();
+      initSoftwareDropdown();
 
+      // Hosting buttons
+      const hostingBtns        = document.querySelectorAll('.hosting-btn');
+      const hostingDescription = document.getElementById('hostingDescription');
+      const hostingDetails     = document.getElementById('hostingDetails');
+
+      hostingBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          hostingBtns.forEach(b => b.classList.remove('selected'));
+          this.classList.add('selected');
+          hostingDescription.style.display = 'block';
+          hostingDetails.placeholder = this.dataset.type === 'physical'
+            ? 'e.g. in admin basement'
+            : 'e.g., AWS, Google Cloud, Co-op Cloud';
+          autoSaveData();
+        });
+      });
+
+      // Community links
+      const channelUrlInput = document.getElementById('channelUrl');
+      const addChannelBtn   = document.getElementById('addChannel');
+
+      addChannelBtn.addEventListener('click', () => {
+        const url = channelUrlInput.value.trim();
+        if (!url) return;
+        addChannelItem(url);
+        channelUrlInput.value = '';
+        autoSaveData();
+      });
+      channelUrlInput.addEventListener('keypress', e => { if (e.key === 'Enter') addChannelBtn.click(); });
+
+      // Infrastructure text inputs
       document.getElementById("protocols").addEventListener("input", autoSaveData);
-      document.getElementById("software").addEventListener("input", autoSaveData);
+      document.getElementById("software").addEventListener("input", () => {
+        const val = document.getElementById("software").value.trim();
+        document.getElementById("softwareVersionWrapper").style.display = val ? "block" : "none";
+        autoSaveData();
+      });
+      document.getElementById("softwareVersion").addEventListener("input", autoSaveData);
       document.getElementById("hostingDetails").addEventListener("input", autoSaveData);
       document.getElementById("costs").addEventListener("input", autoSaveData);
+
+      // Data/Privacy inputs
+      document.getElementById("privacyPolicyUrl").addEventListener("input", autoSaveData);
+      document.getElementById("logRetention").addEventListener("input", autoSaveData);
+      document.getElementById("protectionMeasures").addEventListener("input", autoSaveData);
+
+      // Regulations toggle buttons
+      document.querySelectorAll('.regulation-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          btn.classList.toggle('selected');
+          if (btn.dataset.regulation === 'dmca') {
+            document.getElementById('dmcaInfo').style.display = btn.classList.contains('selected') ? 'block' : 'none';
+          }
+          autoSaveData();
+        });
+      });
+
+      // Regulations add button
+      const addRegBtn    = document.getElementById('addRegulationBtn');
+      const regNewCont   = document.getElementById('regulationNewModuleContainer');
+      const regTextInput = document.getElementById('regulationNewModuleText');
+      const regSaveBtn   = document.getElementById('regulationSaveBtn');
+      const regCancelBtn = document.getElementById('regulationCancelBtn');
+
+      addRegBtn.addEventListener('click', () => { regNewCont.style.display = 'block'; regTextInput.focus(); });
+      regSaveBtn.addEventListener('click', () => {
+        const val = regTextInput.value.trim();
+        if (!val) return;
+        document.getElementById('regulationsContainer').insertBefore(makeRegulationBtn(val), addRegBtn);
+        regNewCont.style.display = 'none';
+        regTextInput.value = '';
+        autoSaveData();
+      });
+      regCancelBtn.addEventListener('click', () => { regNewCont.style.display = 'none'; regTextInput.value = ''; });
+      regTextInput.addEventListener('keypress', e => { if (e.key === 'Enter') regSaveBtn.click(); });
+
+      // DMCA agent fields
+      ['dmcaAgentName','dmcaAgentAddress','dmcaAgentEmail','dmcaAgentPhone'].forEach(id => {
+        document.getElementById(id).addEventListener('input', autoSaveData);
+      });
     });
   </script>
 </body>

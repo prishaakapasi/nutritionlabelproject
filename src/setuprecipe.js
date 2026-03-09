@@ -25,9 +25,7 @@ const moduleOrder = [
   "Membership",
   "Rules",
   "Federation",
-  "Data/Privacy",
   "Community Processes",
-  "Legal Compliance"
 ];
 
 const modulePages = {
@@ -36,12 +34,9 @@ const modulePages = {
   "Membership": "membership.html",
   "Rules": "rules.html",
   "Federation": "federation.html",
-  "Data/Privacy": "dataprivacy.html",
-  "Legal Compliance": "legalcompliance.html",
   "Community Processes": "communityprocesses.html"
 };
 
-// Save community name with debouncing
 let saveNameTimeout;
 communityNameInput.addEventListener("input", function () {
   clearTimeout(saveNameTimeout);
