@@ -31,7 +31,6 @@
 
     <main>
 
-      <!-- ── INFRASTRUCTURE ── -->
       <h1>Infrastructure</h1>
       <h3>Give people some insight into the technical infrastructure that your community sits on.</h3>
       
@@ -83,7 +82,6 @@
         <button id="addChannel" class="save-module">Add Link</button>
       </div>
 
-      <!-- ── DATA / PRIVACY ── -->
       <h1>Data / Privacy</h1>
       <h3>Help people understand what they can expect in terms of data protections and privacy.</h3>
 
@@ -99,7 +97,6 @@
       <h2>Protection Measures</h2>
       <textarea id="protectionMeasures" name="protectionMeasures" placeholder="Describe your data protection measures..."></textarea>
 
-      <!-- ── LEGAL COMPLIANCE ── -->
       <h1>Legal Compliance</h1>
       <h3>Let people know what laws you need to comply with to keep the community up and running.</h3>
 
@@ -244,16 +241,13 @@
       "Virgin Islands, U.S","Wallis and Futuna","Western Sahara","Yemen","Zambia","Zimbabwe"
     ];
 
-    // ── Auto-save debounce ──────────────────────────────────────────
     let saveTimeout;
     function autoSaveData() {
       clearTimeout(saveTimeout);
       saveTimeout = setTimeout(saveAllData, 1000);
     }
 
-    // ── Collect all form data ───────────────────────────────────────
     function collectAllData() {
-      // Infrastructure
       const channels = [];
       document.querySelectorAll(".channel-item").forEach(item => {
         const link = item.querySelector(".channel-btn");
@@ -270,14 +264,12 @@
         channels
       };
 
-      // Data/Privacy
       const dataprivacy_data = {
         privacyPolicyUrl:   document.getElementById("privacyPolicyUrl").value,
         logRetention:       document.getElementById("logRetention").value,
         protectionMeasures: document.getElementById("protectionMeasures").value
       };
 
-      // Legal Compliance
       const selectedRegulations = [...document.querySelectorAll('.regulation-btn.selected')].map(b => b.textContent);
       const customRegulations   = [...document.querySelectorAll('.regulation-btn')]
         .map(b => b.textContent).filter(t => !defaultRegulations.includes(t) && t !== '+');
@@ -297,7 +289,6 @@
       return { infrastructure_data, dataprivacy_data, legalcompliance_data };
     }
 
-    // ── Save all data in one update ────────────────────────────────
     async function saveAllData() {
       const communityId = localStorage.getItem("communityId");
       if (!communityId) { console.error("No community ID found"); return false; }
@@ -309,7 +300,6 @@
       return true;
     }
 
-    // ── Load & populate ────────────────────────────────────────────
     async function loadAllData() {
       const communityId = localStorage.getItem("communityId");
       if (!communityId) { console.error("No community ID found"); return; }
@@ -593,7 +583,6 @@
         });
       });
 
-      // Community links
       const channelUrlInput = document.getElementById('channelUrl');
       const addChannelBtn   = document.getElementById('addChannel');
 
@@ -606,7 +595,6 @@
       });
       channelUrlInput.addEventListener('keypress', e => { if (e.key === 'Enter') addChannelBtn.click(); });
 
-      // Infrastructure text inputs
       document.getElementById("protocols").addEventListener("input", autoSaveData);
       document.getElementById("software").addEventListener("input", () => {
         const val = document.getElementById("software").value.trim();
@@ -652,7 +640,6 @@
       regCancelBtn.addEventListener('click', () => { regNewCont.style.display = 'none'; regTextInput.value = ''; });
       regTextInput.addEventListener('keypress', e => { if (e.key === 'Enter') regSaveBtn.click(); });
 
-      // DMCA agent fields
       ['dmcaAgentName','dmcaAgentAddress','dmcaAgentEmail','dmcaAgentPhone'].forEach(id => {
         document.getElementById(id).addEventListener('input', autoSaveData);
       });
