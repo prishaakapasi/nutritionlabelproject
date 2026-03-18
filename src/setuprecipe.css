@@ -80,8 +80,6 @@ h4 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
   font-family: "IBM Plex Sans", sans-serif;
   font-size: 13px;
   font-weight: normal;
@@ -89,7 +87,6 @@ h4 {
   color: #bf6d02;
   vertical-align: top;
   margin-top: 8px;
-  margin-left: 8px;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
