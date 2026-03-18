@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
-  <title>Community</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
+  <title>Create Page</title>
   <link rel="stylesheet" href="setuprecipe.css" />
 </head>
 
@@ -23,14 +23,46 @@
 
   <main>
     <div class="items">
-      <h1> Community Name </h1>
-        <input type="text" id="communityNameInput"
-      />
-      <h1>DESCRIBE YOUR COMMUNITY</h1>
-      <input type="text" id="communityTypeInput"
-      />
 
-      <h1>SELECT CATEGORY MODULES</h1>
+      <h1>COMMUNITY NAME</h1>
+      <input type="text" id="communityNameInput" placeholder="e.g. Mastodon Social" />
+
+      <h1>COMMUNITY LINK</h1>
+      <input type="text" id="communityLinkInput" placeholder="e.g. https://mastodon.social" />
+
+      <h1>COMMUNITY TYPE</h1>
+      <select id="communityTypeInput">
+        <option value="" disabled selected>Select a type…</option>
+        <option value="fediverse">Fediverse server</option>
+        <option value="chat">Chat group (e.g., Telegram, WhatsApp)</option>
+        <option value="wiki">Wiki (e.g., Fandom)</option>
+        <option value="social">Social network (e.g., Facebook Groups, LinkedIn)</option>
+        <option value="forum">Discussion forum (e.g., Discourse, Reddit)</option>
+        <option value="citizen_science">Citizen science</option>
+        <option value="other">Other</option>
+      </select>
+
+      <h1 class="label">COMMUNITY SIZE 
+        <span class="info-icon"> ⓘ <span class="infoicontext"> Any broadly shared guidelines your community adheres to </span> </span>
+      </h1>
+      <div id="sizeContainer">
+        <button type="button" class="size-btn" data-size="0-10">0–10</button>
+        <button type="button" class="size-btn" data-size="11-100">11–100</button>
+        <button type="button" class="size-btn" data-size="101-500">101–500</button>
+        <button type="button" class="size-btn" data-size="501-1000">501–1,000</button>
+        <button type="button" class="size-btn" data-size="1001-10000">1,000–10,000</button>
+        <button type="button" class="size-btn" data-size="10000+">10k+</button>
+      </div>
+
+      <h1 class="label">COMMUNITY KEYWORDS 
+        <span class="info-icon"> ⓘ <span class="infoicontext"> "Add keywords that help describe your community; press Tab to add another keyword" </span> </span>
+      </h1>
+      <div id="keywordsWrapper">
+        <div id="keywordTags"></div>
+        <input type="text" id="keywordInput" placeholder="Type a keyword and press Tab or Enter…" />
+      </div>
+
+      <h1>SELECT RELEVANT MODULES</h1>
 
       <div id="modulesContainer">
         <button type="button" class="module-btn">Admin</button>
@@ -43,11 +75,7 @@
       </div>
 
       <div id="newModuleContainer" style="display:none; margin-top:10px;">
-        <input
-          type="text"
-          id="newModuleText"
-          placeholder="Enter new module name"
-        />
+        <input type="text" id="newModuleText" placeholder="Enter new module name" />
         <button id="saveModule">Add Module</button>
         <button id="cancelModule">Cancel</button>
       </div>

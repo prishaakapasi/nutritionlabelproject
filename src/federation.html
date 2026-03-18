@@ -34,7 +34,6 @@
       <div id="federationContainer" class="button-container">
         <button class="module-btn">Whitelist Mode</button>
         <button class="module-btn">Blocklist Mode</button>
-        <button class="module-btn">Anti-meta Fedipact</button>
         <button class="add-module-btn">+</button>
       </div>
       <div class="new-module-container" style="display: none;">
@@ -80,7 +79,7 @@
     const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const defaultFederation = ['Whitelist Mode', 'Blocklist Mode', 'Anti-meta Fedipact'];
+    const defaultFederation = ['Whitelist Mode', 'Blocklist Mode'];
     const defaultBridging = ['AT Protocol', 'Nostr', 'Farcaster'];
     const defaultBlocklists = ['Garden Fence', 'CARIAD', 'IFTAS-DNI', 'Seridy Tier-0', 'FediNuke'];
 
