@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
   <title>Create Page</title>
   <link rel="stylesheet" href="setuprecipe.css" />
+
 </head>
 
 <body>
@@ -22,16 +23,21 @@
   </nav>
 
   <main>
-    <div class="items">
+  <div class="items">
 
-      <h1>COMMUNITY NAME</h1>
-      <input type="text" id="communityNameInput" placeholder="e.g. Mastodon Social" />
+      <div class="page-header">
+        <h1 class="page-title">CREATE A COMMUNITY RECIPE</h1>
+        <p class="requiredtext"><span class="required-star" aria-label="required">✱</span> Indicates required question (Most questions are not required)</p>
+      </div>
 
-      <h1>COMMUNITY LINK</h1>
+      <h1>COMMUNITY NAME <span class="required-star" aria-label="required">✱</span></h1>
+      <input type="text" id="communityNameInput" placeholder="e.g. Mastodon Social" required />
+
+      <h1>COMMUNITY LINK </h1>
       <input type="text" id="communityLinkInput" placeholder="e.g. https://mastodon.social" />
 
-      <h1>COMMUNITY TYPE</h1>
-      <select id="communityTypeInput">
+      <h1>COMMUNITY TYPE <span class="required-star" aria-label="required">✱</span></h1>
+      <select id="communityTypeInput" required>
         <option value="" disabled selected>Select a type…</option>
         <option value="fediverse">Fediverse server</option>
         <option value="chat">Chat group (e.g., Telegram, WhatsApp)</option>
@@ -62,8 +68,9 @@
         <input type="text" id="keywordInput" placeholder="Type a keyword and press Tab or Enter…" />
       </div>
 
-      <h1>SELECT RELEVANT MODULES</h1>
-
+      <h1 class="label">Select Category Modules
+        <span class="info-icon"> ⓘ <span class="infoicontext"> What governance decisions are relevant to your community" </span> </span>
+      </h1>
       <div id="modulesContainer">
         <button type="button" class="module-btn">Admin</button>
         <button type="button" class="module-btn">Rules</button>

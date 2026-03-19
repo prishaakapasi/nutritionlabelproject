@@ -504,3 +504,18 @@ span:not(.info-icon):not(.keyword-tag):not(.infoicontext) {
   color: #FF8F00;
   font-weight: bold;
 }
+.required-star {
+  color: #e53e3e;
+  font-size: 0.35em;
+  vertical-align: super;
+  margin-left: 3px;
+  font-weight: 300;
+  opacity: 0.9;
+  line-height: 1;
+}
+.page-title{
+  font-size:70px;
+}
+.requiredtext{
+  margin: -2%;
+}
