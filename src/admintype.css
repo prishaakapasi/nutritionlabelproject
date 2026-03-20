@@ -475,3 +475,59 @@ h1{
     padding: 10px var(--spacing-sm);
   }
 }
+.role-row {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+  width: 100%;
+  max-width: 900px;
+  margin-bottom: var(--spacing-sm);
+}
+
+.role-input {
+  flex: 1;
+  padding: 12px var(--spacing-sm);
+  background-color: var(--color-bg);
+  border: 2px solid var(--color-border);
+  color: var(--color-text);
+  font-family: var(--font-primary);
+  font-size: 16px;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  border-radius: 2px;
+}
+
+.role-input::placeholder {
+  color: var(--color-input-placeholder);
+  opacity: 0.7;
+}
+
+.role-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(255, 143, 0, 0.1);
+}
+
+.role-input:hover:not(:focus) {
+  border-color: var(--color-accent);
+}
+
+.role-fixed {
+  color: var(--color-input-placeholder);
+  cursor: default;
+  pointer-events: none;
+  border-style: dashed;
+}
+
+.role-fixed:hover {
+  border-color: var(--color-border);
+}
+
+@media (max-width: 600px){
+    .role-row {
+    flex-wrap: wrap;
+  }
+
+  .role-input {
+    min-width: 0;
+  }
+}

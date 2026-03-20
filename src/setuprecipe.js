@@ -4,7 +4,6 @@ const supabaseUrl = "https://sewbsumjjlpsbadgwgfk.supabase.co";
 const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// ── DOM refs ──────────────────────────────────────────────────────────────────
 const communityNameInput   = document.getElementById("communityNameInput");
 const communityLinkInput   = document.getElementById("communityLinkInput");
 const communityTypeInput   = document.getElementById("communityTypeInput");
@@ -19,7 +18,6 @@ const saveModuleBtn        = document.getElementById("saveModule");
 const cancelModuleBtn      = document.getElementById("cancelModule");
 const modulesContainer     = document.getElementById("modulesContainer");
 
-// ── State ─────────────────────────────────────────────────────────────────────
 let communityId     = localStorage.getItem("communityId") || null;
 let selectedModules = new Set();
 let selectedSize    = null;
@@ -27,7 +25,6 @@ let keywords        = [];
 
 console.log("Initial communityId:", communityId);
 
-// ── Constants ─────────────────────────────────────────────────────────────────
 const moduleOrder = [
   "Infrastructure",
   "Admin",
@@ -89,7 +86,6 @@ communityTypeInput.addEventListener("change", async function () {
   }
 });
 
-// ── Community size ────────────────────────────────────────────────────────────
 sizeContainer.addEventListener("click", async function (e) {
   const btn = e.target.closest(".size-btn");
   if (!btn) return;
@@ -100,7 +96,6 @@ sizeContainer.addEventListener("click", async function (e) {
   await saveCommunity({ size: selectedSize });
 });
 
-// ── Keywords (tag input) ──────────────────────────────────────────────────────
 function renderKeywords() {
   keywordTagsEl.innerHTML = "";
   keywords.forEach((kw, i) => {
@@ -135,7 +130,6 @@ keywordInput.addEventListener("keydown", async function (e) {
   }
 });
 
-// ── Supabase helpers ──────────────────────────────────────────────────────────
 async function saveCommunity(updates) {
   console.log("Saving community with updates:", updates, "and ID:", communityId);
 
@@ -164,7 +158,6 @@ async function saveCommunity(updates) {
   }
 }
 
-// ── Module buttons ────────────────────────────────────────────────────────────
 function refreshModuleButtons() {
   document.querySelectorAll(".module-btn").forEach(btn => {
     if (btn.id === "addModuleBtn") return;
@@ -241,7 +234,6 @@ async function saveSelectedModules() {
   else console.log("Modules saved successfully:", data);
 }
 
-// ── Load existing community data ──────────────────────────────────────────────
 async function loadCommunityData() {
   if (!communityId) { console.log("No existing communityId found"); return; }
   console.log("Loading data for communityId:", communityId);
@@ -281,7 +273,6 @@ async function loadCommunityData() {
   }
 }
 
-// ── Next button ───────────────────────────────────────────────────────────────
 function handleNextButton() {
   const nextButton = document.querySelector(".btn");
   if (!nextButton) { console.error("Next button not found"); return; }
@@ -326,7 +317,6 @@ function handleNextButton() {
   });
 }
 
-// ── Init ──────────────────────────────────────────────────────────────────────
 window.addEventListener("DOMContentLoaded", function () {
   loadCommunityData();
   handleNextButton();

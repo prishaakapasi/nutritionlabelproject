@@ -5,8 +5,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="legalcompliance.css" />
     <link rel="stylesheet" href="dataprivacy.css" />
+    <link rel="stylesheet" href="legalcompliance.css" />
     <link rel="stylesheet" href="mastersheet.css" /> 
     <link rel="stylesheet" href="infrastructure.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -25,36 +25,48 @@
   
   <div class="content-wrapper">
     <aside class="sidebar">
-      <nav class="sidebar-nav" id="dynamicNav">
-      </nav>
+      <nav class="sidebar-nav" id="dynamicNav"></nav>
     </aside>
 
     <main>
 
       <h1>Infrastructure</h1>
       <h3>Give people some insight into the technical infrastructure that your community sits on.</h3>
+
       <h2>Platform Software</h2>
-       <div class="software-hint">Choose one or type your own software</div>
+      <div class="software-hint">Choose one or type your own software</div>
       <div class="software-container">
-        <input
-          type="text"
-          id="software"
-          placeholder="Start typing to search or type your own"
-          autocomplete="off"
-        />
+        <input type="text" id="software" placeholder="Start typing to search or type your own" autocomplete="off" />
         <ul id="software-dropdown" class="software-dropdown"></ul>
       </div>
       <div id="softwareVersionWrapper" style="display:none; margin-top: 8px;">
-        <input
-          type="text"
-          id="softwareVersion"
-          placeholder="Version (e.g. 4.2.1) — optional"
-          autocomplete="off"
-        />
+        <input type="text" id="softwareVersion" placeholder="Version (e.g. 4.2.1) — optional" autocomplete="off" />
       </div>
-      
-      <h2>Protocol</h2>
-      <input id="protocols" name="protocols" placeholder="Describe the protocol(s) your community uses...">
+
+      <div class="protocol-question-block">
+        <div class="protocol-question-heading">
+          <span class="protocol-question-label">Is this system based on an open protocol?</span>
+          <span class="info-tooltip">
+            ⓘ
+            <span class="tooltip-text">An open protocol is a publicly documented communication standard (e.g. ActivityPub, AT Protocol) that allows different platforms to interoperate. Communities built on open protocols can federate with other services.</span>
+          </span>
+        </div>
+        <div class="protocol-yn-btns">
+          <button class="module-btn" id="protocolYesBtn" data-answer="yes">Yes</button>
+          <button class="module-btn" id="protocolNoBtn" data-answer="no">No</button>
+        </div>
+      </div>
+      <div id="protocolInputWrapper" style="display:none; margin-top: 8px;">
+        <div class="software-container" id="protocol-container">
+          <input type="text" id="protocols" placeholder="Start typing a protocol name…" autocomplete="off" />
+          <ul id="protocol-dropdown" class="software-dropdown"></ul>
+        </div>
+      </div>
+
+      <h2>Stack</h2>
+      <div class="software-hint">Add purpose–software pairs that make up your community's tech stack (e.g. Hosting → AWS Cloud Services)</div>
+      <div id="stackList" class="stack-list"></div>
+      <button class="add-btn" id="addStackBtn">+ Add to Stack</button>
 
       <h2>Hosting</h2>
       <div class="button-container">
@@ -69,12 +81,49 @@
         Costs
         <span class="info-tooltip">
           ⓘ
-          <span class="tooltip-text">Cost of running the server</span>
+          <span class="tooltip-text">How are costs related to running the server (e.g., paying for software and hosting) covered?</span>
         </span>
       </h2>
-      <textarea id="costs" name="costs" placeholder="Funded by admin"></textarea>
 
-      <h2>Community Links</h2>
+      <div class="costs-subsection">
+        <div class="costs-sublabel">What costs does the community need to cover?</div>
+        <input type="text" id="costsWhat" placeholder="e.g. server, domain, media storage" />
+      </div>
+
+      <div class="costs-subsection">
+        <div class="costs-sublabel">Who covers the costs?</div>
+        <div class="button-container" id="costsCoverageContainer">
+          <button class="module-btn cost-coverage-btn" data-value="Admin">Admin</button>
+          <button class="module-btn cost-coverage-btn" data-value="Community donations">Community donations</button>
+          <button class="module-btn cost-coverage-btn" data-value="Membership fees">Membership fees</button>
+          <button class="add-module-btn" id="addCostCoverageBtn">+</button>
+        </div>
+        <div class="new-module-container" id="costCoverageNewContainer" style="display:none;">
+          <input type="text" class="new-module-text" id="costCoverageNewText" placeholder="Enter funding source…">
+          <div class="button-group">
+            <button class="save-module" id="costCoverageSaveBtn">Save</button>
+            <button class="cancel-module" id="costCoverageCancelBtn">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="costs-subsection">
+        <div class="costs-sublabel">Donation or finance links</div>
+        <div id="donationLinksList" class="donation-links-list"></div>
+        <div class="channel-input-container">
+          <input type="url" id="donationLinkUrl" placeholder="e.g. patreon.com/yourcommunity, ko-fi.com/you, opencollective.com/you">
+          <button id="addDonationLink" class="save-module">Add Link</button>
+        </div>
+      </div>
+
+      <h2>
+        Community Links
+        <span class="info-tooltip">
+          ⓘ
+          <span class="tooltip-text">Links to additional or related platforms, pages, or resources your community uses — for example, a Loomio space for voting, a GitHub repo, or a newsletter.</span>
+        </span>
+      </h2>
+      <div class="software-hint">Links to additional or related platforms, pages, or resources your community uses (e.g., Loomio for voting)</div>
       <div id="channelsList" class="channels-list"></div>
       <div class="channel-input-container">
         <input type="url" id="channelUrl" placeholder="https://discord.gg/example or https://loomio.org/example">
@@ -103,13 +152,7 @@
       <div class="input-container">
         <div class="country-search-wrapper">
           <span class="country-search-icon">&#8981;</span>
-          <input
-            type="text"
-            id="countryInput"
-            placeholder="Search countries…"
-            autocomplete="off"
-            spellcheck="false"
-          />
+          <input type="text" id="countryInput" placeholder="Search countries…" autocomplete="off" spellcheck="false" />
           <span class="country-clear-btn" id="countryClearBtn" style="display:none;" title="Clear">✕</span>
         </div>
         <ul class="input-dropdown" id="countryDropdown">
@@ -121,40 +164,12 @@
       <p class="input-hint">This is where your server is located and/or obligated to comply with local laws.</p>
 
       <style>
-        .country-search-wrapper {
-          position: relative;
-          display: flex;
-          align-items: center;
-        }
-        .country-search-icon {
-          position: absolute;
-          left: 10px;
-          font-size: 14px;
-          pointer-events: none;
-          opacity: 0.5;
-        }
-        #countryInput {
-          padding-left: 32px !important;
-          padding-right: 32px !important;
-        }
-        .country-clear-btn {
-          position: absolute;
-          right: 10px;
-          cursor: pointer;
-          opacity: 0.4;
-          font-size: 13px;
-          line-height: 1;
-          user-select: none;
-        }
+        .country-search-wrapper { position: relative; display: flex; align-items: center; }
+        .country-search-icon { position: absolute; left: 10px; font-size: 14px; pointer-events: none; opacity: 0.5; }
+        #countryInput { padding-left: 32px !important; padding-right: 32px !important; }
+        .country-clear-btn { position: absolute; right: 10px; cursor: pointer; opacity: 0.4; font-size: 13px; line-height: 1; user-select: none; }
         .country-clear-btn:hover { opacity: 0.8; }
-        .country-result-count {
-          font-size: 11px;
-          opacity: 0.5;
-          padding: 4px 10px 2px;
-          pointer-events: none;
-          border-bottom: 1px solid rgba(255,255,255,0.08);
-          letter-spacing: 0.03em;
-        }
+        .country-result-count { font-size: 11px; opacity: 0.5; padding: 4px 10px 2px; pointer-events: none; border-bottom: 1px solid rgba(255,255,255,0.08); letter-spacing: 0.03em; }
         .country-match { font-weight: bold; text-decoration: underline; }
       </style>
 
@@ -240,10 +255,103 @@
       "Virgin Islands, U.S","Wallis and Futuna","Western Sahara","Yemen","Zambia","Zimbabwe"
     ];
 
+    const protocolOptions = [
+      "ActivityPub","AT Protocol","RSS","Atom","OStatus","Diaspora","Zot","Nomad",
+      "WebFinger","WebSub","Salmon","IndieWeb","Micropub","WebMention","XMPP","Matrix",
+      "IRC","SMTP","IMAP","HTTP","WebRTC","Nostr","Secure Scuttlebutt (SSB)"
+    ];
+
+    const stackPurposes = [
+      "Hosting","Database","Media Storage","CDN","Email","Search","Authentication",
+      "Monitoring","Backups","CI/CD","DNS","Caching","Moderation Tools","Analytics"
+    ];
+
     let saveTimeout;
     function autoSaveData() {
       clearTimeout(saveTimeout);
       saveTimeout = setTimeout(saveAllData, 1000);
+    }
+
+    function addStackRow(purpose = '', software = '') {
+      const list = document.getElementById('stackList');
+      const row = document.createElement('div');
+      row.className = 'stack-row';
+      row.innerHTML = `
+        <div class="stack-purpose-wrap">
+          <input type="text" class="stack-purpose" placeholder="Purpose (e.g. Hosting)" value="${escHtml(purpose)}" autocomplete="off" />
+          <ul class="software-dropdown stack-purpose-dropdown"></ul>
+        </div>
+        <span class="stack-arrow">→</span>
+        <input type="text" class="stack-software" placeholder="Software / Service (e.g. AWS)" value="${escHtml(software)}" />
+        <button class="remove-btn stack-remove" title="Remove">✕</button>
+      `;
+      list.appendChild(row);
+
+      const purposeInput = row.querySelector('.stack-purpose');
+      const purposeDrop  = row.querySelector('.stack-purpose-dropdown');
+
+      purposeInput.addEventListener('input', () => {
+        const val = purposeInput.value.toLowerCase();
+        purposeDrop.innerHTML = '';
+        if (!val) { purposeDrop.style.display = 'none'; return; }
+        const filtered = stackPurposes.filter(p => p.toLowerCase().includes(val));
+        filtered.forEach(p => {
+          const li = document.createElement('li');
+          li.textContent = p;
+          li.addEventListener('click', () => {
+            purposeInput.value = p;
+            purposeDrop.style.display = 'none';
+            row.querySelector('.stack-software').focus();
+            autoSaveData();
+          });
+          purposeDrop.appendChild(li);
+        });
+        purposeDrop.style.display = filtered.length ? 'block' : 'none';
+      });
+
+      document.addEventListener('click', e => {
+        if (!row.querySelector('.stack-purpose-wrap').contains(e.target)) purposeDrop.style.display = 'none';
+      });
+
+      row.querySelector('.stack-remove').addEventListener('click', () => { row.remove(); autoSaveData(); });
+      row.querySelector('.stack-software').addEventListener('input', autoSaveData);
+      purposeInput.addEventListener('blur', autoSaveData);
+    }
+
+    function initDonationButtons() {
+      document.querySelectorAll('.donation-platform-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          btn.classList.toggle('selected');
+          updateDonationUrlInputs();
+          autoSaveData();
+        });
+      });
+    }
+
+    function updateDonationUrlInputs() {
+      const container = document.getElementById('donationUrlInputs');
+      const selected = [...document.querySelectorAll('.donation-platform-btn.selected')];
+
+      container.querySelectorAll('.donation-url-row').forEach(row => {
+        if (!selected.find(b => b.dataset.platform === row.dataset.platform)) row.remove();
+      });
+
+      selected.forEach(btn => {
+        if (!container.querySelector(`[data-platform="${btn.dataset.platform}"]`)) {
+          const row = document.createElement('div');
+          row.className = 'donation-url-row';
+          row.dataset.platform = btn.dataset.platform;
+          row.innerHTML = `
+            <label class="donation-url-label">${btn.dataset.platform} URL</label>
+            <input type="url" class="donation-url-input" placeholder="https://${btn.dataset.platform.toLowerCase().replace(/\s/g,'')}.com/yourcommunity" value="${escHtml(btn.dataset.url || '')}" />
+          `;
+          row.querySelector('input').addEventListener('input', e => {
+            btn.dataset.url = e.target.value;
+            autoSaveData();
+          });
+          container.appendChild(row);
+        }
+      });
     }
 
     function collectAllData() {
@@ -253,13 +361,38 @@
         if (link) channels.push({ url: link.href, platform: link.textContent });
       });
 
+      const stack = [];
+      document.querySelectorAll('.stack-row').forEach(row => {
+        const purpose  = row.querySelector('.stack-purpose').value.trim();
+        const software = row.querySelector('.stack-software').value.trim();
+        if (purpose || software) stack.push({ purpose, software });
+      });
+
+      const costCoverage = [...document.querySelectorAll('.cost-coverage-btn.selected')].map(b => b.dataset.value);
+      const customCostCoverage = [...document.querySelectorAll('.cost-coverage-btn')]
+        .map(b => b.dataset.value)
+        .filter(v => !['Admin','Community donations','Membership fees'].includes(v));
+
+      const donationLinks = [];
+      document.querySelectorAll('#donationLinksList .channel-item').forEach(item => {
+        const link = item.querySelector('.channel-btn');
+        if (link) donationLinks.push({ url: link.href, label: link.textContent });
+      });
+
+      const protocolAnswer = document.querySelector('.protocol-yn-btns .module-btn.selected')?.dataset.answer || null;
+
       const infrastructure_data = {
-        protocol:       document.getElementById("protocols").value,
-        software:       document.getElementById("software").value,
+        protocolAnswer,
+        protocol:        document.getElementById("protocols").value,
+        software:        document.getElementById("software").value,
         softwareVersion: document.getElementById("softwareVersion").value,
-        hostingType:    document.querySelector(".hosting-btn.selected")?.dataset.type || null,
-        hostingDetails: document.getElementById("hostingDetails").value,
-        costs:          document.getElementById("costs").value,
+        stack,
+        hostingType:     document.querySelector(".hosting-btn.selected")?.dataset.type || null,
+        hostingDetails:  document.getElementById("hostingDetails").value,
+        costsWhat:       document.getElementById("costsWhat").value,
+        costCoverage,
+        customCostCoverage,
+        donationLinks,
         channels
       };
 
@@ -291,7 +424,6 @@
     async function saveAllData() {
       const communityId = localStorage.getItem("communityId");
       if (!communityId) { console.error("No community ID found"); return false; }
-
       const payload = collectAllData();
       const { error } = await supabase.from("communities").update(payload).eq("id", communityId);
       if (error) { console.error("Error saving data:", error); return false; }
@@ -302,38 +434,59 @@
     async function loadAllData() {
       const communityId = localStorage.getItem("communityId");
       if (!communityId) { console.error("No community ID found"); return; }
-
       const { data, error } = await supabase
         .from("communities")
         .select("infrastructure_data, dataprivacy_data, legalcompliance_data")
         .eq("id", communityId)
         .single();
-
       if (error) { console.error("Error loading data:", error); return; }
-
-      if (data.infrastructure_data)    populateInfrastructure(data.infrastructure_data);
-      if (data.dataprivacy_data)       populateDataPrivacy(data.dataprivacy_data);
-      if (data.legalcompliance_data)   populateLegal(data.legalcompliance_data);
+      if (data.infrastructure_data)  populateInfrastructure(data.infrastructure_data);
+      if (data.dataprivacy_data)     populateDataPrivacy(data.dataprivacy_data);
+      if (data.legalcompliance_data) populateLegal(data.legalcompliance_data);
     }
 
     function populateInfrastructure(d) {
-      if (d.protocol)  document.getElementById("protocols").value = d.protocol;
+      if (d.protocolAnswer) {
+        const btn = document.querySelector(`.protocol-yn-btns .module-btn[data-answer="${d.protocolAnswer}"]`);
+        if (btn) { btn.classList.add('selected'); if (d.protocolAnswer === 'yes') document.getElementById('protocolInputWrapper').style.display = 'block'; }
+      }
+      if (d.protocol) document.getElementById("protocols").value = d.protocol;
+
       if (d.software) {
         document.getElementById("software").value = d.software;
         document.getElementById("softwareVersionWrapper").style.display = "block";
       }
       if (d.softwareVersion) document.getElementById("softwareVersion").value = d.softwareVersion;
 
+      if (d.stack && Array.isArray(d.stack)) d.stack.forEach(s => addStackRow(s.purpose, s.software));
+
       if (d.hostingType) {
         const btn = document.querySelector(`[data-type="${d.hostingType}"]`);
         if (btn) btn.click();
       }
       if (d.hostingDetails) document.getElementById("hostingDetails").value = d.hostingDetails;
-      if (d.costs)          document.getElementById("costs").value           = d.costs;
 
-      if (d.channels && Array.isArray(d.channels)) {
-        d.channels.forEach(ch => addChannelItem(ch.url, ch.platform));
+      if (d.costsWhat) document.getElementById("costsWhat").value = d.costsWhat;
+
+      if (d.costCoverage) {
+        d.costCoverage.forEach(val => {
+          const btn = document.querySelector(`.cost-coverage-btn[data-value="${val}"]`);
+          if (btn) btn.classList.add('selected');
+        });
       }
+      if (d.customCostCoverage) {
+        const container = document.getElementById('costsCoverageContainer');
+        const addBtn = document.getElementById('addCostCoverageBtn');
+        d.customCostCoverage.forEach(val => {
+          const btn = makeCostCoverageBtn(val, d.costCoverage?.includes(val));
+          if (container && addBtn) container.insertBefore(btn, addBtn);
+        });
+      }
+      if (d.donationLinks && Array.isArray(d.donationLinks)) {
+        d.donationLinks.forEach(({ url }) => { if (url) addDonationLinkItem(url); });
+      }
+
+      if (d.channels && Array.isArray(d.channels)) d.channels.forEach(ch => addChannelItem(ch.url, ch.platform));
     }
 
     function populateDataPrivacy(d) {
@@ -345,11 +498,10 @@
     function populateLegal(d) {
       if (d.country) {
         document.getElementById("countryInput").value = d.country;
-        document.getElementById("country").value      = d.country;
+        document.getElementById("country").value = d.country;
         const clearBtn = document.getElementById("countryClearBtn");
         if (clearBtn) clearBtn.style.display = 'block';
       }
-
       if (d.selectedRegulations) {
         d.selectedRegulations.forEach(reg => {
           const btn = [...document.querySelectorAll('.regulation-btn')].find(b => b.textContent === reg);
@@ -359,16 +511,14 @@
           }
         });
       }
-
       if (d.customRegulations) {
         const container = document.getElementById('regulationsContainer');
-        const addBtn    = document.getElementById('addRegulationBtn');
+        const addBtn = document.getElementById('addRegulationBtn');
         d.customRegulations.forEach(reg => {
           const btn = makeRegulationBtn(reg, d.selectedRegulations?.includes(reg));
           container.insertBefore(btn, addBtn);
         });
       }
-
       if (d.dmcaAgent) {
         if (d.dmcaAgent.name)    document.getElementById("dmcaAgentName").value    = d.dmcaAgent.name;
         if (d.dmcaAgent.address) document.getElementById("dmcaAgentAddress").value = d.dmcaAgent.address;
@@ -377,23 +527,26 @@
       }
     }
 
-    // ── Helpers ────────────────────────────────────────────────────
+    function escHtml(str) {
+      return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
     function normalizeUrl(url) {
       return /^https?:\/\//i.test(url) ? url : "https://" + url;
     }
 
     function detectPlatform(url) {
       url = url.toLowerCase();
-      if (url.includes('discord'))                   return 'Discord';
-      if (url.includes('loomio'))                    return 'Loomio';
-      if (url.includes('slack'))                     return 'Slack';
-      if (url.includes('telegram'))                  return 'Telegram';
-      if (url.includes('matrix'))                    return 'Matrix';
-      if (url.includes('github'))                    return 'GitHub';
-      if (url.includes('gitlab'))                    return 'GitLab';
-      if (url.includes('reddit'))                    return 'Reddit';
+      if (url.includes('discord'))  return 'Discord';
+      if (url.includes('loomio'))   return 'Loomio';
+      if (url.includes('slack'))    return 'Slack';
+      if (url.includes('telegram')) return 'Telegram';
+      if (url.includes('matrix'))   return 'Matrix';
+      if (url.includes('github'))   return 'GitHub';
+      if (url.includes('gitlab'))   return 'GitLab';
+      if (url.includes('reddit'))   return 'Reddit';
       if (url.includes('twitter') || url.includes('x.com')) return 'Twitter/X';
-      if (url.includes('facebook'))                  return 'Facebook';
+      if (url.includes('facebook')) return 'Facebook';
       return 'Link';
     }
 
@@ -401,22 +554,18 @@
       url = normalizeUrl(url);
       const label = platformLabel || detectPlatform(url);
       const channelsList = document.getElementById("channelsList");
-
       const channelItem = document.createElement("div");
       channelItem.className = "channel-item";
-
       const channelBtn = document.createElement("a");
       channelBtn.className = "channel-btn";
       channelBtn.href = url;
       channelBtn.target = "_blank";
       channelBtn.rel = "noopener noreferrer";
       channelBtn.textContent = label.toUpperCase();
-
       const removeBtn = document.createElement("button");
       removeBtn.className = "remove-channel-btn";
       removeBtn.textContent = "×";
       removeBtn.addEventListener("click", () => { channelItem.remove(); autoSaveData(); });
-
       channelItem.appendChild(channelBtn);
       channelItem.appendChild(removeBtn);
       channelsList.appendChild(channelItem);
@@ -430,7 +579,15 @@
       return btn;
     }
 
-    // ── Country dropdown ───────────────────────────────────────────
+    function makeCostCoverageBtn(text, isSelected = false) {
+      const btn = document.createElement('button');
+      btn.className = 'module-btn cost-coverage-btn' + (isSelected ? ' selected' : '');
+      btn.dataset.value = text;
+      btn.textContent = text;
+      btn.addEventListener('click', () => { btn.classList.toggle('selected'); autoSaveData(); });
+      return btn;
+    }
+
     function initCountryDropdown() {
       const inputField  = document.getElementById('countryInput');
       const dropdown    = document.getElementById('countryDropdown');
@@ -439,12 +596,11 @@
       const resultCount = document.getElementById('countryResultCount');
       const clearBtn    = document.getElementById('countryClearBtn');
 
-      // Build list items (hidden by default, shown on focus/input)
       country_list.forEach(country => {
         const li = document.createElement('li');
         li.dataset.country = country;
         li.addEventListener('click', () => {
-          inputField.value  = country;
+          inputField.value = country;
           hiddenField.value = country;
           clearBtn.style.display = 'block';
           dropdown.style.display = 'none';
@@ -474,45 +630,26 @@
           const country = li.dataset.country;
           const show = country.toLowerCase().includes(t.toLowerCase());
           li.style.display = show ? '' : 'none';
-          if (show) {
-            li.textContent = '';
-            li.appendChild(highlight(country, t));
-            visible++;
-          }
+          if (show) { li.textContent = ''; li.appendChild(highlight(country, t)); visible++; }
         });
         noResults.style.display = visible === 0 ? '' : 'none';
-        if (t) {
-          resultCount.textContent = `${visible} result${visible !== 1 ? 's' : ''}`;
-          resultCount.style.display = '';
-        } else {
-          resultCount.style.display = 'none';
-        }
+        if (t) { resultCount.textContent = `${visible} result${visible !== 1 ? 's' : ''}`; resultCount.style.display = ''; }
+        else resultCount.style.display = 'none';
       }
 
       clearBtn.addEventListener('click', () => {
-        inputField.value  = '';
-        hiddenField.value = '';
-        clearBtn.style.display = 'none';
-        filter('');
-        inputField.focus();
-        autoSaveData();
+        inputField.value = ''; hiddenField.value = ''; clearBtn.style.display = 'none';
+        filter(''); inputField.focus(); autoSaveData();
       });
-
-      inputField.addEventListener('focus', () => {
-        dropdown.style.display = 'block';
-        filter(inputField.value);
-      });
+      inputField.addEventListener('focus', () => { dropdown.style.display = 'block'; filter(inputField.value); });
       inputField.addEventListener('input', () => {
-        dropdown.style.display = 'block';
-        hiddenField.value = inputField.value;
-        clearBtn.style.display = inputField.value ? 'block' : 'none';
-        filter(inputField.value);
+        dropdown.style.display = 'block'; hiddenField.value = inputField.value;
+        clearBtn.style.display = inputField.value ? 'block' : 'none'; filter(inputField.value);
       });
       inputField.addEventListener('blur', autoSaveData);
       document.addEventListener('click', e => {
-        if (!inputField.contains(e.target) && !dropdown.contains(e.target) && !clearBtn.contains(e.target)) {
+        if (!inputField.contains(e.target) && !dropdown.contains(e.target) && !clearBtn.contains(e.target))
           dropdown.style.display = 'none';
-        }
       });
     }
 
@@ -526,17 +663,14 @@
         "GoToSocial","Postmarks","Betula","Microblog.pub","Manyfold","Hackers' Pub","Ktistec",
         "Takahē","Stegodon","Mobilizon","Frequency","Gancio","Drupal","Plume","Flipboard",
         "Loforo","Brutalinks","Zap","Ecko","Irwin","Honk","Lotide","Emissary","Bonfire",
-        "Bridgy Fed", "Discord", "Reddit", "Facebook Groups", "Bluesky"
+        "Bridgy Fed","Discord","Reddit","Facebook Groups","Bluesky"
       ];
-
       const softwareInput    = document.getElementById("software");
       const softwareDropdown = document.getElementById("software-dropdown");
-
       softwareInput.addEventListener("input", () => {
         const value = softwareInput.value.toLowerCase();
         softwareDropdown.innerHTML = "";
         if (!value) { softwareDropdown.style.display = "none"; return; }
-
         const filtered = softwareOptions.filter(opt => opt.toLowerCase().includes(value));
         filtered.forEach(opt => {
           const li = document.createElement("li");
@@ -552,23 +686,60 @@
         });
         softwareDropdown.style.display = filtered.length ? "block" : "none";
       });
-
       document.addEventListener("click", e => {
         if (!e.target.closest(".software-container")) softwareDropdown.style.display = "none";
       });
     }
 
-    // ── Boot ───────────────────────────────────────────────────────
+    function initProtocolDropdown() {
+      const protocolInput = document.getElementById("protocols");
+      const protocolDrop  = document.getElementById("protocol-dropdown");
+      protocolInput.addEventListener("input", () => {
+        const value = protocolInput.value.toLowerCase();
+        protocolDrop.innerHTML = "";
+        if (!value) { protocolDrop.style.display = "none"; return; }
+        const filtered = protocolOptions.filter(opt => opt.toLowerCase().includes(value));
+        filtered.forEach(opt => {
+          const li = document.createElement("li");
+          li.textContent = opt;
+          li.addEventListener("click", () => {
+            protocolInput.value = opt;
+            protocolDrop.style.display = "none";
+            autoSaveData();
+          });
+          protocolDrop.appendChild(li);
+        });
+        protocolDrop.style.display = filtered.length ? "block" : "none";
+      });
+      protocolInput.addEventListener("input", autoSaveData);
+      document.addEventListener("click", e => {
+        if (!e.target.closest("#protocol-container")) protocolDrop.style.display = "none";
+      });
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
       loadAllData();
       initCountryDropdown();
       initSoftwareDropdown();
+      initProtocolDropdown();
+      initDonationButtons();
 
-      // Hosting buttons
+      document.querySelectorAll('.protocol-yn-btns .module-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.protocol-yn-btns .module-btn').forEach(b => b.classList.remove('selected'));
+          this.classList.add('selected');
+          document.getElementById('protocolInputWrapper').style.display =
+            this.dataset.answer === 'yes' ? 'block' : 'none';
+          if (this.dataset.answer === 'no') document.getElementById('protocols').value = '';
+          autoSaveData();
+        });
+      });
+
+      document.getElementById('addStackBtn').addEventListener('click', () => addStackRow());
+
       const hostingBtns        = document.querySelectorAll('.hosting-btn');
       const hostingDescription = document.getElementById('hostingDescription');
       const hostingDetails     = document.getElementById('hostingDetails');
-
       hostingBtns.forEach(btn => {
         btn.addEventListener('click', function() {
           hostingBtns.forEach(b => b.classList.remove('selected'));
@@ -581,9 +752,44 @@
         });
       });
 
+      document.querySelectorAll('.cost-coverage-btn').forEach(btn => {
+        btn.addEventListener('click', () => { btn.classList.toggle('selected'); autoSaveData(); });
+      });
+
+      const addCostCovBtn    = document.getElementById('addCostCoverageBtn');
+      const costCovNewCont   = document.getElementById('costCoverageNewContainer');
+      const costCovNewText   = document.getElementById('costCoverageNewText');
+      const costCovSaveBtn   = document.getElementById('costCoverageSaveBtn');
+      const costCovCancelBtn = document.getElementById('costCoverageCancelBtn');
+
+      addCostCovBtn.addEventListener('click', () => { costCovNewCont.style.display = 'block'; costCovNewText.focus(); });
+      costCovSaveBtn.addEventListener('click', () => {
+        const val = costCovNewText.value.trim();
+        if (!val) return;
+        const container = document.getElementById('costsCoverageContainer');
+        container.insertBefore(makeCostCoverageBtn(val, true), addCostCovBtn);
+        costCovNewCont.style.display = 'none';
+        costCovNewText.value = '';
+        autoSaveData();
+      });
+      costCovCancelBtn.addEventListener('click', () => { costCovNewCont.style.display = 'none'; costCovNewText.value = ''; });
+      costCovNewText.addEventListener('keypress', e => { if (e.key === 'Enter') costCovSaveBtn.click(); });
+
+      document.getElementById("costsWhat").addEventListener("input", autoSaveData);
+
+      const donationLinkInput = document.getElementById('donationLinkUrl');
+      const addDonationBtn    = document.getElementById('addDonationLink');
+      addDonationBtn.addEventListener('click', () => {
+        const url = donationLinkInput.value.trim();
+        if (!url) return;
+        addDonationLinkItem(url);
+        donationLinkInput.value = '';
+        autoSaveData();
+      });
+      donationLinkInput.addEventListener('keypress', e => { if (e.key === 'Enter') addDonationBtn.click(); });
+
       const channelUrlInput = document.getElementById('channelUrl');
       const addChannelBtn   = document.getElementById('addChannel');
-
       addChannelBtn.addEventListener('click', () => {
         const url = channelUrlInput.value.trim();
         if (!url) return;
@@ -593,7 +799,6 @@
       });
       channelUrlInput.addEventListener('keypress', e => { if (e.key === 'Enter') addChannelBtn.click(); });
 
-      document.getElementById("protocols").addEventListener("input", autoSaveData);
       document.getElementById("software").addEventListener("input", () => {
         const val = document.getElementById("software").value.trim();
         document.getElementById("softwareVersionWrapper").style.display = val ? "block" : "none";
@@ -601,25 +806,20 @@
       });
       document.getElementById("softwareVersion").addEventListener("input", autoSaveData);
       document.getElementById("hostingDetails").addEventListener("input", autoSaveData);
-      document.getElementById("costs").addEventListener("input", autoSaveData);
 
-      // Data/Privacy inputs
       document.getElementById("privacyPolicyUrl").addEventListener("input", autoSaveData);
       document.getElementById("logRetention").addEventListener("input", autoSaveData);
       document.getElementById("protectionMeasures").addEventListener("input", autoSaveData);
 
-      // Regulations toggle buttons
       document.querySelectorAll('.regulation-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           btn.classList.toggle('selected');
-          if (btn.dataset.regulation === 'dmca') {
+          if (btn.dataset.regulation === 'dmca')
             document.getElementById('dmcaInfo').style.display = btn.classList.contains('selected') ? 'block' : 'none';
-          }
           autoSaveData();
         });
       });
 
-      // Regulations add button
       const addRegBtn    = document.getElementById('addRegulationBtn');
       const regNewCont   = document.getElementById('regulationNewModuleContainer');
       const regTextInput = document.getElementById('regulationNewModuleText');

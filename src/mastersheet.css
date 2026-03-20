@@ -160,11 +160,6 @@ h3 {
   opacity: 0.85;
 }
 
-/* ========================================
-   RESPONSIVE STYLES
-   ======================================== */
-
-/* Tablet (below 1024px) */
 @media (max-width: 1024px) {
   .navbar {
     padding: 20px var(--spacing-md);
@@ -188,7 +183,6 @@ h3 {
   }
 }
 
-/* Mobile (below 768px) */
 @media (max-width: 768px) {
   .navbar {
     padding: 16px var(--spacing-sm);
@@ -259,7 +253,6 @@ h3 {
   }
 }
 
-/* Small Mobile (below 480px) */
 @media (max-width: 480px) {
   .navbar {
     padding: 12px var(--spacing-xs);

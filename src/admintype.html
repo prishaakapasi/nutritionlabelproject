@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
-    <title> Admin Type</title>
+    <title> Roles </title>
     <style>
       .admin-section {
         width: 100%;
@@ -29,20 +29,20 @@
   
   <div class="content-wrapper">
     <aside class="sidebar">
-      <nav class="sidebar-nav" id="dynamicNav">
-      </nav>
+      <nav class="sidebar-nav" id="dynamicNav"></nav>
     </aside>
 
     <main>
-      <h1>Admin Type</h1>
-      <h3>Let people know who administers and moderates the community space.</h3>
+
+      <h1> Structure </h1>
+      <h3>Let people know how your community is moderated and administered. </h3>
       <div id="modulesContainer" class="button-container">
-        <button class="module-btn">Team</button>
-        <button class="module-btn">Cooperative</button>
-        <button class="module-btn">Benevolent Dictator</button>
+        <button class="admintype-btn module-btn">Team</button>
+        <button class="admintype-btn module-btn">Cooperative</button>
+        <button class="admintype-btn module-btn">Benevolent Dictator</button>
         <button id="addModuleBtn">+</button>
       </div>
-      
+
       <div id="newModuleContainer" style="display: none;">
         <input type="text" id="newModuleText" placeholder="Enter new admin type...">
         <div class="button-group">
@@ -56,6 +56,23 @@
         <div id="adminList" class="covenant-list"></div>
         <button id="addAdminBtn" class="add-btn">+ Add Admin</button>
       </div>
+
+      <h1>Membership</h1>
+      <h3>Select your type of membership.</h3>
+      <div id="membershipContainer" class="button-container">
+        <button class="membership-btn module-btn">Open Membership</button>
+        <button class="membership-btn module-btn">Closed Membership</button>
+      </div>
+
+      <div id="memberTypesSection">
+        <h2>Member Types</h2>
+        <textarea
+          id="memberTypes"
+          placeholder="Describe (if any) the different types of members and what each can do."
+          rows="6"
+        ></textarea>
+      </div>
+
     </main>
   </div>
 
@@ -70,91 +87,84 @@
 
     let admins = [];
 
+
+    function showMemberTypes(show) {
+      document.getElementById('memberTypesSection').style.display = show ? 'block' : 'none';
+    }
+
+
     function createAdminItem(username = '') {
       const item = document.createElement('div');
       item.className = 'covenant-item';
-      
+
       const input = document.createElement('input');
       input.type = 'text';
       input.placeholder = 'ex: https://server/@user';
       input.value = username;
-      input.addEventListener('input', () => {
-        updateAdminsArray();
-        autoSaveData();
-      });
-      
+      input.addEventListener('input', () => { updateAdminsArray(); autoSaveData(); });
+
       const removeBtn = document.createElement('button');
       removeBtn.className = 'remove-btn';
       removeBtn.textContent = '−';
-      removeBtn.addEventListener('click', () => {
-        item.remove();
-        updateAdminsArray();
-        autoSaveData();
-      });
-      
+      removeBtn.addEventListener('click', () => { item.remove(); updateAdminsArray(); autoSaveData(); });
+
       item.appendChild(input);
       item.appendChild(removeBtn);
-      
       return item;
     }
 
     function updateAdminsArray() {
-      const adminInputs = document.querySelectorAll('#adminList input');
-      admins = Array.from(adminInputs)
-        .map(input => input.value.trim())
-        .filter(value => value !== '');
+      admins = Array.from(document.querySelectorAll('#adminList input'))
+        .map(i => i.value.trim())
+        .filter(v => v !== '');
     }
 
-    async function loadAdminData() {
+
+    async function loadData() {
       const communityId = localStorage.getItem("communityId");
-      if (!communityId) {
-        console.error("No community ID found");
-        return;
-      }
+      if (!communityId) { console.error("No community ID found"); return; }
 
       const { data, error } = await supabase
         .from("communities")
-        .select("admin_data")
+        .select("membership_data, admin_data")
         .eq("id", communityId)
         .single();
 
-      if (error) {
-        console.error("Error loading admin data:", error);
-        return;
-      }
+      if (error) { console.error("Error loading data:", error); return; }
 
-      if (data && data.admin_data) {
-        populateForm(data.admin_data);
-      } else {
-        document.getElementById('adminList').appendChild(createAdminItem());
-      }
+      if (data.membership_data) populateMembership(data.membership_data);
+      if (data.admin_data)      populateAdmin(data.admin_data);
+      else document.getElementById('adminList').appendChild(createAdminItem());
     }
 
-    function populateForm(adminData) {
-      if (adminData.selectedType) {
-        const buttons = document.querySelectorAll('.module-btn');
-        buttons.forEach(btn => {
-          if (btn.textContent === adminData.selectedType) {
-            btn.classList.add('selected');
-          }
+    function populateMembership(d) {
+      if (d.selectedType) {
+        document.querySelectorAll('.membership-btn').forEach(btn => {
+          if (btn.textContent === d.selectedType) btn.classList.add('selected');
+        });
+        showMemberTypes(d.selectedType === 'Closed Membership');
+      }
+      if (d.memberTypes) document.getElementById('memberTypes').value = d.memberTypes;
+    }
+
+    function populateAdmin(d) {
+      if (d.selectedType) {
+        document.querySelectorAll('.admintype-btn').forEach(btn => {
+          if (btn.textContent === d.selectedType) btn.classList.add('selected');
         });
       }
 
-      if (adminData.customTypes && Array.isArray(adminData.customTypes)) {
+      if (d.customTypes && Array.isArray(d.customTypes)) {
         const modulesContainer = document.getElementById('modulesContainer');
         const addBtn = document.getElementById('addModuleBtn');
-        
-        adminData.customTypes.forEach(type => {
+        d.customTypes.forEach(type => {
           const newButton = document.createElement('button');
-          newButton.className = 'module-btn';
-          if (type === adminData.selectedType) {
-            newButton.classList.add('selected');
-          }
+          newButton.className = 'admintype-btn module-btn';
+          if (type === d.selectedType) newButton.classList.add('selected');
           newButton.textContent = type;
           modulesContainer.insertBefore(newButton, addBtn);
-          
-          newButton.addEventListener('click', function() {
-            document.querySelectorAll('.module-btn').forEach(b => b.classList.remove('selected'));
+          newButton.addEventListener('click', function () {
+            document.querySelectorAll('.admintype-btn').forEach(b => b.classList.remove('selected'));
             this.classList.add('selected');
             autoSaveData();
           });
@@ -163,128 +173,126 @@
 
       const adminList = document.getElementById('adminList');
       adminList.innerHTML = '';
-      
-      if (adminData.usernames && Array.isArray(adminData.usernames) && adminData.usernames.length > 0) {
-        adminData.usernames.forEach(username => {
-          adminList.appendChild(createAdminItem(username));
-        });
+      if (d.usernames && d.usernames.length > 0) {
+        d.usernames.forEach(u => adminList.appendChild(createAdminItem(u)));
       } else {
         adminList.appendChild(createAdminItem());
       }
-      
       updateAdminsArray();
     }
 
-    function collectFormData() {
-      const selectedBtn = document.querySelector('.module-btn.selected');
-      const defaultTypes = ['Benevolent Dictator', 'Cooperative', 'Team'];
-      
+
+    function collectData() {
+      const selectedMembership = document.querySelector('.membership-btn.selected');
+      const selectedAdmin = document.querySelector('.admintype-btn.selected');
+      const defaultTypes = ['Team', 'Cooperative', 'Benevolent Dictator'];
+
       const customTypes = [];
-      document.querySelectorAll('.module-btn').forEach(btn => {
-        const text = btn.textContent;
-        if (!defaultTypes.includes(text)) {
-          customTypes.push(text);
-        }
+      document.querySelectorAll('.admintype-btn').forEach(btn => {
+        if (!defaultTypes.includes(btn.textContent)) customTypes.push(btn.textContent);
       });
 
       updateAdminsArray();
 
       return {
-        selectedType: selectedBtn ? selectedBtn.textContent : null,
-        customTypes: customTypes,
-        usernames: admins
+        membership: {
+          selectedType: selectedMembership ? selectedMembership.textContent : null,
+          memberTypes:  document.getElementById('memberTypes').value,
+        },
+        admin: {
+          selectedType: selectedAdmin ? selectedAdmin.textContent : null,
+          customTypes,
+          usernames: admins,
+        }
       };
     }
 
-    async function saveAdminData() {
+    async function saveData() {
       const communityId = localStorage.getItem("communityId");
-      if (!communityId) {
-        console.error("No community ID found");
-        return false;
-      }
+      if (!communityId) { console.error("No community ID found"); return false; }
 
-      const adminData = collectFormData();
+      const { membership, admin } = collectData();
 
       const { error } = await supabase
         .from("communities")
-        .update({ admin_data: adminData })
+        .update({ membership_data: membership, admin_data: admin })
         .eq("id", communityId);
 
-      if (error) {
-        console.error("Error saving admin data:", error);
-        return false;
-      }
-
-      console.log("Admin data saved successfully");
+      if (error) { console.error("Error saving data:", error); return false; }
+      console.log("Data saved successfully");
       return true;
     }
 
     let saveTimeout;
     function autoSaveData() {
       clearTimeout(saveTimeout);
-      saveTimeout = setTimeout(() => {
-        saveAdminData();
-      }, 1000);
+      saveTimeout = setTimeout(saveData, 1000);
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-      loadAdminData();
 
-      document.getElementById('addAdminBtn').addEventListener('click', () => {
-        document.getElementById('adminList').appendChild(createAdminItem());
+    document.addEventListener("DOMContentLoaded", () => {
+      loadData();
+
+      document.querySelectorAll('.membership-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.membership-btn').forEach(b => b.classList.remove('selected'));
+          this.classList.add('selected');
+          showMemberTypes(this.textContent === 'Closed Membership');
+          autoSaveData();
+        });
       });
 
-      document.querySelectorAll('.module-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          document.querySelectorAll('.module-btn').forEach(b => b.classList.remove('selected'));
+      document.querySelectorAll('.admintype-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.admintype-btn').forEach(b => b.classList.remove('selected'));
           this.classList.add('selected');
           autoSaveData();
         });
       });
 
-      const addModuleBtn = document.getElementById('addModuleBtn');
+      document.getElementById('addAdminBtn').addEventListener('click', () => {
+        document.getElementById('adminList').appendChild(createAdminItem());
+      });
+
+      document.getElementById('memberTypes').addEventListener('input', autoSaveData);
+
+      const addModuleBtn     = document.getElementById('addModuleBtn');
       const newModuleContainer = document.getElementById('newModuleContainer');
-      const newModuleText = document.getElementById('newModuleText');
-      const saveModule = document.getElementById('saveModule');
-      const cancelModule = document.getElementById('cancelModule');
+      const newModuleText    = document.getElementById('newModuleText');
+      const saveModule       = document.getElementById('saveModule');
+      const cancelModule     = document.getElementById('cancelModule');
       const modulesContainer = document.getElementById('modulesContainer');
 
-      addModuleBtn.addEventListener('click', function() {
+      addModuleBtn.addEventListener('click', () => {
         newModuleContainer.style.display = 'block';
         newModuleText.focus();
       });
 
-      saveModule.addEventListener('click', function() {
+      saveModule.addEventListener('click', () => {
         const newModule = newModuleText.value.trim();
         if (newModule) {
           const newButton = document.createElement('button');
-          newButton.className = 'module-btn';
+          newButton.className = 'admintype-btn module-btn';
           newButton.textContent = newModule;
-
-          newButton.addEventListener('click', function() {
-            document.querySelectorAll('.module-btn').forEach(b => b.classList.remove('selected'));
+          newButton.addEventListener('click', function () {
+            document.querySelectorAll('.admintype-btn').forEach(b => b.classList.remove('selected'));
             this.classList.add('selected');
             autoSaveData();
           });
-
           modulesContainer.insertBefore(newButton, addModuleBtn);
-          
           newModuleContainer.style.display = 'none';
           newModuleText.value = '';
-          
           autoSaveData();
         }
       });
 
-      cancelModule.addEventListener('click', function() {
+      cancelModule.addEventListener('click', () => {
         newModuleContainer.style.display = 'none';
         newModuleText.value = '';
       });
 
-      newModuleText.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-          saveModule.click();
-        }
+      newModuleText.addEventListener('keypress', e => {
+        if (e.key === 'Enter') saveModule.click();
       });
     });
   </script>

@@ -17,29 +17,62 @@
       <li><a href="library.html">Library</a></li>
     </ul>
   </nav>
-  
+
   <div class="content-wrapper">
     <aside class="sidebar">
-      <nav class="sidebar-nav" id="dynamicNav">
-      </nav>
+      <nav class="sidebar-nav" id="dynamicNav"></nav>
     </aside>
 
     <main>
       <h1>Membership</h1>
-      <h3>Select your type of membership.</h3>
-      <div id="modulesContainer" class="button-container">
-        <button class="module-btn">Open Membership</button>
-        <button class="module-btn">Closed Membership</button>
-      </div>
 
-      <div id="memberTypesSection">
-        <h2>Member Types</h2>
-        <textarea
-          id="memberTypes"
-          placeholder="Describe (if any) the different types of members and what each can do."
-          rows="6"
-        ></textarea>
-      </div>
+      <!-- ── STRUCTURE ── -->
+      <section id="structureSection">
+        <h2>Structure</h2>
+        <h3>Select the type of community structure.</h3>
+        <div class="button-container" id="structureButtons">
+          <button class="module-btn" data-value="Team">Team</button>
+          <button class="module-btn" data-value="Cooperative">Cooperative</button>
+          <button class="module-btn" data-value="BD">Benevolent Dictator</button>
+        </div>
+      </section>
+
+      <!-- ── ROLES ── -->
+      <section id="rolesSection" style="display:none;">
+        <h2>Roles</h2>
+        <p class="info-text" id="rolesHint"></p>
+        <p class="info-text permission-note">
+          Remember to ask members for permission before listing their usernames here.
+        </p>
+
+        <div id="rolesContainer"></div>
+
+        <button id="addRoleBtn" class="add-btn" style="display:none;">+ Add Member</button>
+      </section>
+
+      <!-- ── REGISTRATION / JOINING ── -->
+      <section id="registrationSection">
+        <h2>Registration / Joining</h2>
+        <h3>How can people join this community?</h3>
+        <div class="button-container" id="registrationButtons">
+          <button class="module-btn" data-value="Closed Registration">Closed Registration</button>
+          <button class="module-btn" data-value="Sign-up Approval Required">Sign-up Approval Required</button>
+          <button class="module-btn" data-value="Instant Join">Instant Join</button>
+        </div>
+
+        <p id="infoClosedReg"   class="info-blurb" style="display:none;">No new members are being accepted at this time.</p>
+        <p id="infoApprovalReq" class="info-blurb" style="display:none;">Approval is required before someone can create an account.</p>
+        <p id="infoInstantJoin" class="info-blurb" style="display:none;">Anyone can join immediately — no approval needed.</p>
+
+        <div id="approvalMethodSection" style="display:none;">
+          <h3>How do prospective members request to join?</h3>
+          <div class="button-container" id="approvalMethodButtons">
+            <button class="module-btn" data-value="Send a Request to Admins">Send a Request to Admins</button>
+            <button class="module-btn" data-value="Fill Out Form">Fill Out Form</button>
+          </div>
+        </div>
+      </section>
+
     </main>
   </div>
 
@@ -50,82 +83,212 @@
 
     const supabaseUrl = "https://sewbsumjjlpsbadgwgfk.supabase.co";
     const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabase   = createClient(supabaseUrl, supabaseKey);
 
-    const memberTypesSection = document.getElementById('memberTypesSection');
+    // ── Structure config ──────────────────────────────────────────────────────
+    const STRUCTURE_CONFIG = {
+      "Team": {
+        hint: "Add your team members and their roles (e.g. Lead, Designer, Developer).",
+        usernamePlaceholder: "Username",
+        rolePlaceholder: "Role (e.g. Lead, Developer, Designer…)",
+        maxMembers: null,
+      },
+      "Cooperative": {
+        hint: "Add co-op members and their positions (e.g. President, Secretary, Treasurer, Member).",
+        usernamePlaceholder: "Username",
+        rolePlaceholder: "Position (e.g. President, Secretary, Member-at-Large…)",
+        maxMembers: null,
+      },
+      "BD": {
+        hint: "A Benevolent Dictator structure has one person at the top. Add that person below.",
+        usernamePlaceholder: "Username",
+        rolePlaceholder: "Benevolent Dictator",
+        maxMembers: 1,
+      },
+    };
 
-    function showMemberTypes(show) {
-      memberTypesSection.style.display = show ? 'block' : 'none';
+    // ── State ─────────────────────────────────────────────────────────────────
+    let roles = [];
+    let currentStructure = null;
+
+    // ── Auto-save ─────────────────────────────────────────────────────────────
+    let saveTimeout;
+    function scheduleAutoSave() {
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(saveMembershipData, 1000);
+    }
+
+    // ── Roles rendering ───────────────────────────────────────────────────────
+    function escHtml(str) {
+      return (str || "")
+        .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    }
+
+    function renderRoles() {
+      const config    = STRUCTURE_CONFIG[currentStructure] || {};
+      const container = document.getElementById("rolesContainer");
+      const addBtn    = document.getElementById("addRoleBtn");
+      const section   = document.getElementById("rolesSection");
+
+      if (!currentStructure) { section.style.display = "none"; return; }
+
+      section.style.display = "block";
+      document.getElementById("rolesHint").textContent = config.hint || "";
+
+      const atMax = config.maxMembers !== null && roles.length >= config.maxMembers;
+      addBtn.style.display = atMax ? "none" : "inline-block";
+
+      container.innerHTML = "";
+      roles.forEach((r, i) => {
+        const row = document.createElement("div");
+        row.className = "role-row";
+
+        // BD: role field is read-only
+        const roleInputHtml = config.maxMembers === 1
+          ? `<input class="role-input role-fixed" type="text"
+               value="${escHtml(config.rolePlaceholder)}" readonly
+               data-index="${i}" data-field="role" />`
+          : `<input class="role-input" type="text"
+               placeholder="${escHtml(config.rolePlaceholder)}"
+               value="${escHtml(r.role)}"
+               data-index="${i}" data-field="role" />`;
+
+        // BD: no remove button (single mandatory row)
+        const removeBtnHtml = config.maxMembers === 1
+          ? ""
+          : `<button class="remove-btn" data-index="${i}" title="Remove">✕</button>`;
+
+        row.innerHTML = `
+          <input class="role-input" type="text"
+            placeholder="${escHtml(config.usernamePlaceholder)}"
+            value="${escHtml(r.username)}"
+            data-index="${i}" data-field="username" />
+          ${roleInputHtml}
+          ${removeBtnHtml}
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    // ── Roles events ──────────────────────────────────────────────────────────
+    document.getElementById("rolesContainer").addEventListener("input", e => {
+      const el = e.target;
+      if (el.dataset.index === undefined) return;
+      const i = parseInt(el.dataset.index, 10);
+      roles[i][el.dataset.field] = el.value;
+      scheduleAutoSave();
+    });
+
+    document.getElementById("rolesContainer").addEventListener("click", e => {
+      if (!e.target.classList.contains("remove-btn")) return;
+      roles.splice(parseInt(e.target.dataset.index, 10), 1);
+      renderRoles();
+      scheduleAutoSave();
+    });
+
+    document.getElementById("addRoleBtn").addEventListener("click", () => {
+      roles.push({ username: "", role: "" });
+      renderRoles();
+    });
+
+    // ── Structure selection ───────────────────────────────────────────────────
+    function selectStructure(value) {
+      currentStructure = value;
+      const config = STRUCTURE_CONFIG[value] || {};
+      // Seed one empty row; BD seeds its fixed row
+      roles = config.maxMembers === 1
+        ? [{ username: "", role: config.rolePlaceholder }]
+        : [];
+      renderRoles();
+      scheduleAutoSave();
+    }
+
+    // ── Registration UI ───────────────────────────────────────────────────────
+    function updateRegistrationUI(value) {
+      document.getElementById("infoClosedReg").style.display    = value === "Closed Registration"       ? "block" : "none";
+      document.getElementById("infoApprovalReq").style.display  = value === "Sign-up Approval Required" ? "block" : "none";
+      document.getElementById("infoInstantJoin").style.display  = value === "Instant Join"              ? "block" : "none";
+      document.getElementById("approvalMethodSection").style.display =
+        value === "Sign-up Approval Required" ? "block" : "none";
+    }
+
+    // ── Generic button group wiring ───────────────────────────────────────────
+    function wireGroup(groupId, onSelect) {
+      document.querySelectorAll(`#${groupId} .module-btn`).forEach(btn => {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(`#${groupId} .module-btn`).forEach(b => b.classList.remove("selected"));
+          this.classList.add("selected");
+          if (onSelect) onSelect(this.dataset.value);
+          scheduleAutoSave();
+        });
+      });
+    }
+
+    function setSelected(groupId, value) {
+      document.querySelectorAll(`#${groupId} .module-btn`).forEach(btn => {
+        btn.classList.toggle("selected", btn.dataset.value === value);
+      });
+    }
+
+    function getSelected(groupId) {
+      const btn = document.querySelector(`#${groupId} .module-btn.selected`);
+      return btn ? btn.dataset.value : null;
+    }
+
+    wireGroup("structureButtons", selectStructure);
+    wireGroup("registrationButtons", updateRegistrationUI);
+    wireGroup("approvalMethodButtons");
+
+    // ── Supabase ──────────────────────────────────────────────────────────────
+    function collectFormData() {
+      return {
+        structure:      currentStructure,
+        roles:          roles,
+        registration:   getSelected("registrationButtons"),
+        approvalMethod: getSelected("approvalMethodButtons"),
+      };
+    }
+
+    function populateForm(d) {
+      if (d.structure) {
+        currentStructure = d.structure;
+        setSelected("structureButtons", d.structure);
+        if (d.roles) roles = d.roles;
+        renderRoles();
+      }
+      if (d.registration) {
+        setSelected("registrationButtons", d.registration);
+        updateRegistrationUI(d.registration);
+      }
+      if (d.approvalMethod) setSelected("approvalMethodButtons", d.approvalMethod);
     }
 
     async function loadMembershipData() {
       const communityId = localStorage.getItem("communityId");
-      if (!communityId) { console.error("No community ID found"); return; }
-
+      if (!communityId) return;
       const { data, error } = await supabase
         .from("communities")
         .select("membership_data")
         .eq("id", communityId)
         .single();
-
       if (error) { console.error("Error loading membership data:", error); return; }
-      if (data && data.membership_data) populateForm(data.membership_data);
-    }
-
-    function populateForm(d) {
-      if (d.selectedType) {
-        document.querySelectorAll('.module-btn').forEach(btn => {
-          if (btn.textContent === d.selectedType) btn.classList.add('selected');
-        });
-        showMemberTypes(d.selectedType === 'Closed Membership');
-      }
-      if (d.memberTypes) {
-        document.getElementById('memberTypes').value = d.memberTypes;
-      }
-    }
-
-    function collectFormData() {
-      const selectedBtn = document.querySelector('.module-btn.selected');
-      return {
-        selectedType: selectedBtn ? selectedBtn.textContent : null,
-        memberTypes:  document.getElementById('memberTypes').value
-      };
+      if (data?.membership_data) populateForm(data.membership_data);
     }
 
     async function saveMembershipData() {
       const communityId = localStorage.getItem("communityId");
-      if (!communityId) { console.error("No community ID found"); return false; }
-
+      if (!communityId) return false;
       const { error } = await supabase
         .from("communities")
         .update({ membership_data: collectFormData() })
         .eq("id", communityId);
-
       if (error) { console.error("Error saving membership data:", error); return false; }
-      console.log("Membership data saved successfully");
+      console.log("Membership data saved");
       return true;
     }
 
-    let saveTimeout;
-    function autoSaveData() {
-      clearTimeout(saveTimeout);
-      saveTimeout = setTimeout(saveMembershipData, 1000);
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      loadMembershipData();
-
-      document.querySelectorAll('.module-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          document.querySelectorAll('.module-btn').forEach(b => b.classList.remove('selected'));
-          this.classList.add('selected');
-          showMemberTypes(this.textContent === 'Closed Membership');
-          autoSaveData();
-        });
-      });
-
-      document.getElementById('memberTypes').addEventListener('input', autoSaveData);
-    });
+    document.addEventListener("DOMContentLoaded", loadMembershipData);
   </script>
 </body>
 </html>

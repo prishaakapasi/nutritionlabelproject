@@ -28,16 +28,44 @@
       <h3>Set a shared understanding about how governance works in your community. Can people submit proposals, and if so how? Who can be involved in the decision-making? Is there a deliberation process? How are your rules enforced?</h3>
       
       <h2>Moderation</h2>
-      <textarea id="moderation" name="moderation" placeholder="Describe your moderation process, reporting procedures, conflict resolution, disciplinary steps, warning system, etc."></textarea>
-      
+      <textarea id="moderation" name="moderation" placeholder="Describe your moderation process, conflict resolution, disciplinary steps, warning system, etc."></textarea>
+
+      <h2>Reporting</h2>
+      <textarea id="reporting" name="reporting" placeholder="Explain how users report content or behavior, what information they provide, how reports are reviewed, expected response times, and how users are notified of outcomes."></textarea>
+
       <h2>Decision-making</h2>
       <textarea id="decisionMaking" name="decisionMaking" placeholder="Explain how decisions about rules, infrastructure changes, and community direction are made."></textarea>
       
       <h2>Updates</h2>
-      <textarea id="updates" name="updates" placeholder="Where can people find server updates? (e.g., admin account, announcement channel, etc.)"></textarea>
-      
+      <div class="option-buttons" id="updatesButtons">
+        <button type="button" class="option-btn" data-group="updates" data-value="announcement_feed">Announcement Feed</button>
+        <button type="button" class="option-btn" data-group="updates" data-value="admin_account">Admin Account</button>
+        <button type="button" class="option-btn" data-group="updates" data-value="other">Other</button>
+      </div>
+
+      <div class="link-input-wrapper" id="updates-announcement_feed-link">
+      <input type="text" id="updates-announcement_feed-url" placeholder=" Announcement Feed Link " />
+      </div>
+      <div class="link-input-wrapper" id="updates-admin_account-link">
+      <input type="text" id="updates-admin_account-url" placeholder=" Updates Link" />
+      </div>
+      <div class="link-input-wrapper" id="updates-other-link">
+        <input type="text" id="updates-other-url" placeholder="Other Link" />
+      </div>
+
       <h2>Feedback</h2>
-      <textarea id="feedback" name="feedback" placeholder="Describe where and how people can submit feedback, requests, polls, or suggestions."></textarea>
+      <div class="option-buttons" id="feedbackButtons">
+        <button type="button" class="option-btn" data-group="feedback" data-value="form">Form</button>
+        <button type="button" class="option-btn" data-group="feedback" data-value="admin_contact">Admin Contact</button>
+      </div>
+
+      <div class="link-input-wrapper" id="feedback-form-link">
+        <input type="text" id="feedback-form-url" placeholder="Link to form" />
+      </div>
+      <div class="link-input-wrapper" id="feedback-admin_contact-link">
+        <input type="text" id="feedback-admin_contact-url" placeholder="Link to Admin Contact" />
+      </div>
+
     </main>
   </div>
 
@@ -50,12 +78,85 @@
     const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
     const supabase = createClient(supabaseUrl, supabaseKey);
 
+
+    function setupToggleButtons(groupName) {
+      const buttons = document.querySelectorAll(`.option-btn[data-group="${groupName}"]`);
+      buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const value = btn.dataset.value;
+          const isSelected = btn.classList.contains("selected");
+
+          btn.classList.toggle("selected", !isSelected);
+
+          const linkWrapper = document.getElementById(`${groupName}-${value}-link`);
+          if (linkWrapper) {
+            linkWrapper.classList.toggle("visible", !isSelected);
+          }
+
+          autoSaveData();
+        });
+      });
+    }
+
+    setupToggleButtons("updates");
+    setupToggleButtons("feedback");
+
+    document.querySelectorAll(".link-input-wrapper input").forEach(input => {
+      input.addEventListener("input", autoSaveData);
+    });
+
+
+    function getButtonSelections(groupName) {
+      const selected = [];
+      document.querySelectorAll(`.option-btn[data-group="${groupName}"].selected`).forEach(btn => {
+        const value = btn.dataset.value;
+        const urlInput = document.getElementById(`${groupName}-${value}-url`);
+        selected.push({ value, url: urlInput ? urlInput.value : "" });
+      });
+      return selected;
+    }
+
+    function setButtonSelections(groupName, selections) {
+      if (!Array.isArray(selections)) return;
+      selections.forEach(({ value, url }) => {
+        const btn = document.querySelector(`.option-btn[data-group="${groupName}"][data-value="${value}"]`);
+        if (btn) {
+          btn.classList.add("selected");
+          const linkWrapper = document.getElementById(`${groupName}-${value}-link`);
+          if (linkWrapper) linkWrapper.classList.add("visible");
+          const urlInput = document.getElementById(`${groupName}-${value}-url`);
+          if (urlInput && url) urlInput.value = url;
+        }
+      });
+    }
+
+    function collectFormData() {
+      return {
+        moderation: document.getElementById("moderation").value,
+        reporting: document.getElementById("reporting").value,
+        decisionMaking: document.getElementById("decisionMaking").value,
+        updates: getButtonSelections("updates"),
+        feedback: getButtonSelections("feedback"),
+      };
+    }
+
+    function populateForm(processesData) {
+      if (processesData.moderation)
+        document.getElementById("moderation").value = processesData.moderation;
+      if (processesData.reporting)
+        document.getElementById("reporting").value = processesData.reporting;
+      if (processesData.decisionMaking)
+        document.getElementById("decisionMaking").value = processesData.decisionMaking;
+      if (processesData.updates)
+        setButtonSelections("updates", processesData.updates);
+      if (processesData.feedback)
+        setButtonSelections("feedback", processesData.feedback);
+    }
+
+
     async function loadCommunityProcessesData() {
       const communityId = localStorage.getItem("communityId");
-      if (!communityId) {
-        console.error("No community ID found");
-        return;
-      }
+      if (!communityId) { console.error("No community ID found"); return; }
 
       const { data, error } = await supabase
         .from("communities")
@@ -63,62 +164,20 @@
         .eq("id", communityId)
         .single();
 
-      if (error) {
-        console.error("Error loading community processes data:", error);
-        return;
-      }
-
-      if (data && data.communityprocesses_data) {
-        populateForm(data.communityprocesses_data);
-      }
-    }
-
-    function populateForm(processesData) {
-      if (processesData.moderation) {
-        document.getElementById("moderation").value = processesData.moderation;
-      }
-
-      if (processesData.decisionMaking) {
-        document.getElementById("decisionMaking").value = processesData.decisionMaking;
-      }
-
-      if (processesData.updates) {
-        document.getElementById("updates").value = processesData.updates;
-      }
-
-      if (processesData.feedback) {
-        document.getElementById("feedback").value = processesData.feedback;
-      }
-    }
-
-    function collectFormData() {
-      return {
-        moderation: document.getElementById("moderation").value,
-        decisionMaking: document.getElementById("decisionMaking").value,
-        updates: document.getElementById("updates").value,
-        feedback: document.getElementById("feedback").value
-      };
+      if (error) { console.error("Error loading community processes data:", error); return; }
+      if (data && data.communityprocesses_data) populateForm(data.communityprocesses_data);
     }
 
     async function saveCommunityProcessesData() {
       const communityId = localStorage.getItem("communityId");
-      if (!communityId) {
-        console.error("No community ID found");
-        return false;
-      }
-
-      const processesData = collectFormData();
+      if (!communityId) { console.error("No community ID found"); return false; }
 
       const { error } = await supabase
         .from("communities")
-        .update({ communityprocesses_data: processesData })
+        .update({ communityprocesses_data: collectFormData() })
         .eq("id", communityId);
 
-      if (error) {
-        console.error("Error saving community processes data:", error);
-        return false;
-      }
-
+      if (error) { console.error("Error saving community processes data:", error); return false; }
       console.log("Community processes data saved successfully");
       return true;
     }
@@ -126,18 +185,15 @@
     let saveTimeout;
     function autoSaveData() {
       clearTimeout(saveTimeout);
-      saveTimeout = setTimeout(() => {
-        saveCommunityProcessesData();
-      }, 1000);
+      saveTimeout = setTimeout(() => saveCommunityProcessesData(), 1000);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
       loadCommunityProcessesData();
 
-      document.getElementById("moderation").addEventListener("input", autoSaveData);
-      document.getElementById("decisionMaking").addEventListener("input", autoSaveData);
-      document.getElementById("updates").addEventListener("input", autoSaveData);
-      document.getElementById("feedback").addEventListener("input", autoSaveData);
+      ["moderation", "reporting", "decisionMaking"].forEach(id => {
+        document.getElementById(id).addEventListener("input", autoSaveData);
+      });
     });
   </script>
 </body>
