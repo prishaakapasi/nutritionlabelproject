@@ -8,7 +8,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
   <title>Create Page</title>
   <link rel="stylesheet" href="setuprecipe.css" />
-
 </head>
 
 <body>
@@ -23,7 +22,7 @@
   </nav>
 
   <main>
-  <div class="items">
+    <div class="items">
 
       <div class="page-header">
         <h1 class="page-title">CREATE A COMMUNITY RECIPE</h1>
@@ -33,7 +32,7 @@
       <h1>COMMUNITY NAME <span class="required-star" aria-label="required">✱</span></h1>
       <input type="text" id="communityNameInput" placeholder="e.g. Mastodon Social" required />
 
-      <h1>COMMUNITY LINK </h1>
+      <h1>COMMUNITY LINK</h1>
       <input type="text" id="communityLinkInput" placeholder="e.g. https://mastodon.social" />
 
       <h1>COMMUNITY TYPE <span class="required-star" aria-label="required">✱</span></h1>
@@ -48,8 +47,8 @@
         <option value="other">Other</option>
       </select>
 
-      <h1 class="label">COMMUNITY SIZE 
-        <span class="info-icon"> ⓘ <span class="infoicontext"> Any broadly shared guidelines your community adheres to </span> </span>
+      <h1 class="label">COMMUNITY SIZE <span class="required-star" aria-label="required">✱</span>
+        <span class="info-icon"> ⓘ <span class="infoicontext">Select the approximate number of members in your community</span> </span>
       </h1>
       <div id="sizeContainer">
         <button type="button" class="size-btn" data-size="0-10">0–10</button>
@@ -60,21 +59,20 @@
         <button type="button" class="size-btn" data-size="10000+">10k+</button>
       </div>
 
-      <h1 class="label">COMMUNITY KEYWORDS 
-        <span class="info-icon"> ⓘ <span class="infoicontext"> "Add keywords that help describe your community; press Tab to add another keyword" </span> </span>
+      <h1 class="label">COMMUNITY KEYWORDS <span class="required-star" aria-label="required">✱</span>
+        <span class="info-icon"> ⓘ <span class="infoicontext">Add keywords that help describe your community; press Tab or Enter to add each one</span> </span>
       </h1>
       <div id="keywordsWrapper">
         <div id="keywordTags"></div>
         <input type="text" id="keywordInput" placeholder="Type a keyword and press Tab or Enter…" />
       </div>
 
-      <h1 class="label">Select Category Modules
-        <span class="info-icon"> ⓘ <span class="infoicontext"> What governance decisions are relevant to your community" </span> </span>
+      <h1 class="label">SELECT CATEGORY MODULES
+        <span class="info-icon"> ⓘ <span class="infoicontext">What governance decisions are relevant to your community</span> </span>
       </h1>
       <div id="modulesContainer">
-        <button type="button" class="module-btn">Admin</button>
+        <button type="button" class="module-btn">Roles</button>
         <button type="button" class="module-btn">Rules</button>
-        <button type="button" class="module-btn">Membership</button>
         <button type="button" class="module-btn">Federation</button>
         <button type="button" class="module-btn">Infrastructure</button>
         <button type="button" class="module-btn">Community Processes</button>

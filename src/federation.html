@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="federation.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Federation</title>
+
 </head>
 <body>
   <nav class="navbar">
@@ -22,51 +23,155 @@
   
   <div class="content-wrapper">
     <aside class="sidebar">
-      <nav class="sidebar-nav" id="dynamicNav">
-      </nav>
+      <nav class="sidebar-nav" id="dynamicNav"></nav>
     </aside>
 
     <main>
       <h1>Federation</h1>
       <h3>Summarize your policy for federating with other servers, including those on other protocols.</h3>
+
       
-      <h2>Federation Mode </h2>
-      <div id="federationContainer" class="button-container">
-        <button class="module-btn"> Allowlist Mode </button>
-        <button class="module-btn">Blocklist Mode</button>
-        <button class="add-module-btn">+</button>
+      <div class="policy-section">
+        <div class="section-header">
+          <h2>Federation Mode</h2>
+          <span class="info-tooltip">ⓘ<span class="tooltip-text">Allowlist: servers must be approved to federate. Blocklist: open by default, blocked as needed.</span></span>
+        </div>
+        <div id="federationContainer" class="mode-group">
+          <button class="module-btn" data-group="federation" data-exclusive="true">Allowlist Mode</button>
+          <button class="module-btn" data-group="federation" data-exclusive="true">Blocklist Mode</button>
+        </div>
       </div>
-      <div class="new-module-container" style="display: none;">
-        <input type="text" class="new-module-text" placeholder="Enter new federation policy...">
-        <div class="button-group">
+
+      
+      <div class="policy-section">
+        <div class="section-header">
+          <h2>Policies</h2>
+        </div>
+
+        
+        <div style="margin-bottom: 1.25rem;">
+          <div class="toggle-row">
+            <label class="toggle-switch">
+              <input type="checkbox" id="antimetaToggle">
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="toggle-label">
+              <strong>Anti-Meta Fedipact</strong>
+              <span class="toggle-sublabel">This server does not federate with Threads</span>
+            </span>
+          </div>
+        </div>
+
+        
+        <div style="margin-bottom: 1.25rem;">
+          <div class="section-header" style="margin-bottom: 0.5rem;">
+            <strong>Reasons for defederation</strong>
+          </div>
+          <div id="reasonsContainer" class="reasons-group">
+            <button class="module-btn" data-group="reasons">Spam</button>
+            <button class="module-btn" data-group="reasons">Illegal Content</button>
+            <button class="module-btn" data-group="reasons">Imcompatible Values</button>
+            <button class="module-btn" data-group="reasons">Scale</button>
+            <button class="module-btn" data-group="reasons">Disputes</button>
+            <button class="module-btn" data-group="reasons">Non-responsive admin</button>
+            <button class="module-btn" data-group="reasons">No bots</button>
+            <button class="add-module-btn" id="reasonsAddBtn">+ Other</button>
+          </div>
+          <div class="new-module-container" id="reasonsNewItem">
+            <input type="text" class="new-module-text" placeholder="Enter custom reason...">
+            <button class="save-module">Save</button>
+            <button class="cancel-module">Cancel</button>
+          </div>
+        </div>
+
+        
+        <div style="margin-bottom: 1.25rem;">
+          <div class="section-header" style="margin-bottom: 0.5rem;">
+            <strong>Defederation Strategy</strong>
+            <span class="info-tooltip">ⓘ<span class="tooltip-text">Steps taken before fully defederating. Select all that apply — each reveals a notes field.</span></span>
+          </div>
+          <div class="strategy-list">
+
+            <div class="strategy-item">
+              <div class="strategy-item-row">
+                <button class="module-btn" data-group="strategy" data-notes-id="notes-warn">Warn</button>
+              </div>
+              <div class="strategy-notes" id="notes-warn">
+                <textarea placeholder="Describe how you warn another server admin…"></textarea>
+              </div>
+            </div>
+
+            <div class="strategy-item">
+              <div class="strategy-item-row">
+                <button class="module-btn" data-group="strategy" data-notes-id="notes-mute">Mute</button>
+              </div>
+              <div class="strategy-notes" id="notes-mute">
+                <textarea placeholder="Describe your muting policy…"></textarea>
+              </div>
+            </div>
+
+            <div class="strategy-item">
+              <div class="strategy-item-row">
+                <button class="module-btn" data-group="strategy" data-notes-id="notes-ghost">Ghost</button>
+                <span class="strategy-note-label">Bonfire only</span>
+              </div>
+              <div class="strategy-notes" id="notes-ghost">
+                <textarea placeholder="Describe your ghosting policy…"></textarea>
+              </div>
+            </div>
+
+            <div class="strategy-item">
+              <div class="strategy-item-row">
+                <button class="module-btn" data-group="strategy" data-notes-id="notes-deliberate">Deliberate</button>
+              </div>
+              <div class="strategy-notes" id="notes-deliberate">
+                <textarea placeholder="Describe your deliberation process…"></textarea>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="policy-section">
+        <div class="section-header">
+          <h2>Bridging </h2>
+          <span class="info-tooltip">ⓘ<span class="tooltip-text">Other protocols this server allows bridged content from</span></span>
+        </div>
+        <div id="bridgingContainer" class="button-container">
+          <button class="module-btn" data-group="bridging">AT Protocol</button>
+          <button class="module-btn" data-group="bridging">Nostr</button>
+          <button class="module-btn" data-group="bridging">Farcaster</button>
+          <button class="add-module-btn" id="bridgingAddBtn">+</button>
+        </div>
+        <div class="new-module-container" id="bridgingNewItem">
+          <input type="text" class="new-module-text" placeholder="Enter bridging protocol...">
           <button class="save-module">Save</button>
           <button class="cancel-module">Cancel</button>
         </div>
       </div>
 
-      <h2>Bridging Policy</h2>
-      <div id="bridgingContainer" class="button-container">
-        <button class="module-btn">AT Protocol</button>
-        <button class="module-btn">Nostr</button>
-        <button class="module-btn">Farcaster</button>
-        <button class="add-module-btn">+</button>
-      </div>
-      <div class="new-module-container" style="display: none;">
-        <input type="text" class="new-module-text" placeholder="Enter new bridging policy...">
-        <div class="button-group">
+      
+      <div class="policy-section">
+        <div class="section-header">
+          <h2>Blocklist Subscriptions</h2>
+        </div>
+        <div id="blocklistsContainer" class="button-container">
+          <button class="module-btn" data-group="blocklists">Garden Fence</button>
+          <button class="module-btn" data-group="blocklists">CARIAD</button>
+          <button class="module-btn" data-group="blocklists">IFTAS-DNI</button>
+          <button class="module-btn" data-group="blocklists">Seridy Tier-0</button>
+          <button class="module-btn" data-group="blocklists">FediNuke</button>
+          <button class="add-module-btn" id="blocklistsAddBtn">+</button>
+        </div>
+        <div class="new-module-container" id="blocklistsNewItem">
+          <input type="text" class="new-module-text" placeholder="Enter blocklist name...">
           <button class="save-module">Save</button>
           <button class="cancel-module">Cancel</button>
         </div>
       </div>
 
-      <h2>Blocklists</h2>
-      <div id="blocklistsContainer" class="button-container">
-        <button class="module-btn">Garden Fence</button>
-        <button class="module-btn">CARIAD</button>
-        <button class="module-btn">IFTAS-DNI</button>
-        <button class="module-btn">Seridy Tier-0</button>
-        <button class="module-btn">FediNuke</button>
-      </div>
     </main>
   </div>
 
@@ -79,235 +184,224 @@
     const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const defaultFederation = ['Whitelist Mode', 'Blocklist Mode'];
-    const defaultBridging = ['AT Protocol', 'Nostr', 'Farcaster'];
-    const defaultBlocklists = ['Garden Fence', 'CARIAD', 'IFTAS-DNI', 'Seridy Tier-0', 'FediNuke'];
+    const defaultFederation  = ['Allowlist Mode', 'Blocklist Mode'];
+    const defaultBridging    = ['AT Protocol', 'Nostr', 'Farcaster'];
+    const defaultBlocklists  = ['Garden Fence', 'CARIAD', 'IFTAS-DNI', 'Seridy Tier-0', 'FediNuke'];
+    const defaultReasons     = ['spam', 'illegal content', 'incompatible values', 'scale', 'disputes', 'non-responsive admin', 'no bots'];
+    const defaultStrategy    = ['warn', 'mute', 'ghost', 'deliberate'];
 
-    async function loadFederationData() {
-      const communityId = localStorage.getItem("communityId");
-      if (!communityId) {
-        console.error("No community ID found");
-        return;
-      }
-
-      const { data, error } = await supabase
-        .from("communities")
-        .select("federation_data")
-        .eq("id", communityId)
-        .single();
-
-      if (error) {
-        console.error("Error loading federation data:", error);
-        return;
-      }
-
-      if (data && data.federation_data) {
-        populateForm(data.federation_data);
-      }
-    }
-
-    function populateForm(federationData) {
-      if (federationData.selectedFederation && Array.isArray(federationData.selectedFederation)) {
-        federationData.selectedFederation.forEach(policy => {
-          const btn = Array.from(document.querySelectorAll('#federationContainer .module-btn'))
-            .find(b => b.textContent === policy);
-          if (btn) {
-            btn.classList.add('selected');
-          }
-        });
-      }
-
-      if (federationData.customFederation && Array.isArray(federationData.customFederation)) {
-        const container = document.getElementById('federationContainer');
-        const addBtn = container.querySelector('.add-module-btn');
-        
-        federationData.customFederation.forEach(policy => {
-          const newButton = document.createElement('button');
-          newButton.className = 'module-btn';
-          if (federationData.selectedFederation && federationData.selectedFederation.includes(policy)) {
-            newButton.classList.add('selected');
-          }
-          newButton.textContent = policy;
-          container.insertBefore(newButton, addBtn);
-          
-          newButton.addEventListener('click', function() {
-            this.classList.toggle('selected');
-            autoSaveData();
-          });
-        });
-      }
-
-      if (federationData.selectedBridging && Array.isArray(federationData.selectedBridging)) {
-        federationData.selectedBridging.forEach(policy => {
-          const btn = Array.from(document.querySelectorAll('#bridgingContainer .module-btn'))
-            .find(b => b.textContent === policy);
-          if (btn) {
-            btn.classList.add('selected');
-          }
-        });
-      }
-
-      if (federationData.customBridging && Array.isArray(federationData.customBridging)) {
-        const container = document.getElementById('bridgingContainer');
-        const addBtn = container.querySelector('.add-module-btn');
-        
-        federationData.customBridging.forEach(policy => {
-          const newButton = document.createElement('button');
-          newButton.className = 'module-btn';
-          if (federationData.selectedBridging && federationData.selectedBridging.includes(policy)) {
-            newButton.classList.add('selected');
-          }
-          newButton.textContent = policy;
-          container.insertBefore(newButton, addBtn);
-          
-          newButton.addEventListener('click', function() {
-            this.classList.toggle('selected');
-            autoSaveData();
-          });
-        });
-      }
-
-      if (federationData.selectedBlocklists && Array.isArray(federationData.selectedBlocklists)) {
-        federationData.selectedBlocklists.forEach(blocklist => {
-          const btn = Array.from(document.querySelectorAll('#blocklistsContainer .module-btn'))
-            .find(b => b.textContent === blocklist);
-          if (btn) {
-            btn.classList.add('selected');
-          }
-        });
-      }
-    }
-
-    function collectFormData() {
-      const selectedFederation = [];
-      document.querySelectorAll('#federationContainer .module-btn.selected').forEach(btn => {
-        selectedFederation.push(btn.textContent);
-      });
-
-      const customFederation = [];
-      document.querySelectorAll('#federationContainer .module-btn').forEach(btn => {
-        const text = btn.textContent;
-        if (!defaultFederation.includes(text) && text !== '+') {
-          customFederation.push(text);
-        }
-      });
-
-      const selectedBridging = [];
-      document.querySelectorAll('#bridgingContainer .module-btn.selected').forEach(btn => {
-        selectedBridging.push(btn.textContent);
-      });
-
-      const customBridging = [];
-      document.querySelectorAll('#bridgingContainer .module-btn').forEach(btn => {
-        const text = btn.textContent;
-        if (!defaultBridging.includes(text) && text !== '+') {
-          customBridging.push(text);
-        }
-      });
-
-      const selectedBlocklists = [];
-      document.querySelectorAll('#blocklistsContainer .module-btn.selected').forEach(btn => {
-        selectedBlocklists.push(btn.textContent);
-      });
-
-      return {
-        selectedFederation,
-        customFederation,
-        selectedBridging,
-        customBridging,
-        selectedBlocklists
-      };
-    }
-
-    async function saveFederationData() {
-      const communityId = localStorage.getItem("communityId");
-      if (!communityId) {
-        console.error("No community ID found");
-        return false;
-      }
-
-      const federationData = collectFormData();
-
-      const { error } = await supabase
-        .from("communities")
-        .update({ federation_data: federationData })
-        .eq("id", communityId);
-
-      if (error) {
-        console.error("Error saving federation data:", error);
-        return false;
-      }
-
-      console.log("Federation data saved successfully");
-      return true;
-    }
-
+    
     let saveTimeout;
     function autoSaveData() {
       clearTimeout(saveTimeout);
-      saveTimeout = setTimeout(() => {
-        saveFederationData();
-      }, 1000);
+      saveTimeout = setTimeout(saveFederationData, 1000);
     }
 
-    function initializeSection(containerElement) {
-      const addBtn = containerElement.querySelector('.add-module-btn');
-      const newModuleContainer = containerElement.nextElementSibling;
-      const newModuleText = newModuleContainer.querySelector('.new-module-text');
-      const saveBtn = newModuleContainer.querySelector('.save-module');
-      const cancelBtn = newModuleContainer.querySelector('.cancel-module');
+    
+    function collectFormData() {
+      const sel = id => [...document.querySelectorAll(`#${id} .module-btn.selected`)].map(b => b.textContent.trim());
+      const all = (id, defaults) => {
+        const custom = [];
+        document.querySelectorAll(`#${id} .module-btn`).forEach(b => {
+          const t = b.textContent.trim();
+          if (!defaults.includes(t)) custom.push(t);
+        });
+        return custom;
+      };
 
-      addBtn.addEventListener('click', function() {
-        newModuleContainer.style.display = 'block';
-        newModuleText.focus();
+      const strategyNotes = {};
+      document.querySelectorAll('.strategy-item').forEach(item => {
+        const btn = item.querySelector('.module-btn');
+        const ta  = item.querySelector('textarea');
+        if (btn && ta) strategyNotes[btn.textContent.trim()] = ta.value.trim();
       });
 
-      saveBtn.addEventListener('click', function() {
-        const newModule = newModuleText.value.trim();
-        if (newModule) {
-          const newButton = document.createElement('button');
-          newButton.className = 'module-btn';
-          newButton.textContent = newModule;
+      return {
+        selectedFederation:  sel('federationContainer'),
+        selectedBridging:    sel('bridgingContainer'),
+        customBridging:      all('bridgingContainer', defaultBridging),
+        selectedBlocklists:  sel('blocklistsContainer'),
+        selectedReasons:     sel('reasonsContainer'),
+        customReasons:       all('reasonsContainer', defaultReasons),
+        selectedStrategy:    sel('strategyList'),   
+        strategyNotes,
+        antiMeta: document.getElementById('antimetaToggle').checked,
+      };
+    }
 
-          newButton.addEventListener('click', function() {
-            this.classList.toggle('selected');
-            autoSaveData();
-          });
+    
+    function collectStrategy() {
+      return {
+        selectedStrategy: [...document.querySelectorAll('.strategy-list .module-btn.selected')].map(b => b.textContent.trim()),
+      };
+    }
 
-          containerElement.insertBefore(newButton, addBtn);
-          
-          newModuleContainer.style.display = 'none';
-          newModuleText.value = '';
+    
+    async function saveFederationData() {
+      const communityId = localStorage.getItem("communityId");
+      if (!communityId) return;
+
+      const data = { ...collectFormData(), ...collectStrategy() };
+      const { error } = await supabase.from("communities").update({ federation_data: data }).eq("id", communityId);
+      if (error) console.error("Error saving:", error);
+      else console.log("Saved federation data");
+    }
+
+    
+    async function loadFederationData() {
+      const communityId = localStorage.getItem("communityId");
+      if (!communityId) return;
+
+      const { data, error } = await supabase.from("communities").select("federation_data").eq("id", communityId).single();
+      if (error || !data?.federation_data) return;
+      populateForm(data.federation_data);
+    }
+
+    function markSelected(containerSelector, list) {
+      if (!Array.isArray(list)) return;
+      document.querySelectorAll(containerSelector + ' .module-btn').forEach(btn => {
+        if (list.includes(btn.textContent.trim())) btn.classList.add('selected');
+      });
+    }
+
+    function populateForm(d) {
+      markSelected('#federationContainer', d.selectedFederation);
+      markSelected('#bridgingContainer',   d.selectedBridging);
+      markSelected('#blocklistsContainer', d.selectedBlocklists);
+      markSelected('#reasonsContainer',    d.selectedReasons);
+
+      
+      if (d.customReasons) addCustomButtons('reasonsContainer', d.customReasons, defaultReasons, d.selectedReasons || []);
+      
+      if (d.customBridging) addCustomButtons('bridgingContainer', d.customBridging, defaultBridging, d.selectedBridging || []);
+
+      
+      if (d.selectedStrategy) {
+        document.querySelectorAll('.strategy-list .module-btn').forEach(btn => {
+          if (d.selectedStrategy.includes(btn.textContent.trim())) {
+            btn.classList.add('selected');
+            const notesId = btn.dataset.notesId;
+            if (notesId) document.getElementById(notesId)?.classList.add('visible');
+          }
+        });
+      }
+      if (d.strategyNotes) {
+        Object.entries(d.strategyNotes).forEach(([key, val]) => {
+          const btn = [...document.querySelectorAll('.strategy-list .module-btn')].find(b => b.textContent.trim() === key);
+          if (btn) {
+            const ta = document.getElementById(btn.dataset.notesId)?.querySelector('textarea');
+            if (ta) ta.value = val;
+          }
+        });
+      }
+
+      if (d.antiMeta !== undefined) {
+        document.getElementById('antimetaToggle').checked = d.antiMeta;
+      }
+    }
+
+    function addCustomButtons(containerId, items, defaults, selected) {
+      const container = document.getElementById(containerId);
+      const addBtn = container.querySelector('.add-module-btn');
+      items.forEach(text => {
+        if (!defaults.includes(text)) {
+          const btn = makeToggleBtn(text);
+          if (selected.includes(text)) btn.classList.add('selected');
+          container.insertBefore(btn, addBtn);
+        }
+      });
+    }
+
+    
+    function makeToggleBtn(text) {
+      const btn = document.createElement('button');
+      btn.className = 'module-btn';
+      btn.textContent = text;
+      btn.addEventListener('click', () => { btn.classList.toggle('selected'); autoSaveData(); });
+      return btn;
+    }
+
+    
+    function initAddFlow(addBtnId, newItemId, containerId, placeholder) {
+      const addBtn    = document.getElementById(addBtnId);
+      const newItem   = document.getElementById(newItemId);
+      const input     = newItem.querySelector('.new-module-text');
+      const saveBtn   = newItem.querySelector('.save-module');
+      const cancelBtn = newItem.querySelector('.cancel-module');
+      const container = document.getElementById(containerId);
+      const insertBefore = addBtn; 
+
+      input.placeholder = placeholder;
+
+      addBtn.addEventListener('click', () => { newItem.classList.add('visible'); input.focus(); });
+      cancelBtn.addEventListener('click', () => { newItem.classList.remove('visible'); input.value = ''; });
+      saveBtn.addEventListener('click', () => {
+        const val = input.value.trim();
+        if (!val) return;
+        const btn = makeToggleBtn(val);
+        container.insertBefore(btn, insertBefore);
+        newItem.classList.remove('visible');
+        input.value = '';
+        autoSaveData();
+      });
+      input.addEventListener('keypress', e => { if (e.key === 'Enter') saveBtn.click(); });
+    }
+
+    
+    function initExclusiveModeButtons() {
+      document.querySelectorAll('#federationContainer .module-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const wasSelected = btn.classList.contains('selected');
+          document.querySelectorAll('#federationContainer .module-btn').forEach(b => b.classList.remove('selected'));
+          if (!wasSelected) btn.classList.add('selected');
           autoSaveData();
-        }
+        });
       });
+    }
 
-      cancelBtn.addEventListener('click', function() {
-        newModuleContainer.style.display = 'none';
-        newModuleText.value = '';
-      });
-
-      newModuleText.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-          saveBtn.click();
+    
+    function initStrategyButtons() {
+      document.querySelectorAll('.strategy-list .module-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          btn.classList.toggle('selected');
+          const notesId = btn.dataset.notesId;
+          if (notesId) {
+            const notesEl = document.getElementById(notesId);
+            notesEl?.classList.toggle('visible', btn.classList.contains('selected'));
+          }
+          autoSaveData();
+        });
+        
+        const notesId = btn.dataset.notesId;
+        if (notesId) {
+          document.getElementById(notesId)?.querySelector('textarea')
+            ?.addEventListener('input', autoSaveData);
         }
       });
     }
 
+    
+    function initToggleButtons(containerSelector) {
+      document.querySelectorAll(containerSelector + ' .module-btn').forEach(btn => {
+        btn.addEventListener('click', () => { btn.classList.toggle('selected'); autoSaveData(); });
+      });
+    }
+
+    
     document.addEventListener("DOMContentLoaded", () => {
       loadFederationData();
 
-      initializeSection(document.getElementById('federationContainer'));
-      initializeSection(document.getElementById('bridgingContainer'));
+      initExclusiveModeButtons();
+      initStrategyButtons();
+      initToggleButtons('#reasonsContainer');
+      initToggleButtons('#bridgingContainer');
+      initToggleButtons('#blocklistsContainer');
 
-      document.querySelectorAll('#federationContainer .module-btn, #bridgingContainer .module-btn, #blocklistsContainer .module-btn').forEach(btn => {
-        if (!btn.classList.contains('add-module-btn')) {
-          btn.addEventListener('click', function() {
-            this.classList.toggle('selected');
-            autoSaveData();
-          });
-        }
-      });
+      initAddFlow('reasonsAddBtn',   'reasonsNewItem',   'reasonsContainer',   'Enter custom reason...');
+      initAddFlow('bridgingAddBtn',  'bridgingNewItem',  'bridgingContainer',  'Enter bridging protocol...');
+      initAddFlow('blocklistsAddBtn','blocklistsNewItem','blocklistsContainer','Enter blocklist name...');
+
+      document.getElementById('antimetaToggle').addEventListener('change', autoSaveData);
     });
   </script>
 </body>
