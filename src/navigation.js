@@ -6,22 +6,18 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 const moduleOrder = [
   "Infrastructure",
-  "Admin",
-  "Membership",
+  "Roles",
+  "Community Processes",
   "Rules",
   "Federation",
-  "Community Processes",
 ];
 
 const modulePages = {
-  "Admin": "admintype.html",
-  "Rules": "rules.html",
-  "Membership": "membership.html",
-  "Federation": "federation.html",
   "Infrastructure": "infrastructure.html",
-  "Data/Privacy": "dataprivacy.html",
-  "Legal Compliance": "legalcompliance.html",
-  "Community Processes": "communityprocesses.html"
+  "Roles": "membership.html",
+  "Community Processes": "communityprocesses.html",
+  "Rules": "rules.html",
+  "Federation": "federation.html",
 };
 
 function getModulePage(moduleName) {

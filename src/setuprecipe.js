@@ -27,8 +27,7 @@ console.log("Initial communityId:", communityId);
 
 const moduleOrder = [
   "Infrastructure",
-  "Admin",
-  "Membership",
+  "Roles",
   "Rules",
   "Federation",
   "Community Processes",
@@ -36,25 +35,23 @@ const moduleOrder = [
 
 const modulePages = {
   "Infrastructure":      "infrastructure.html",
-  "Admin":               "admintype.html",
-  "Membership":          "membership.html",
+  "Roles":          "membership.html",
   "Rules":               "rules.html",
   "Federation":          "federation.html",
   "Community Processes": "communityprocesses.html",
 };
 
-// Default module sets per community type
 const typeModuleDefaults = {
-  fediverse:       new Set(["Infrastructure", "Admin", "Membership", "Rules", "Federation"]),
-  chat:            new Set(["Admin", "Membership", "Rules", "Community Processes"]),
-  wiki:            new Set(["Admin", "Membership", "Rules", "Community Processes"]),
-  social:          new Set(["Admin", "Membership", "Rules", "Community Processes"]),
-  forum:           new Set(["Admin", "Membership", "Rules", "Community Processes"]),
-  citizen_science: new Set(["Admin", "Membership", "Rules", "Community Processes", "Infrastructure"]),
-  other:           new Set(["Admin", "Membership", "Rules"]),
+  fediverse:       new Set(["Infrastructure", "Roles", "Rules", "Federation"]),
+  chat:            new Set(["Roles", "Rules", "Community Processes"]),
+  wiki:            new Set(["Roles", "Rules", "Community Processes"]),
+  social:          new Set(["Roles", "Rules", "Community Processes"]),
+  forum:           new Set(["Roles", "Rules", "Community Processes"]),
+  citizen_science: new Set(["Roles", "Rules", "Community Processes", "Infrastructure"]),
+  other:           new Set(["Roles", "Rules"]),
 };
 
-// ── Debounced save helpers ────────────────────────────────────────────────────
+
 function debounce(fn, ms) {
   let t;
   return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
