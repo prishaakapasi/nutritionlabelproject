@@ -1006,7 +1006,6 @@ textarea:hover:not(:focus) {
   font-weight: 700;
   background-color: #ffffff;
   color: #FF8F00;
-  border: 2px dashed #FF8F00;
   box-shadow: 3px 3px 0 #000;
   cursor: pointer;
   font-family: "Cascadia Code", monospace;

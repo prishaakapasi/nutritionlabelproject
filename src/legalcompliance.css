@@ -228,7 +228,6 @@ h3 {
   font-size: 24px;
   background-color: var(--color-bg);
   color: var(--color-accent);
-  border: 2px dashed var(--color-accent);
   cursor: pointer;
   font-family: var(--font-primary);
   transition: all var(--transition-standard);

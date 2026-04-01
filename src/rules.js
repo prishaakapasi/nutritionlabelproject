@@ -141,8 +141,8 @@ const RULES_DATA = {
 
 const rbState = {};
 [...RULES_DATA.behavior, ...RULES_DATA.content].forEach(t => {
-  rbState[t.id] = { open: false, checked: {}, qualifier: "" };
-  t.rules.forEach(r => { rbState[t.id].checked[r] = false; });
+  rbState[t.id] = { open: false, checked: {}, qualifiers: {} };
+  t.rules.forEach(r => { rbState[t.id].checked[r] = false; rbState[t.id].qualifiers[r] = ""; });
 });
 
 
@@ -194,35 +194,35 @@ function rbRenderSection(containerId, types) {
         window.autoSaveData();
       });
       panel.appendChild(item);
-    });
 
-    if (t.qualifier && anyChecked) {
-      const qBlock = document.createElement("div");
-      qBlock.className = "qualifier-block";
-      qBlock.innerHTML = `<div class="qualifier-title">Qualifier / rule setting — applies to checked items above</div>`;
+      if (t.qualifier && s.checked[r]) {
+        const qBlock = document.createElement("div");
+        qBlock.className = "qualifier-block per-rule";
+        qBlock.innerHTML = `<div class="qualifier-title">Qualifier / rule setting</div>`;
 
-      const qOptions = document.createElement("div");
-      qOptions.className = "q-options";
+        const qOptions = document.createElement("div");
+        qOptions.className = "q-options";
 
-      QUALIFIER_OPTIONS.forEach((o, i) => {
-        const qOpt = document.createElement("div");
-        qOpt.className = "q-option";
-        qOpt.innerHTML = `
-          <div class="rb-radio ${s.qualifier === o ? "selected" : ""}"></div>
-          <span>${i + 1}. ${o}</span>
-        `;
-        qOpt.addEventListener("click", (e) => {
-          e.stopPropagation();
-          rbState[t.id].qualifier = rbState[t.id].qualifier === o ? "" : o;
-          rbRender();
-          window.autoSaveData();
+        QUALIFIER_OPTIONS.forEach((o, i) => {
+          const qOpt = document.createElement("div");
+          qOpt.className = "q-option";
+          qOpt.innerHTML = `
+            <div class="rb-radio ${s.qualifiers[r] === o ? "selected" : ""}"></div>
+            <span>${i + 1}. ${o}</span>
+          `;
+          qOpt.addEventListener("click", (e) => {
+            e.stopPropagation();
+            rbState[t.id].qualifiers[r] = rbState[t.id].qualifiers[r] === o ? "" : o;
+            rbRender();
+            window.autoSaveData();
+          });
+          qOptions.appendChild(qOpt);
         });
-        qOptions.appendChild(qOpt);
-      });
 
-      qBlock.appendChild(qOptions);
-      panel.appendChild(qBlock);
-    }
+        qBlock.appendChild(qOptions);
+        panel.appendChild(qBlock);
+      }
+    });
 
     div.appendChild(header);
     div.appendChild(panel);
@@ -239,11 +239,13 @@ function rbRenderSummary() {
     const s = rbState[t.id];
     const checked = Object.entries(s.checked).filter(([, v]) => v).map(([k]) => k);
     if (!checked.length) return;
-    const qual = s.qualifier ? `<span class="rb-summary-qual">→ ${s.qualifier}</span>` : "";
     html += `
       <div class="rb-summary-group">
         <div class="rb-summary-group-name">${t.name}</div>
-        ${checked.map(r => `<div class="rb-summary-rule">${r}${qual}</div>`).join("")}
+        ${checked.map(r => {
+          const qual = s.qualifiers && s.qualifiers[r] ? `<span class="rb-summary-qual">→ ${s.qualifiers[r]}</span>` : "";
+          return `<div class="rb-summary-rule">${r}${qual}</div>`;
+        }).join("")}
       </div>
     `;
   });
@@ -268,7 +270,7 @@ function collectFormData() {
   Object.entries(rbState).forEach(([id, s]) => {
     rulesBuilder[id] = {
       checked: { ...s.checked },
-      qualifier: s.qualifier
+      qualifiers: { ...s.qualifiers }
     };
   });
 
@@ -292,7 +294,7 @@ function populateForm(d) {
   if (d.communityRulesLink) document.getElementById('communityRulesLink').value = d.communityRulesLink;
   if (d.adaptedFrom) document.getElementById('adaptedFrom').value = d.adaptedFrom;
 
-  if (d.covenants && Array.isArray(d.covenants)) {
+  if (d.covenants && Array.isArray(d.covenants) && d.covenants.length > 0) {
     const covenantList = document.getElementById('covenant-list');
     covenantList.innerHTML = '';
     const predefined = [
@@ -326,7 +328,11 @@ function populateForm(d) {
   if (d.rulesBuilder) {
     Object.entries(d.rulesBuilder).forEach(([id, s]) => {
       if (!rbState[id]) return;
-      rbState[id].qualifier = s.qualifier || "";
+      rbState[id].qualifiers = s.qualifiers || {};
+      // backfill any missing keys
+      Object.keys(rbState[id].checked).forEach(r => {
+        if (!rbState[id].qualifiers[r]) rbState[id].qualifiers[r] = "";
+      });
       Object.entries(s.checked || {}).forEach(([rule, val]) => {
         if (Object.prototype.hasOwnProperty.call(rbState[id].checked, rule)) {
           rbState[id].checked[rule] = val;
