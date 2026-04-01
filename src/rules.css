@@ -260,6 +260,10 @@
   margin: 10px 0 5px;
 }
 
+.section-title-large .info-tooltip {
+  vertical-align: top;
+}
+
 .section-divider {
   border: none;
   height: 2px;

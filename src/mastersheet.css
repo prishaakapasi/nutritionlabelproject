@@ -83,6 +83,15 @@ body {
   width: 100%;
 }
 
+.page-divider {
+  height: 2px;
+  background: #000000;
+  margin-top: 12px;
+  margin-bottom: 32px;
+  margin-left: -60px;
+  width: calc(100vw - 242px);
+}
+
 .content-wrapper {
   display: flex;
   max-width: 1400px;

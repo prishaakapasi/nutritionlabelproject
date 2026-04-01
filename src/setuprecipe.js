@@ -27,7 +27,7 @@ console.log("Initial communityId:", communityId);
 
 const moduleOrder = [
   "Infrastructure",
-  "Roles",
+  "Membership + Roles",
   "Rules",
   "Federation",
   "Community Processes",
@@ -35,20 +35,20 @@ const moduleOrder = [
 
 const modulePages = {
   "Infrastructure":      "infrastructure.html",
-  "Roles":          "membership.html",
+  "Membership + Roles":  "membership.html",
   "Rules":               "rules.html",
   "Federation":          "federation.html",
   "Community Processes": "communityprocesses.html",
 };
 
 const typeModuleDefaults = {
-  fediverse:       new Set(["Infrastructure", "Roles", "Rules", "Federation"]),
-  chat:            new Set(["Roles", "Rules", "Community Processes"]),
-  wiki:            new Set(["Roles", "Rules", "Community Processes"]),
-  social:          new Set(["Roles", "Rules", "Community Processes"]),
-  forum:           new Set(["Roles", "Rules", "Community Processes"]),
-  citizen_science: new Set(["Roles", "Rules", "Community Processes", "Infrastructure"]),
-  other:           new Set(["Roles", "Rules"]),
+  fediverse:       new Set(["Infrastructure", "Membership + Roles", "Rules", "Federation"]),
+  chat:            new Set(["Membership + Roles", "Rules", "Community Processes"]),
+  wiki:            new Set(["Membership + Roles", "Rules", "Community Processes"]),
+  social:          new Set(["Membership + Roles", "Rules", "Community Processes"]),
+  forum:           new Set(["Membership + Roles", "Rules", "Community Processes"]),
+  citizen_science: new Set(["Membership + Roles", "Rules", "Community Processes", "Infrastructure"]),
+  other:           new Set(["Membership + Roles", "Rules"]),
 };
 
 

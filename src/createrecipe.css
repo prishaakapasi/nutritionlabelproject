@@ -85,6 +85,15 @@ body {
   width: 100%;
 }
 
+.page-divider {
+  height: 2px;
+  background: #000000;
+  margin-top: 12px;
+  margin-bottom: 32px;
+  margin-left: -60px;
+  width: calc(100vw - 242px);
+}
+
 .content-wrapper {
   display: flex;
   max-width: 1400px;
@@ -686,27 +695,25 @@ select:hover:not(:focus) {
 
 .tooltip-text {
   position: absolute;
-  bottom: 130%;
+  bottom: calc(100% + 10px);
   left: 50%;
   transform: translateX(-50%);
   width: 220px;
   background-color: var(--color-bg);
   color: var(--color-text);
-  border: 1px solid var(--color-border);
+  border: 2px solid var(--color-border);
   padding: 8px 10px;
   font-size: 12px;
   line-height: 1.4;
-  border-radius: 4px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  box-shadow: 4px 4px 0 var(--color-border);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity 0.2s ease;
   z-index: 10;
 }
 
 .info-tooltip:hover .tooltip-text {
   opacity: 1;
-  transform: translateX(-50%) translateY(-4px);
 }
 #section1Title {
     background-color: var(--color-bg);

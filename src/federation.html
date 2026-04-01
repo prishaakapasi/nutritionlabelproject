@@ -29,6 +29,7 @@
 
     <main>
       <h1>Federation</h1>
+      <div class="page-divider"></div>
       <h3>Summarize your policy for federating with other servers, including those on other protocols.</h3>
 
       
@@ -50,7 +51,7 @@
         </div>
 
         
-        <div style="margin-bottom: 1.25rem;">
+        <div class="sub-section">
           <div class="toggle-row">
             <label class="toggle-switch">
               <input type="checkbox" id="antimetaToggle">
@@ -63,10 +64,9 @@
           </div>
         </div>
 
-        
-        <div style="margin-bottom: 1.25rem;">
-          <div class="section-header" style="margin-bottom: 0.5rem;">
-            <strong>Reasons for defederation</strong>
+        <div class="sub-section">
+          <div class="section-header">
+            <h2>Reasons for defederation</h2>
           </div>
           <div id="reasonsContainer" class="reasons-group">
             <button class="module-btn" data-group="reasons">Spam</button>
@@ -86,48 +86,40 @@
         </div>
 
         
-        <div style="margin-bottom: 1.25rem;">
-          <div class="section-header" style="margin-bottom: 0.5rem;">
-            <strong>Defederation Strategy</strong>
+        <div class="sub-section">
+          <div class="section-header">
+            <h2>Defederation Strategy</h2>
             <span class="info-tooltip">ⓘ<span class="tooltip-text">Steps taken before fully defederating. Select all that apply — each reveals a notes field.</span></span>
           </div>
           <div class="strategy-list">
 
-            <div class="strategy-item">
+            <div class="strategy-buttons-row">
               <div class="strategy-item-row">
                 <button class="module-btn" data-group="strategy" data-notes-id="notes-warn">Warn</button>
               </div>
-              <div class="strategy-notes" id="notes-warn">
-                <textarea placeholder="Describe how you warn another server admin…"></textarea>
-              </div>
-            </div>
-
-            <div class="strategy-item">
               <div class="strategy-item-row">
                 <button class="module-btn" data-group="strategy" data-notes-id="notes-mute">Mute</button>
               </div>
-              <div class="strategy-notes" id="notes-mute">
-                <textarea placeholder="Describe your muting policy…"></textarea>
-              </div>
-            </div>
-
-            <div class="strategy-item">
               <div class="strategy-item-row">
                 <button class="module-btn" data-group="strategy" data-notes-id="notes-ghost">Ghost</button>
                 <span class="strategy-note-label">Bonfire only</span>
               </div>
-              <div class="strategy-notes" id="notes-ghost">
-                <textarea placeholder="Describe your ghosting policy…"></textarea>
-              </div>
-            </div>
-
-            <div class="strategy-item">
               <div class="strategy-item-row">
                 <button class="module-btn" data-group="strategy" data-notes-id="notes-deliberate">Deliberate</button>
               </div>
-              <div class="strategy-notes" id="notes-deliberate">
-                <textarea placeholder="Describe your deliberation process…"></textarea>
-              </div>
+            </div>
+
+            <div class="strategy-notes" id="notes-warn">
+              <textarea placeholder="Describe how you warn another server admin…"></textarea>
+            </div>
+            <div class="strategy-notes" id="notes-mute">
+              <textarea placeholder="Describe your muting policy…"></textarea>
+            </div>
+            <div class="strategy-notes" id="notes-ghost">
+              <textarea placeholder="Describe your ghosting policy…"></textarea>
+            </div>
+            <div class="strategy-notes" id="notes-deliberate">
+              <textarea placeholder="Describe your deliberation process…"></textarea>
             </div>
 
           </div>
@@ -211,10 +203,12 @@
       };
 
       const strategyNotes = {};
-      document.querySelectorAll('.strategy-item').forEach(item => {
-        const btn = item.querySelector('.module-btn');
-        const ta  = item.querySelector('textarea');
-        if (btn && ta) strategyNotes[btn.textContent.trim()] = ta.value.trim();
+      document.querySelectorAll('.strategy-list .module-btn').forEach(btn => {
+        const notesId = btn.dataset.notesId;
+        if (notesId) {
+          const ta = document.getElementById(notesId)?.querySelector('textarea');
+          if (ta) strategyNotes[btn.textContent.trim()] = ta.value.trim();
+        }
       });
 
       return {

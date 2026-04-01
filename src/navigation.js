@@ -6,21 +6,21 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 const moduleOrder = [
   "Infrastructure",
-  "Roles",
+  "Membership + Roles",
   "Rules",
   "Federation",
   "Community Processes",
 ];
 
 // Legacy module names that have been consolidated — never show these
-const deprecatedModules = new Set(["Admin", "Membership"]);
+const deprecatedModules = new Set(["Admin", "Membership", "Roles"]);
 
 const modulePages = {
-  "Infrastructure": "infrastructure.html",
-  "Roles": "membership.html",
+  "Infrastructure":     "infrastructure.html",
+  "Membership + Roles": "membership.html",
   "Community Processes": "communityprocesses.html",
-  "Rules": "rules.html",
-  "Federation": "federation.html",
+  "Rules":              "rules.html",
+  "Federation":         "federation.html",
 };
 
 function getModulePage(moduleName) {
@@ -110,14 +110,30 @@ function generateSideNav(modules) {
   editButton.className = "sidebar-link edit-modules-btn";
   editButton.textContent = "Edit Modules";
   editButton.style.cssText = `
-    background: #fffaf4;
-    border: 2px solid #FF8F00;
+    background: #ffffff;
+    border: 2px solid #000000;
+    outline: 1px solid #FF8F00;
+    outline-offset: -5px;
     cursor: pointer;
     width: 100%;
     text-align: left;
-    font-weight: bold;
-    color: #FF8F00;
+    font-weight: 600;
+    font-family: "Cascadia Code", monospace;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    color: #000000;
+    padding: 12px 16px;
+    box-sizing: border-box;
+    transition: background 0.2s ease;
   `;
+  editButton.addEventListener("mouseenter", () => {
+    editButton.style.background = "#ffae35";
+    editButton.style.outlineColor = "#000000";
+  });
+  editButton.addEventListener("mouseleave", () => {
+    editButton.style.background = "#ffffff";
+    editButton.style.outlineColor = "#FF8F00";
+  });
   editButton.addEventListener("click", showModuleEditor);
   navContainer.appendChild(editButton);
 
@@ -125,15 +141,32 @@ function generateSideNav(modules) {
   finishButton.className = "sidebar-link finish-btn";
   finishButton.textContent = "Generate Recipe Now";
   finishButton.style.cssText = `
-    background: #ffae35;;
-    border: 2px solid #000;
+    background: #FF8F00;
+    border: 2px solid #000000;
+    box-shadow: 4px 4px 0 #000000;
     cursor: pointer;
     width: 100%;
     text-align: left;
-    font-weight: bold;
-    color: #000;
+    font-weight: 600;
+    font-family: "Cascadia Code", monospace;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    color: #000000;
+    padding: 12px 16px;
     margin-top: 12px;
+    box-sizing: border-box;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
   `;
+  finishButton.addEventListener("mouseenter", () => {
+    finishButton.style.boxShadow = "2px 2px 0 #000000";
+    finishButton.style.transform = "translate(2px, 2px)";
+    finishButton.style.background = "#DF8200";
+  });
+  finishButton.addEventListener("mouseleave", () => {
+    finishButton.style.boxShadow = "4px 4px 0 #000000";
+    finishButton.style.transform = "translate(0, 0)";
+    finishButton.style.background = "#FF8F00";
+  });
   finishButton.addEventListener("click", () => {
     window.location.href = "finalrecipe.html";
   });
@@ -160,27 +193,29 @@ function showModuleEditor() {
 
   const modalContent = document.createElement("div");
   modalContent.style.cssText = `
-    background: #fffaf4;
+    background: #ffffff;
     padding: 40px;
-    border: 2px solid #000;
+    border: 2px solid #000000;
+    box-shadow: 6px 6px 0 #000000;
     max-width: 600px;
+    width: 90%;
     max-height: 80vh;
     overflow-y: auto;
-    font-family: "Courier New", Courier, monospace;
+    font-family: "Cascadia Code", monospace;
   `;
 
   modalContent.innerHTML = `
-    <h2 style="margin-top: 0;">Edit Your Modules</h2>
-    <p>Select which modules to include in your community:</p>
+    <h2 style="margin-top: 0; font-family: 'Space Mono', monospace; font-size: clamp(28px, 4vw, 48px); font-weight: 700; letter-spacing: -0.01em; line-height: 1.05;">Edit Your Modules</h2>
+    <p style="font-family: 'Cascadia Code', monospace; font-size: 13px; letter-spacing: 0.04em; opacity: 0.65;">Select which modules to include in your community:</p>
     <div id="moduleCheckboxes" style="margin: 20px 0;"></div>
-    <div style="margin-top: 20px;">
-      <input type="text" id="newModuleName" placeholder="Add custom module..." 
-        style="padding: 10px; width: calc(100% - 120px); background: #fffaf4; border: 2px solid #000; font-family: inherit;">
-      <button id="addNewModule" style="padding: 10px 20px; background: #fffaf4; color: #FF8F00; border: 2px solid #000; cursor: pointer; font-family: inherit;">Add</button>
+    <div style="margin-top: 20px; display: flex; gap: 8px;">
+      <input type="text" id="newModuleName" placeholder="Add custom module..."
+        style="padding: 10px 12px; flex: 1; background: #ffffff; border: 2px solid #000000; font-family: 'Cascadia Code', monospace; font-size: 13px; outline: none;">
+      <button id="addNewModule" style="padding: 10px 20px; background: #ffffff; color: #000000; border: 2px solid #000000; outline: 1px solid #FF8F00; outline-offset: -4px; cursor: pointer; font-family: 'Cascadia Code', monospace; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; white-space: nowrap;">Add</button>
     </div>
-    <div style="margin-top: 30px; display: flex; gap: 10px;">
-      <button id="saveModules" style="padding: 12px 24px; background: #FF8F00; border: 2px solid #000; cursor: pointer; font-weight: bold; font-family: inherit;">Save Changes</button>
-      <button id="cancelEdit" style="padding: 12px 24px; background: #fffaf4; border: 2px solid #000; cursor: pointer; font-family: inherit;">Cancel</button>
+    <div style="margin-top: 30px; display: flex; gap: 12px;">
+      <button id="saveModules" style="padding: 12px 24px; background: #FF8F00; color: #000000; border: 2px solid #000000; box-shadow: 4px 4px 0 #000000; cursor: pointer; font-family: 'Cascadia Code', monospace; font-size: 14px; font-weight: 600; letter-spacing: 0.04em;">Save Changes</button>
+      <button id="cancelEdit" style="padding: 12px 24px; background: #ffffff; color: #000000; border: 2px solid #000000; outline: 1px solid #FF8F00; outline-offset: -4px; cursor: pointer; font-family: 'Cascadia Code', monospace; font-size: 14px; letter-spacing: 0.04em;">Cancel</button>
     </div>
   `;
 
@@ -189,9 +224,20 @@ function showModuleEditor() {
 
   loadModuleCheckboxes();
 
-  document.getElementById("addNewModule").addEventListener("click", addCustomModule);
-  document.getElementById("saveModules").addEventListener("click", saveModuleChanges);
-  document.getElementById("cancelEdit").addEventListener("click", () => modal.remove());
+  const addBtn = document.getElementById("addNewModule");
+  addBtn.addEventListener("mouseenter", () => { addBtn.style.background = "#ffae35"; addBtn.style.outlineColor = "#000000"; });
+  addBtn.addEventListener("mouseleave", () => { addBtn.style.background = "#ffffff"; addBtn.style.outlineColor = "#FF8F00"; });
+  addBtn.addEventListener("click", addCustomModule);
+
+  const saveBtn = document.getElementById("saveModules");
+  saveBtn.addEventListener("mouseenter", () => { saveBtn.style.boxShadow = "2px 2px 0 #000000"; saveBtn.style.transform = "translate(2px,2px)"; saveBtn.style.background = "#DF8200"; });
+  saveBtn.addEventListener("mouseleave", () => { saveBtn.style.boxShadow = "4px 4px 0 #000000"; saveBtn.style.transform = "translate(0,0)"; saveBtn.style.background = "#FF8F00"; });
+  saveBtn.addEventListener("click", saveModuleChanges);
+
+  const cancelBtn = document.getElementById("cancelEdit");
+  cancelBtn.addEventListener("mouseenter", () => { cancelBtn.style.background = "#ffae35"; cancelBtn.style.outlineColor = "#000000"; });
+  cancelBtn.addEventListener("mouseleave", () => { cancelBtn.style.background = "#ffffff"; cancelBtn.style.outlineColor = "#FF8F00"; });
+  cancelBtn.addEventListener("click", () => modal.remove());
   modal.addEventListener("click", (e) => {
     if (e.target === modal) modal.remove();
   });
@@ -215,14 +261,15 @@ async function loadModuleCheckboxes() {
 
   moduleOrder.forEach(moduleName => {
     const label = document.createElement("label");
-    label.style.cssText = "display: block; margin: 10px 0; cursor: pointer;";
-    
+    label.style.cssText = "display: block; margin: 10px 0; cursor: pointer; font-family: 'Cascadia Code', monospace; font-size: 13px; letter-spacing: 0.04em;";
+
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.value = moduleName;
     checkbox.checked = selectedModules.has(moduleName);
     checkbox.style.marginRight = "10px";
-    
+    checkbox.style.accentColor = "#FF8F00";
+
     label.appendChild(checkbox);
     label.appendChild(document.createTextNode(moduleName));
     container.appendChild(label);
@@ -232,14 +279,15 @@ async function loadModuleCheckboxes() {
     if (deprecatedModules.has(moduleName)) return;
     if (!moduleOrder.includes(moduleName)) {
       const label = document.createElement("label");
-      label.style.cssText = "display: block; margin: 10px 0; cursor: pointer; color: #FF8F00;";
-      
+      label.style.cssText = "display: block; margin: 10px 0; cursor: pointer; font-family: 'Cascadia Code', monospace; font-size: 13px; letter-spacing: 0.04em; color: #FF8F00;";
+
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
       checkbox.value = moduleName;
       checkbox.checked = true;
       checkbox.style.marginRight = "10px";
-      
+      checkbox.style.accentColor = "#FF8F00";
+
       label.appendChild(checkbox);
       label.appendChild(document.createTextNode(moduleName + " (custom)"));
       container.appendChild(label);
@@ -264,13 +312,14 @@ function addCustomModule() {
   }
 
   const label = document.createElement("label");
-  label.style.cssText = "display: block; margin: 10px 0; cursor: pointer; color: #FF8F00;";
-  
+  label.style.cssText = "display: block; margin: 10px 0; cursor: pointer; font-family: 'Cascadia Code', monospace; font-size: 13px; letter-spacing: 0.04em; color: #FF8F00;";
+
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
   checkbox.value = moduleName;
   checkbox.checked = true;
   checkbox.style.marginRight = "10px";
+  checkbox.style.accentColor = "#FF8F00";
   
   label.appendChild(checkbox);
   label.appendChild(document.createTextNode(moduleName + " (custom)"));
