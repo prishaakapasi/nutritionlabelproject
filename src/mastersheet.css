@@ -5,7 +5,7 @@
 }
 
 :root {
-  --color-bg: #fffaf4;
+  --color-bg: #ffffff;
   --color-text: #000000;
   --color-accent: #FF8F00;
   --color-accent-light: #ffae35;
@@ -16,7 +16,7 @@
   --spacing-md: 24px;
   --spacing-lg: 40px;
   --spacing-xl: 64px;
-  --font-primary: "IBM Plex Sans", sans-serif;
+  --font-primary: "Cascadia Code", monospace;
   --transition-fast: 0.2s ease;
   --transition-standard: 0.3s ease;
 }
@@ -35,8 +35,9 @@ body {
 .navbar {
   display: flex;
   justify-content: flex-end;
-  padding: 28px var(--spacing-xl);
+  padding: 20px 6%;
   background-color: var(--color-bg);
+  border-bottom: 2px solid var(--color-border);
 }
 
 .navbar ul {
@@ -50,7 +51,9 @@ body {
 
 .navbar a {
   text-decoration: none;
-  font-size: 17px;
+  font-size: 15px;
+  font-family: "Cascadia Code", monospace;
+  letter-spacing: 0.05em;
   color: var(--color-text);
   position: relative;
   transition: color var(--transition-standard);
@@ -139,13 +142,13 @@ main {
 }
 
 h1 {
-  font-size: clamp(32px, 5vw, 42px);
+  font-size: clamp(28px, 4vw, 48px);
   margin: 10px 0 5px;
-  letter-spacing: -0.6px;
+  letter-spacing: -0.01em;
   color: var(--color-text);
-  font-weight: normal;
-  line-height: 1.2;
-  font-family: "IBM Plex Sans", sans-serif !important;
+  font-weight: 700;
+  line-height: 1.1;
+  font-family: "Space Mono", monospace;
 }
 
 h2 {

@@ -5,6 +5,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code/index.css">
     <link rel="stylesheet" href="dataprivacy.css" />
     <link rel="stylesheet" href="legalcompliance.css" />
     <link rel="stylesheet" href="mastersheet.css" /> 
@@ -130,6 +131,7 @@
         <button id="addChannel" class="save-module">Add Link</button>
       </div>
 
+      <hr class="section-divider">
       <h1>Data / Privacy</h1>
       <h3>Help people understand what they can expect in terms of data protections and privacy.</h3>
 
@@ -145,15 +147,19 @@
       <h2>Protection Measures</h2>
       <textarea id="protectionMeasures" name="protectionMeasures" placeholder="Describe your data protection measures..."></textarea>
 
+      <hr class="section-divider">
       <h1>Legal Compliance</h1>
       <h3>Let people know what laws you need to comply with to keep the community up and running.</h3>
 
       <h2>Based In</h2>
       <div class="input-container">
         <div class="country-search-wrapper">
-          <span class="country-search-icon">&#8981;</span>
+          <svg class="country-search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
           <input type="text" id="countryInput" placeholder="Search countries…" autocomplete="off" spellcheck="false" />
-          <span class="country-clear-btn" id="countryClearBtn" style="display:none;" title="Clear">✕</span>
+          <button class="country-clear-btn" id="countryClearBtn" style="display:none;" title="Clear" aria-label="Clear selection">✕</button>
         </div>
         <ul class="input-dropdown" id="countryDropdown">
           <li class="country-result-count" id="countryResultCount" style="display:none;"></li>
@@ -162,16 +168,6 @@
         <input type="hidden" id="country" name="country" />
       </div>
       <p class="input-hint">This is where your server is located and/or obligated to comply with local laws.</p>
-
-      <style>
-        .country-search-wrapper { position: relative; display: flex; align-items: center; }
-        .country-search-icon { position: absolute; left: 10px; font-size: 14px; pointer-events: none; opacity: 0.5; }
-        #countryInput { padding-left: 32px !important; padding-right: 32px !important; }
-        .country-clear-btn { position: absolute; right: 10px; cursor: pointer; opacity: 0.4; font-size: 13px; line-height: 1; user-select: none; }
-        .country-clear-btn:hover { opacity: 0.8; }
-        .country-result-count { font-size: 11px; opacity: 0.5; padding: 4px 10px 2px; pointer-events: none; border-bottom: 1px solid rgba(255,255,255,0.08); letter-spacing: 0.03em; }
-        .country-match { font-weight: bold; text-decoration: underline; }
-      </style>
 
       <h2>Relevant Regulations</h2>
       <div id="regulationsContainer" class="button-container">

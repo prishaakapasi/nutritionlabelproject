@@ -7,10 +7,13 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const moduleOrder = [
   "Infrastructure",
   "Roles",
-  "Community Processes",
   "Rules",
   "Federation",
+  "Community Processes",
 ];
+
+// Legacy module names that have been consolidated — never show these
+const deprecatedModules = new Set(["Admin", "Membership"]);
 
 const modulePages = {
   "Infrastructure": "infrastructure.html",
@@ -67,6 +70,7 @@ function generateSideNav(modules) {
   const customModules = [];
   
   modules.forEach(moduleName => {
+    if (deprecatedModules.has(moduleName)) return;
     if (moduleOrder.includes(moduleName)) {
       orderedModules.push(moduleName);
     } else {
@@ -172,7 +176,7 @@ function showModuleEditor() {
     <div style="margin-top: 20px;">
       <input type="text" id="newModuleName" placeholder="Add custom module..." 
         style="padding: 10px; width: calc(100% - 120px); background: #fffaf4; border: 2px solid #000; font-family: inherit;">
-      <button id="addNewModule" style="padding: 10px 20px; background: #fffaf4; #FF8F00; border: 2px solid #000; cursor: pointer; font-family: inherit;">Add</button>
+      <button id="addNewModule" style="padding: 10px 20px; background: #fffaf4; color: #FF8F00; border: 2px solid #000; cursor: pointer; font-family: inherit;">Add</button>
     </div>
     <div style="margin-top: 30px; display: flex; gap: 10px;">
       <button id="saveModules" style="padding: 12px 24px; background: #FF8F00; border: 2px solid #000; cursor: pointer; font-weight: bold; font-family: inherit;">Save Changes</button>
@@ -225,6 +229,7 @@ async function loadModuleCheckboxes() {
   });
 
   selectedModules.forEach(moduleName => {
+    if (deprecatedModules.has(moduleName)) return;
     if (!moduleOrder.includes(moduleName)) {
       const label = document.createElement("label");
       label.style.cssText = "display: block; margin: 10px 0; cursor: pointer; color: #FF8F00;";

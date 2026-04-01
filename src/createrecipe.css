@@ -5,7 +5,7 @@
 }
 
 :root {
-  --color-bg: #fffaf4;
+  --color-bg: #ffffff;
   --color-text: #000000;
   --color-accent: #FF8F00;
   --color-accent-light: #ffae35;
@@ -18,7 +18,7 @@
   --spacing-lg: 40px;
   --spacing-xl: 64px;
   
-  --font-primary: "IBM Plex Sans", sans-serif;
+  --font-primary: "Cascadia Code", monospace;
   --transition-fast: 0.2s ease;
   --transition-standard: 0.3s ease;
 }
@@ -37,8 +37,9 @@ body {
 .navbar {
   display: flex;
   justify-content: flex-end;
-  padding: 28px var(--spacing-xl);
+  padding: 20px 6%;
   background-color: var(--color-bg);
+  border-bottom: 2px solid var(--color-border);
 }
 
 .navbar ul {
@@ -52,7 +53,9 @@ body {
 
 .navbar a {
   text-decoration: none;
-  font-size: 17px;
+  font-size: 15px;
+  font-family: "Cascadia Code", monospace;
+  letter-spacing: 0.05em;
   color: var(--color-text);
   position: relative;
   transition: color var(--transition-standard);
@@ -140,13 +143,13 @@ main {
 }
 
 h1 {
-  font-size: clamp(32px, 5vw, 42px);
+  font-size: clamp(28px, 4vw, 48px);
   margin: 10px 0 5px;
-  letter-spacing: -0.6px;
+  letter-spacing: -0.01em;
   color: var(--color-text);
-  font-family: "Handjet", sans-serif;
-  font-weight: normal;
-  line-height: 1.2;
+  font-family: "Space Mono", monospace;
+  font-weight: 700;
+  line-height: 1.1;
 }
 
 h3 {
@@ -165,29 +168,32 @@ h3 {
 }
 
 .module-btn {
-  padding: 12px var(--spacing-md);
+  padding: 14px 28px;
   background-color: var(--color-bg);
   border: 2px solid var(--color-border);
   color: var(--color-text);
   cursor: pointer;
   font-family: var(--font-primary);
-  font-size: 16px;
-  font-weight: normal;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
   white-space: nowrap;
   position: relative;
   overflow: hidden;
   z-index: 1;
+  outline: 1px solid var(--color-accent);
+  outline-offset: -5px;
   transition: color var(--transition-standard);
-  border-radius: 2px;
+  border-radius: 0;
 }
 
 .module-btn::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 3px;
+  left: 3px;
   width: 0;
-  height: 100%;
+  height: calc(100% - 6px);
   background: var(--color-accent-light);
   transition: width var(--transition-standard);
   z-index: -1;
@@ -195,14 +201,13 @@ h3 {
 
 .module-btn:hover::before,
 .module-btn:focus-visible::before {
-  width: 100%;
+  width: calc(100% - 6px);
 }
 
 .module-btn:hover,
 .module-btn:focus-visible {
   color: var(--color-text);
-  outline: 2px solid var(--color-accent);
-  outline-offset: -2px;
+  outline-color: var(--color-text);
 }
 
 .module-btn:active {

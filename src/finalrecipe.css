@@ -1,8 +1,8 @@
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: "IBM Plex Sans", sans-serif;
-  background-color: #fffaf4;
+  font-family: "Cascadia Code", monospace;
+  background-color: #ffffff;
   color: #000000;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
@@ -11,7 +11,8 @@ body {
 .navbar {
   display: flex;
   justify-content: flex-end;
-  padding: 28px 64px;
+  padding: 20px 6%;
+  border-bottom: 2px solid #000;
 }
 
 .navbar ul {
@@ -24,7 +25,9 @@ body {
 
 .navbar a {
   text-decoration: none;
-  font-size: 17px;
+  font-size: 15px;
+  font-family: "Cascadia Code", monospace;
+  letter-spacing: 0.05em;
   color: #000000;
   position: relative;
   transition: color 0.25s ease;
@@ -77,7 +80,7 @@ h4 {
   max-width: 760px;
   margin: 40px auto 80px;
   padding: 28px 32px;
-  background-color: #fffaf4;
+  background-color: #ffffff;
   border: 2px solid #000;
 }
 
@@ -157,11 +160,11 @@ h4 {
 .btn-edit {
   padding: 10px 15px;
   font-size: 14px;
-  background-color: #fffaf4;
+  background-color: #ffffff;
   color: #FF8F00;
   border: 2px dashed #FF8F00;
   cursor: pointer;
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: "Cascadia Code", monospace;
   transition: all 0.3s ease;
   min-width: 60px;
   font-weight: normal;

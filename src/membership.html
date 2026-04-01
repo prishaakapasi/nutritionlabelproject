@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code/index.css">
     <link rel="stylesheet" href="admintype.css" />
     <link rel="stylesheet" href="mastersheet.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -24,9 +25,8 @@
     </aside>
 
     <main>
-      <h1>Membership</h1>
+      <h1>Roles</h1>
 
-      <!-- ── STRUCTURE ── -->
       <section id="structureSection">
         <h2>Structure</h2>
         <h3>Select the type of community structure.</h3>
@@ -37,7 +37,6 @@
         </div>
       </section>
 
-      <!-- ── ROLES ── -->
       <section id="rolesSection" style="display:none;">
         <h2>Roles</h2>
         <p class="info-text" id="rolesHint"></p>
@@ -49,8 +48,6 @@
 
         <button id="addRoleBtn" class="add-btn" style="display:none;">+ Add Member</button>
       </section>
-
-      <!-- ── REGISTRATION / JOINING ── -->
       <section id="registrationSection">
         <h2>Registration / Joining</h2>
         <h3>How can people join this community?</h3>
@@ -85,7 +82,6 @@
     const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
     const supabase   = createClient(supabaseUrl, supabaseKey);
 
-    // ── Structure config ──────────────────────────────────────────────────────
     const STRUCTURE_CONFIG = {
       "Team": {
         hint: "Add your team members and their roles (e.g. Lead, Designer, Developer).",
@@ -107,18 +103,15 @@
       },
     };
 
-    // ── State ─────────────────────────────────────────────────────────────────
     let roles = [];
     let currentStructure = null;
 
-    // ── Auto-save ─────────────────────────────────────────────────────────────
     let saveTimeout;
     function scheduleAutoSave() {
       clearTimeout(saveTimeout);
       saveTimeout = setTimeout(saveMembershipData, 1000);
     }
 
-    // ── Roles rendering ───────────────────────────────────────────────────────
     function escHtml(str) {
       return (str || "")
         .replace(/&/g,"&amp;").replace(/</g,"&lt;")
@@ -144,7 +137,6 @@
         const row = document.createElement("div");
         row.className = "role-row";
 
-        // BD: role field is read-only
         const roleInputHtml = config.maxMembers === 1
           ? `<input class="role-input role-fixed" type="text"
                value="${escHtml(config.rolePlaceholder)}" readonly
@@ -154,7 +146,6 @@
                value="${escHtml(r.role)}"
                data-index="${i}" data-field="role" />`;
 
-        // BD: no remove button (single mandatory row)
         const removeBtnHtml = config.maxMembers === 1
           ? ""
           : `<button class="remove-btn" data-index="${i}" title="Remove">✕</button>`;
@@ -171,7 +162,6 @@
       });
     }
 
-    // ── Roles events ──────────────────────────────────────────────────────────
     document.getElementById("rolesContainer").addEventListener("input", e => {
       const el = e.target;
       if (el.dataset.index === undefined) return;
@@ -192,11 +182,9 @@
       renderRoles();
     });
 
-    // ── Structure selection ───────────────────────────────────────────────────
     function selectStructure(value) {
       currentStructure = value;
       const config = STRUCTURE_CONFIG[value] || {};
-      // Seed one empty row; BD seeds its fixed row
       roles = config.maxMembers === 1
         ? [{ username: "", role: config.rolePlaceholder }]
         : [];
@@ -204,7 +192,6 @@
       scheduleAutoSave();
     }
 
-    // ── Registration UI ───────────────────────────────────────────────────────
     function updateRegistrationUI(value) {
       document.getElementById("infoClosedReg").style.display    = value === "Closed Registration"       ? "block" : "none";
       document.getElementById("infoApprovalReq").style.display  = value === "Sign-up Approval Required" ? "block" : "none";
@@ -213,7 +200,6 @@
         value === "Sign-up Approval Required" ? "block" : "none";
     }
 
-    // ── Generic button group wiring ───────────────────────────────────────────
     function wireGroup(groupId, onSelect) {
       document.querySelectorAll(`#${groupId} .module-btn`).forEach(btn => {
         btn.addEventListener("click", function () {
@@ -240,7 +226,6 @@
     wireGroup("registrationButtons", updateRegistrationUI);
     wireGroup("approvalMethodButtons");
 
-    // ── Supabase ──────────────────────────────────────────────────────────────
     function collectFormData() {
       return {
         structure:      currentStructure,

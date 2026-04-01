@@ -1,0 +1,49 @@
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 120px);
+  border-bottom: 2px solid #000;
+  padding: 40px 6%;
+  text-align: left;
+}
+
+.hero-text {
+  max-width: 900px;
+}
+
+.hero-text h1 {
+  font-family: "Space Mono", monospace;
+  font-size: clamp(42px, 6vw, 90px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: #000;
+  position: relative;
+}
+
+.hero-text h1::after {
+  content: "";
+  display: block;
+  width: 800px;
+  height: 4px;
+  background: #FF8F00;
+  margin: 18px auto 0;
+}
+
+.hero-text h1 {
+  animation: fadeUp 0.6s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeUp {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
