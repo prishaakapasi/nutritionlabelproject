@@ -25,8 +25,8 @@
     <div class="items">
 
       <div class="page-header">
-        <h1 class="page-title">CREATE A <span class="page-title-color">COMMUNITY RECIPE </span></h1>
-        <p class="requiredtext"><span class="required-star" aria-label="required">✱</span> Indicates required question</p>
+        <h1 class="page-title">CREATE A COMMUNITY RECIPE</h1>
+        <p class="requiredtext"><span class="required-star" aria-label="required">✱</span> Indicates required question. This helps us display some basic information about your commuity. Most of the questions in the following screens aren't strictly necessary (and depending on your community, may not be relevant!) but are there as guides!</p>
       </div>
 
       <h1>COMMUNITY NAME <span class="required-star" aria-label="required">✱</span></h1>
@@ -60,22 +60,22 @@
       </div>
 
       <h1 class="label">COMMUNITY KEYWORDS <span class="required-star" aria-label="required">✱</span>
-        <span class="info-icon"> ⓘ <span class="infoicontext">Add keywords that help describe your community; press Tab or Enter to add each one</span> </span>
+        <span class="info-icon"> ⓘ <span class="infoicontext">Add at least three keywords that help describe your community; press Tab or Enter to add each one</span> </span>
       </h1>
       <div id="keywordsWrapper">
         <div id="keywordTags"></div>
         <input type="text" id="keywordInput" placeholder="Type a keyword and press Tab or Enter…" />
       </div>
 
-      <h1 class="label">SELECT CATEGORY MODULES
-        <span class="info-icon"> ⓘ <span class="infoicontext">What governance decisions are relevant to your community</span> </span>
+      <h1 class="label">SELECT RELEVANT MODULES
+        <span class="info-icon"> ⓘ <span class="infoicontext">What governance decisions are relevant to your community?</span> </span>
       </h1>
       <div id="modulesContainer">
-        <button type="button" class="module-btn">Roles</button>
-        <button type="button" class="module-btn">Rules</button>
+        <button type="button" class="module-btn">Membership + Roles</button> <!--recommend-->
+        <button type="button" class="module-btn">Rules</button> <!--recommend-->
         <button type="button" class="module-btn">Federation</button>
-        <button type="button" class="module-btn">Infrastructure</button>
-        <button type="button" class="module-btn">Community Processes</button>
+        <button type="button" class="module-btn">Infrastructure</button> <!--require-->
+        <button type="button" class="module-btn">Community Processes</button> <!--recommend-->
         <button type="button" id="addModuleBtn">+</button>
       </div>
 

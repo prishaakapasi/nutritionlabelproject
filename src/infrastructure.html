@@ -34,7 +34,7 @@
       <h1>Infrastructure</h1>
       <h3>Give people some insight into the technical infrastructure that your community sits on.</h3>
 
-      <h2>Platform Software</h2>
+      <h2>Platform Software</h2> <!--SOHW: REQUIRE and add more options like centralized platforms-->
       <div class="software-hint">Choose one or type your own software</div>
       <div class="software-container">
         <input type="text" id="software" placeholder="Start typing to search or type your own" autocomplete="off" />
@@ -64,12 +64,12 @@
         </div>
       </div>
 
-      <h2>Stack</h2>
-      <div class="software-hint">Add purpose–software pairs that make up your community's tech stack (e.g. Hosting → AWS Cloud Services)</div>
+      <h2>Stack</h2> <!--SOHW: it should first have a yes/no question about "does your community manage a tech stack or use hosting services to run? if you're on a centralized platform, this is probably no. if you're on a decentralized or protocolized system, this is probably yes."-->
+      <div class="software-hint">You can share more information about the tech stack your community runs on, such as hosting services. You can create purpose–software pairs below (e.g. Hosting → AWS Cloud Services)</div>
       <div id="stackList" class="stack-list"></div>
       <button class="add-btn" id="addStackBtn">+ Add to Stack</button>
 
-      <h2>Hosting</h2>
+      <h2>Hosting</h2> <!--SOHW: remove? it seems redundant given the above-->
       <div class="button-container">
         <button class="hosting-btn" data-type="physical">Physical</button>
         <button class="hosting-btn" data-type="cloud">Cloud</button>
@@ -79,10 +79,10 @@
       </div>
 
       <h2 class="costs-label">
-        Costs
+        Costs <!--SOHW: maybe start with a yes/no to "Does your community incur costs related to running the server?" and expand to show rest if so. i'm imagining that communities like Reddit and etc. won't-->
         <span class="info-tooltip">
           ⓘ
-          <span class="tooltip-text">How are costs related to running the server (e.g., paying for software and hosting) covered?</span>
+          <span class="tooltip-text">How are costs related to running the server (e.g., paying for software and hosting) covered? If you're using a centralized platform like Facebook, this is probably not relevant.</span>
         </span>
       </h2>
 
