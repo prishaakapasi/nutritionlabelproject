@@ -31,8 +31,10 @@
           <h1 id="communityName"></h1>
           <div class="community-meta">
             <span class="community-type-badge" id="communityType"></span>
+            <span class="community-size-val" id="communitySize"></span>
             <span class="community-link-val" id="communityLink"></span>
           </div>
+          <div class="community-keywords" id="communityKeywords"></div>
         </div>
 
         <hr class="rule-thick">
@@ -69,7 +71,6 @@
         "Legal Compliance":      "legalcompliance_data",
       };
 
-      // Human-readable labels. null = skip the field entirely.
       const FIELD_LABELS = {
         communityRulesLink:   "Rules Link",
         covenants:            "Covenants",
@@ -129,9 +130,20 @@
           document.getElementById("communityName").textContent = community.name || "Community";
           document.getElementById("communityType").textContent = formatType(community.type);
 
+          const sizeEl = document.getElementById("communitySize");
+          if (community.size) sizeEl.textContent = community.size + " members";
+
           const linkEl = document.getElementById("communityLink");
           if (community.link) {
-            linkEl.innerHTML = `<a href="${escAttr(community.link)}" target="_blank">${escHtml(community.link)}</a>`;
+            const url = /^https?:\/\//i.test(community.link) ? community.link : "https://" + community.link;
+            linkEl.innerHTML = `<a href="${escAttr(url)}" target="_blank">${escHtml(community.link)}</a>`;
+          }
+
+          const keywordsEl = document.getElementById("communityKeywords");
+          if (community.keywords && community.keywords.length) {
+            keywordsEl.innerHTML = community.keywords
+              .map(kw => `<span class="keyword-tag">${escHtml(kw)}</span>`)
+              .join("");
           }
 
           const modulesContent = document.getElementById("modulesContent");
@@ -140,6 +152,16 @@
           const selectedModules = community.selected_modules || [];
 
           for (const moduleName of selectedModules) {
+            const columnName = moduleColumnMappings[moduleName];
+            if (!columnName || !community[columnName]) continue;
+            const moduleData = community[columnName];
+            if (!hasActualData(moduleData)) continue;
+            renderModule(moduleName, moduleData);
+          }
+
+        
+          for (const moduleName of ["Data/Privacy", "Legal Compliance"]) {
+            if (selectedModules.includes(moduleName)) continue;
             const columnName = moduleColumnMappings[moduleName];
             if (!columnName || !community[columnName]) continue;
             const moduleData = community[columnName];
@@ -215,6 +237,9 @@
 
           if (typeof value === "boolean") {
             valueEl.textContent = value ? "Yes" : "No";
+          } else if (key === "privacyPolicyUrl" && typeof value === "string") {
+            const url = /^https?:\/\//i.test(value) ? value : "https://" + value;
+            valueEl.innerHTML = `<a href="${escAttr(url)}" target="_blank">${escHtml(value)}</a>`;
           } else if (key === "channels" && Array.isArray(value)) {
             valueEl.innerHTML = value
               .filter(ch => ch.url)
@@ -283,57 +308,69 @@
       }
 
       function buildRulesRow(rulesBuilder) {
-        const categories = [];
-        for (const [catId, catState] of Object.entries(rulesBuilder)) {
-          const checked = Object.entries(catState.checked || {}).filter(([, v]) => v);
-          if (!checked.length) continue;
-          categories.push({ id: catId, rules: checked.map(([rule]) => ({
-            text: rule,
-            qualifier: catState.qualifiers?.[rule] || null,
-          }))});
-        }
-        if (!categories.length) return null;
+  const categories = [];
 
-        const row = document.createElement("div");
-        row.className = "data-item";
-        row.style.alignItems = "flex-start";
+  for (const [catId, catState] of Object.entries(rulesBuilder)) {
+    const checked = Object.entries(catState.checked || {}).filter(([, v]) => v);
+    if (!checked.length) continue;
 
-        const labelEl = document.createElement("div");
-        labelEl.className = "data-label";
-        labelEl.textContent = "Rules";
+    categories.push({
+      id: catId,
+      rules: checked.map(([rule]) => ({
+        text: rule,
+        qualifier: catState.qualifiers?.[rule] || null,
+      })),
+    });
+  }
 
-        const valueEl = document.createElement("div");
-        valueEl.className = "data-value";
-        valueEl.style.textAlign = "right";
+  if (!categories.length) return null;
 
-        for (const cat of categories) {
-          const catDiv = document.createElement("div");
-          catDiv.className = "rules-category";
+  const row = document.createElement("div");
+  row.className = "data-item rules-block";
 
-          const catName = document.createElement("div");
-          catName.className = "rules-cat-name";
-          catName.textContent = formatFieldName(cat.id);
-          catDiv.appendChild(catName);
+  const labelEl = document.createElement("div");
+  labelEl.className = "data-label";
+  labelEl.textContent = "Rules";
 
-          const tagList = document.createElement("div");
-          tagList.className = "rules-list";
-          tagList.style.justifyContent = "flex-end";
+  const valueEl = document.createElement("div");
+  valueEl.className = "data-value rules-clean";
 
-          for (const r of cat.rules) {
-            const tag = document.createElement("span");
-            tag.className = r.qualifier ? "rule-tag has-qualifier" : "rule-tag";
-            tag.textContent = r.qualifier ? `${r.text} → ${r.qualifier}` : r.text;
-            tagList.appendChild(tag);
-          }
+  for (const cat of categories) {
+    const catDiv = document.createElement("div");
+    catDiv.className = "rules-category-clean";
 
-          catDiv.appendChild(tagList);
-          valueEl.appendChild(catDiv);
-        }
+    const catName = document.createElement("div");
+    catName.className = "rules-cat-title";
+    catName.textContent = formatFieldName(cat.id);
 
-        row.appendChild(labelEl);
-        row.appendChild(valueEl);
-        return row;
+    const list = document.createElement("ul");
+    list.className = "rules-list-clean";
+
+    for (const r of cat.rules) {
+      const li = document.createElement("li");
+
+      if (r.qualifier) {
+        li.innerHTML = `
+          <span class="rule-text">${escHtml(r.text)}</span>
+          <span class="rule-arrow">→</span>
+          <span class="rule-qualifier">${escHtml(r.qualifier)}</span>
+        `;
+      } else {
+        li.textContent = r.text;
       }
+
+      list.appendChild(li);
+    }
+
+    catDiv.appendChild(catName);
+    catDiv.appendChild(list);
+    valueEl.appendChild(catDiv);
+  }
+
+  row.appendChild(labelEl);
+  row.appendChild(valueEl);
+  return row;
+}
 
       function formatObjectArray(items) {
         return items.map(item => {

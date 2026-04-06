@@ -94,7 +94,7 @@ h1 {
 }
 
 .hero-desc {
-  font-size: clamp(15px, 1.3vw, 17px);
+  font-size: clamp(16px, 1.3vw, 17px);
   color: #000;
   margin: 0;
   line-height: 1.8;

@@ -8,7 +8,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Navbar — matches site-wide style ── */
 .navbar {
   display: flex;
   justify-content: flex-end;
@@ -49,7 +48,6 @@ body {
 .navbar a:hover { color: #FF8F00; }
 .navbar a:hover::after { width: 100%; }
 
-/* ── Page wrapper ── */
 .recipe-page {
   display: flex;
   flex-direction: column;
@@ -64,7 +62,6 @@ body {
   text-align: center;
 }
 
-/* ── Label card — matches .sample from homepage ── */
 .recipe-container {
   width: 100%;
   max-width: 560px;
@@ -77,7 +74,6 @@ body {
   padding: 24px 24px 0;
 }
 
-/* ── Header ── */
 .recipe-header {
   padding-bottom: 14px;
 }
@@ -124,11 +120,33 @@ body {
   text-decoration: underline;
 }
 
-/* ── Divider hierarchy (label style) ── */
-.rule-thick  { border: 0; border-top: 8px solid #000; margin: 14px 0 0; }
+.community-size-val {
+  font-family: "Cascadia Code", monospace;
+  font-size: 11px;
+  color: #555;
+  letter-spacing: 0.04em;
+}
+
+.community-keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.keyword-tag {
+  font-family: "Cascadia Code", monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  border: 1px solid #ccc;
+  padding: 2px 8px;
+  background: #f5f5f5;
+  color: #333;
+}
+
+.rule-thick  { border: 0; border-top: 3px solid #000; margin: 14px 0 0; }
 .rule-medium { border: 0; border-top: 3px solid #000; margin: 0; }
 
-/* ── Module sections ── */
 .module-section { margin-top: 0; }
 
 .module-header {
@@ -147,7 +165,6 @@ body {
   color: #000;
 }
 
-/* ── Data rows ── */
 .module-content { font-size: 13px; }
 
 .data-item {
@@ -185,7 +202,6 @@ body {
   text-decoration: underline;
 }
 
-/* ── Rules tags ── */
 .rules-category {
   padding: 3px 0;
   border-bottom: 1px dashed #ccc;
@@ -225,7 +241,6 @@ body {
   color: #000;
 }
 
-/* ── Nested values (strategy notes, dmca) ── */
 .nested-value { text-align: right; }
 
 .nested-row {
@@ -235,7 +250,6 @@ body {
   margin-bottom: 2px;
 }
 
-/* ── Action buttons — matches site .btn style ── */
 .action-buttons {
   margin: 20px 0 0;
   padding: 16px 0;
@@ -287,4 +301,60 @@ body {
 .btn-edit:hover {
   color: #000;
   outline-color: #000;
+}
+
+.rules-clean {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: right;
+}
+
+.rules-category-clean {
+  padding: 6px 0;
+  border-bottom: 1px dashed #dcdcdc;
+}
+
+.rules-category-clean:last-child {
+  border-bottom: none;
+}
+
+.rules-cat-title {
+  font-family: "Cascadia Code", monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #777;
+  margin-bottom: 4px;
+}
+
+.rules-list-clean {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rules-list-clean li {
+  font-family: "Cascadia Code", monospace;
+  font-size: 12px;
+  color: #111;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.rule-arrow {
+  opacity: 0.4;
+  font-size: 11px;
+}
+
+.rule-qualifier {
+  font-size: 11px;
+  color: #FF8F00;
+  font-style: italic;
 }

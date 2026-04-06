@@ -35,10 +35,10 @@
       <div class="page-divider"></div>
       <h3>Give people some insight into the technical infrastructure that your community sits on.</h3>
 
-      <h2>Platform Software</h2> <!--SOHW: REQUIRE and add more options like centralized platforms-->
-      <div class="software-hint">Choose one or type your own software</div>
+      <h2>Platform Software <span style="color: var(--accent, #e05); font-size: 0.85em;">*</span></h2>
+      <div class="software-hint">Choose one or type your own software. <strong>Required.</strong></div>
       <div class="software-container">
-        <input type="text" id="software" placeholder="Start typing to search or type your own" autocomplete="off" />
+        <input type="text" id="software" placeholder="Start typing to search or type your own" autocomplete="off" required />
         <ul id="software-dropdown" class="software-dropdown"></ul>
       </div>
       <div id="softwareVersionWrapper" style="display:none; margin-top: 8px;">
@@ -65,56 +65,79 @@
         </div>
       </div>
 
-      <h2>Stack</h2> <!--SOHW: it should first have a yes/no question about "does your community manage a tech stack or use hosting services to run? if you're on a centralized platform, this is probably no. if you're on a decentralized or protocolized system, this is probably yes."-->
-      <div class="software-hint">You can share more information about the tech stack your community runs on, such as hosting services. You can create purpose–software pairs below (e.g. Hosting → AWS Cloud Services)</div>
-      <div id="stackList" class="stack-list"></div>
-      <button class="add-btn" id="addStackBtn">+ Add to Stack</button>
-
-      <h2>Hosting</h2> <!--SOHW: remove? it seems redundant given the above-->
-      <div class="button-container">
-        <button class="hosting-btn" data-type="physical">Physical</button>
-        <button class="hosting-btn" data-type="cloud">Cloud</button>
+      <h2>Stack</h2>
+      <div class="protocol-question-block">
+        <div class="protocol-question-heading">
+          <span class="protocol-question-label">Does your community manage its own tech stack or use hosting services?</span>
+          <span class="info-tooltip">
+            ⓘ
+            <span class="tooltip-text">If you're on a centralized platform like Reddit, Facebook Groups, or Discord, this probably doesn't apply — the platform handles everything. If you run your own server (e.g. Mastodon, Lemmy, PeerTube), you likely do manage a stack.</span>
+          </span>
+        </div>
+        <div class="protocol-yn-btns" id="stackYnBtns">
+          <button class="module-btn" id="stackYesBtn" data-answer="yes">Yes</button>
+          <button class="module-btn" id="stackNoBtn" data-answer="no">No</button>
+        </div>
       </div>
-      <div id="hostingDescription" style="display: none;">
-        <input type="text" id="hostingDetails" placeholder="e.g. in admin basement">
+      <div id="stackWrapper" style="display:none; margin-top: 8px;">
+        <div class="software-hint">You can share more information about the tech stack your community runs on, such as hosting services. You can create purpose–software pairs below (e.g. Hosting → AWS Cloud Services)</div>
+        <div id="stackList" class="stack-list"></div>
+        <button class="add-btn" id="addStackBtn">+ Add to Stack</button>
       </div>
 
+    
       <h2 class="costs-label">
-        Costs <!--SOHW: maybe start with a yes/no to "Does your community incur costs related to running the server?" and expand to show rest if so. i'm imagining that communities like Reddit and etc. won't-->
+        Costs
         <span class="info-tooltip">
           ⓘ
           <span class="tooltip-text">How are costs related to running the server (e.g., paying for software and hosting) covered? If you're using a centralized platform like Facebook, this is probably not relevant.</span>
         </span>
       </h2>
 
-      <div class="costs-subsection">
-        <div class="costs-sublabel">What costs does the community need to cover?</div>
-        <input type="text" id="costsWhat" placeholder="e.g. server, domain, media storage" />
+      <div class="protocol-question-block">
+        <div class="protocol-question-heading">
+          <span class="protocol-question-label">Does your community incur costs related to running the server?</span>
+          <span class="info-tooltip">
+            ⓘ
+            <span class="tooltip-text">Communities on centralized platforms like Reddit or Discord typically don't pay server costs — the platform absorbs them. If you self-host or pay for services like a domain or media storage, answer Yes.</span>
+          </span>
+        </div>
+        <div class="protocol-yn-btns" id="costsYnBtns">
+          <button class="module-btn" id="costsYesBtn" data-answer="yes">Yes</button>
+          <button class="module-btn" id="costsNoBtn" data-answer="no">No</button>
+        </div>
       </div>
 
-      <div class="costs-subsection">
-        <div class="costs-sublabel">Who covers the costs?</div>
-        <div class="button-container" id="costsCoverageContainer">
-          <button class="module-btn cost-coverage-btn" data-value="Admin">Admin</button>
-          <button class="module-btn cost-coverage-btn" data-value="Community donations">Community donations</button>
-          <button class="module-btn cost-coverage-btn" data-value="Membership fees">Membership fees</button>
-          <button class="add-module-btn" id="addCostCoverageBtn">+</button>
+      <div id="costsWrapper" style="display:none; margin-top: 8px;">
+        <div class="costs-subsection">
+          <div class="costs-sublabel">What costs does the community need to cover?</div>
+          <input type="text" id="costsWhat" placeholder="e.g. server, domain, media storage" />
         </div>
-        <div class="new-module-container" id="costCoverageNewContainer" style="display:none;">
-          <input type="text" class="new-module-text" id="costCoverageNewText" placeholder="Enter funding source…">
-          <div class="button-group">
-            <button class="save-module" id="costCoverageSaveBtn">Save</button>
-            <button class="cancel-module" id="costCoverageCancelBtn">Cancel</button>
+
+        <div class="costs-subsection">
+          <div class="costs-sublabel">Who covers the costs?</div>
+          <div class="button-container" id="costsCoverageContainer">
+            <button class="module-btn cost-coverage-btn" data-value="Admin">Admin</button>
+            <button class="module-btn cost-coverage-btn" data-value="Community donations">Community donations</button>
+            <button class="module-btn cost-coverage-btn" data-value="Membership fees">Membership fees</button>
+            <button class="add-module-btn" id="addCostCoverageBtn">+</button>
+          </div>
+          <div class="new-module-container" id="costCoverageNewContainer" style="display:none;">
+            <input type="text" class="new-module-text" id="costCoverageNewText" placeholder="Enter funding source…">
+            <div class="button-group">
+              <button class="save-module" id="costCoverageSaveBtn">Save</button>
+              <button class="cancel-module" id="costCoverageCancelBtn">Cancel</button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="costs-subsection">
-        <div class="costs-sublabel">Donation or finance links</div>
-        <div id="donationLinksList" class="donation-links-list"></div>
-        <div class="channel-input-container">
-          <input type="url" id="donationLinkUrl" placeholder="e.g. patreon.com/yourcommunity, ko-fi.com/you, opencollective.com/you">
-          <button id="addDonationLink" class="save-module">Add Link</button>
+        <div class="costs-subsection">
+          <div class="costs-sublabel">Donation or finance links</div>
+          <div id="donationLinksList" class="donation-links-list"></div>
+          <div class="channel-input-container">
+            <input type="url" id="donationLinkUrl" placeholder="e.g. patreon.com/yourcommunity, ko-fi.com/you, opencollective.com/you">
+            <button id="addDonationLink" class="save-module">Add Link</button>
+          </div>
         </div>
       </div>
 
@@ -327,6 +350,7 @@
 
     function updateDonationUrlInputs() {
       const container = document.getElementById('donationUrlInputs');
+      if (!container) return;
       const selected = [...document.querySelectorAll('.donation-platform-btn.selected')];
 
       container.querySelectorAll('.donation-url-row').forEach(row => {
@@ -378,14 +402,17 @@
 
       const protocolAnswer = document.querySelector('.protocol-yn-btns .module-btn.selected')?.dataset.answer || null;
 
+      const stackAnswer = document.querySelector('#stackYnBtns .module-btn.selected')?.dataset.answer || null;
+      const costsAnswer = document.querySelector('#costsYnBtns .module-btn.selected')?.dataset.answer || null;
+
       const infrastructure_data = {
         protocolAnswer,
         protocol:        document.getElementById("protocols").value,
         software:        document.getElementById("software").value,
         softwareVersion: document.getElementById("softwareVersion").value,
+        stackAnswer,
         stack,
-        hostingType:     document.querySelector(".hosting-btn.selected")?.dataset.type || null,
-        hostingDetails:  document.getElementById("hostingDetails").value,
+        costsAnswer,
         costsWhat:       document.getElementById("costsWhat").value,
         costCoverage,
         customCostCoverage,
@@ -455,13 +482,22 @@
       }
       if (d.softwareVersion) document.getElementById("softwareVersion").value = d.softwareVersion;
 
+      if (d.stackAnswer) {
+        const btn = document.querySelector(`#stackYnBtns .module-btn[data-answer="${d.stackAnswer}"]`);
+        if (btn) {
+          btn.classList.add('selected');
+          if (d.stackAnswer === 'yes') document.getElementById('stackWrapper').style.display = 'block';
+        }
+      }
       if (d.stack && Array.isArray(d.stack)) d.stack.forEach(s => addStackRow(s.purpose, s.software));
 
-      if (d.hostingType) {
-        const btn = document.querySelector(`[data-type="${d.hostingType}"]`);
-        if (btn) btn.click();
+      if (d.costsAnswer) {
+        const btn = document.querySelector(`#costsYnBtns .module-btn[data-answer="${d.costsAnswer}"]`);
+        if (btn) {
+          btn.classList.add('selected');
+          if (d.costsAnswer === 'yes') document.getElementById('costsWrapper').style.display = 'block';
+        }
       }
-      if (d.hostingDetails) document.getElementById("hostingDetails").value = d.hostingDetails;
 
       if (d.costsWhat) document.getElementById("costsWhat").value = d.costsWhat;
 
@@ -545,6 +581,42 @@
       if (url.includes('twitter') || url.includes('x.com')) return 'Twitter/X';
       if (url.includes('facebook')) return 'Facebook';
       return 'Link';
+    }
+
+    function detectDonationPlatform(url) {
+      const u = url.toLowerCase();
+      if (u.includes('patreon'))         return 'Patreon';
+      if (u.includes('ko-fi'))           return 'Ko-fi';
+      if (u.includes('opencollective'))  return 'Open Collective';
+      if (u.includes('buymeacoffee'))    return 'Buy Me a Coffee';
+      if (u.includes('paypal'))          return 'PayPal';
+      if (u.includes('venmo'))           return 'Venmo';
+      if (u.includes('cashapp'))         return 'Cash App';
+      if (u.includes('github'))          return 'GitHub Sponsors';
+      if (u.includes('liberapay'))       return 'Liberapay';
+      if (u.includes('donorbox'))        return 'Donorbox';
+      return 'Donate';
+    }
+
+    function addDonationLinkItem(url) {
+      url = normalizeUrl(url);
+      const label = detectDonationPlatform(url);
+      const list = document.getElementById("donationLinksList");
+      const item = document.createElement("div");
+      item.className = "channel-item";
+      const link = document.createElement("a");
+      link.className = "channel-btn";
+      link.href = url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = label.toUpperCase();
+      const removeBtn = document.createElement("button");
+      removeBtn.className = "remove-channel-btn";
+      removeBtn.textContent = "×";
+      removeBtn.addEventListener("click", () => { item.remove(); autoSaveData(); });
+      item.appendChild(link);
+      item.appendChild(removeBtn);
+      list.appendChild(item);
     }
 
     function addChannelItem(url, platformLabel) {
@@ -651,7 +723,13 @@
     }
 
     function initSoftwareDropdown() {
+      // CHANGE 1: Expanded software options to include centralized platforms more prominently
       const softwareOptions = [
+        // Centralized platforms
+        "Discord","Reddit","Facebook Groups","Slack","Telegram","WhatsApp","LinkedIn Groups",
+        "YouTube","Twitch","Patreon","Substack","Mighty Networks","Circle","Kajabi",
+        "Discourse","Vanilla Forums","Ning","Wix","Squarespace","Weebly",
+        // Decentralized / federated
         "Mastodon","Pixelfed","Lemmy","PeerTube","WordPress","Misskey","Pleroma","WriteFreely",
         "Fedibird","NodeBB","Activity Relay","Micro.blog","Akkoma","Firefish","BookWyrm",
         "Sharkey","Hometown","Friendica","Loops","PieFed","NeoDB","Hubzilla","Forgejo","Mbin",
@@ -660,7 +738,7 @@
         "GoToSocial","Postmarks","Betula","Microblog.pub","Manyfold","Hackers' Pub","Ktistec",
         "Takahē","Stegodon","Mobilizon","Frequency","Gancio","Drupal","Plume","Flipboard",
         "Loforo","Brutalinks","Zap","Ecko","Irwin","Honk","Lotide","Emissary","Bonfire",
-        "Bridgy Fed","Discord","Reddit","Facebook Groups","Bluesky"
+        "Bridgy Fed","Bluesky"
       ];
       const softwareInput    = document.getElementById("software");
       const softwareDropdown = document.getElementById("software-dropdown");
@@ -732,19 +810,26 @@
         });
       });
 
+
+      document.querySelectorAll('#stackYnBtns .module-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('#stackYnBtns .module-btn').forEach(b => b.classList.remove('selected'));
+          this.classList.add('selected');
+          document.getElementById('stackWrapper').style.display =
+            this.dataset.answer === 'yes' ? 'block' : 'none';
+          autoSaveData();
+        });
+      });
+
       document.getElementById('addStackBtn').addEventListener('click', () => addStackRow());
 
-      const hostingBtns        = document.querySelectorAll('.hosting-btn');
-      const hostingDescription = document.getElementById('hostingDescription');
-      const hostingDetails     = document.getElementById('hostingDetails');
-      hostingBtns.forEach(btn => {
+  
+      document.querySelectorAll('#costsYnBtns .module-btn').forEach(btn => {
         btn.addEventListener('click', function() {
-          hostingBtns.forEach(b => b.classList.remove('selected'));
+          document.querySelectorAll('#costsYnBtns .module-btn').forEach(b => b.classList.remove('selected'));
           this.classList.add('selected');
-          hostingDescription.style.display = 'block';
-          hostingDetails.placeholder = this.dataset.type === 'physical'
-            ? 'e.g. in admin basement'
-            : 'e.g., AWS, Google Cloud, Co-op Cloud';
+          document.getElementById('costsWrapper').style.display =
+            this.dataset.answer === 'yes' ? 'block' : 'none';
           autoSaveData();
         });
       });
@@ -802,7 +887,6 @@
         autoSaveData();
       });
       document.getElementById("softwareVersion").addEventListener("input", autoSaveData);
-      document.getElementById("hostingDetails").addEventListener("input", autoSaveData);
 
       document.getElementById("privacyPolicyUrl").addEventListener("input", autoSaveData);
       document.getElementById("logRetention").addEventListener("input", autoSaveData);
