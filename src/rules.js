@@ -54,14 +54,14 @@ const RULES_DATA = {
       id: "authenticity",
       name: "Authenticity and account integrity",
       qualifier: true,
-      rules: ["No impersonation", "Parody accounts", "Bot accounts"]
+      rules: ["Impersonation", "Parody accounts", "Bot accounts"]
     },
     {
       id: "spam",
       name: "Spam, advertising, and platform misuse",
       qualifier: true,
       rules: [
-        "No spam", "Mass-following or mass-replying",
+        "Spam", "Mass-following or mass-replying",
         "Unsolicited advertising & unsolicited DMs for promotion",
         "Personal project / non-commercial / non-profit promotion",
         "Commercial advertising", "Fundraising or donation requests",
@@ -100,9 +100,9 @@ const RULES_DATA = {
       name: "AI-generated media, attribution, and copyright",
       qualifier: true,
       rules: [
-        "AI-generated media", "No AI impersonation of real people",
-        "Credit original creators", "No reposting without permission",
-        "No copyright infringement", "No scraped or stolen creative work",
+        "AI-generated media", "AI impersonation of real people",
+        "Credit original creators", "Reposting without permission",
+        "Copyright infringement", "Scraped or stolen creative work",
         "Fanworks / derivatives must be credited where relevant"
       ]
     },
@@ -112,7 +112,7 @@ const RULES_DATA = {
       qualifier: true,
       rules: [
         "Explicit sexual content", "Nudity",
-        "Adult content is allowed if labeled",
+        "Adult content",
         "Sexualized depictions of minors",
         "Non-consensual sexual content",
         "Revenge porn / intimate media",

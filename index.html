@@ -1,103 +1,125 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="src/styles.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code/index.css">
+    <link rel="stylesheet" href="/src/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code/index.css"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Community Governance Cards</title>
   </head>
-<body>
-  <nav class="navbar">
-    <ul>
-      <li><a href="/src/index.html">Home</a></li>
-      <li><a href="/src/about.html">About</a></li>
-      <li><a href="/src/tutorial.html">Tutorial</a></li>
-      <li><a href="/src/setuprecipe.html">Create</a></li>
-      <li><a href="/src/library.html">Library</a></li>
-    </ul>
-  </nav>
+  <body>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/src/index.html">Home</a></li>
+        <li><a href="/src/about.html">About</a></li>
+        <li><a href="/src/tutorial.html">Tutorial</a></li>
+        <li><a href="/src/setuprecipe.html">Create</a></li>
+        <li><a href="/src/library.html">Library</a></li>
+      </ul>
+    </nav>
 
-  <main>
+    <main>
+      <section class="hero">
+        <div class="hero-left">
+          <p class="eyebrow">Community Governance Tool</p>
+          <h1>
+            CRAFTING<br />
+            <span class="accent-word">INTENTIONAL</span><br />
+            SPACES
+          </h1>
+          <p class="hero-desc">
+            <span class="highlight">Community Governance Cards</span> guide
+            reflection on and sharing how your community governs interaction.
+          </p>
+          <a href="/src/setuprecipe.html" class="btn-primary">Make a Card →</a>
+        </div>
+        <div class="hero-right">
+          <div class="sample" id="sampleCard">
+            <button class="sample-expand" title="Expand">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
 
-    <section class="hero">
-      <div class="hero-left">
-        <p class="eyebrow"> Community Governance Tool</p>
-        <h1>
-          CRAFTING<br>
-          <span class="accent-word">INTENTIONAL</span><br>
-          SPACES
-        </h1>
-        <p class="hero-desc">
-          <span class="highlight">Community Governance Cards</span> guide
-          reflection on and sharing how your community governs interaction.
-        </p>
-        <a href="/src/setuprecipe.html" class="btn-primary">Make a Card →</a>
-      </div>
-      <div class="hero-right">
-        <div class="sample" id="sampleCard">
-          <button class="sample-expand" title="Expand">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <polyline points="15 3 21 3 21 9"></polyline>
-              <polyline points="9 21 3 21 3 15"></polyline>
-              <line x1="21" y1="3" x2="14" y2="10"></line>
-              <line x1="3" y1="21" x2="10" y2="14"></line>
-            </svg>
-          </button>
+      <div class="ticker-wrap">
+        <div class="ticker-track">
+          <span>GOVERNANCE</span><span class="sep">·</span>
+          <span>COMMUNITY</span><span class="sep">·</span>
+          <span>TRANSPARENCY</span><span class="sep">·</span> <span>TRUST</span
+          ><span class="sep">·</span> <span>MODERATION</span
+          ><span class="sep">·</span> <span>FEDERATION</span
+          ><span class="sep">·</span> <span>INFRASTRUCTURE</span
+          ><span class="sep">·</span> <span>RULES</span
+          ><span class="sep">·</span> <span>ROLES</span
+          ><span class="sep">·</span> <span>PRIVACY</span
+          ><span class="sep">·</span> <span>GOVERNANCE</span
+          ><span class="sep">·</span> <span>COMMUNITY</span
+          ><span class="sep">·</span> <span>TRANSPARENCY</span
+          ><span class="sep">·</span> <span>TRUST</span
+          ><span class="sep">·</span> <span>MODERATION</span
+          ><span class="sep">·</span> <span>FEDERATION</span
+          ><span class="sep">·</span> <span>INFRASTRUCTURE</span
+          ><span class="sep">·</span> <span>RULES</span
+          ><span class="sep">·</span> <span>ROLES</span
+          ><span class="sep">·</span> <span>PRIVACY</span
+          ><span class="sep">·</span>
         </div>
       </div>
-    </section>
 
-    <div class="ticker-wrap">
-      <div class="ticker-track">
-        <span>GOVERNANCE</span><span class="sep">·</span>
-        <span>COMMUNITY</span><span class="sep">·</span>
-        <span>TRANSPARENCY</span><span class="sep">·</span>
-        <span>TRUST</span><span class="sep">·</span>
-        <span>MODERATION</span><span class="sep">·</span>
-        <span>FEDERATION</span><span class="sep">·</span>
-        <span>INFRASTRUCTURE</span><span class="sep">·</span>
-        <span>RULES</span><span class="sep">·</span>
-        <span>ROLES</span><span class="sep">·</span>
-        <span>PRIVACY</span><span class="sep">·</span>
-        <span>GOVERNANCE</span><span class="sep">·</span>
-        <span>COMMUNITY</span><span class="sep">·</span>
-        <span>TRANSPARENCY</span><span class="sep">·</span>
-        <span>TRUST</span><span class="sep">·</span>
-        <span>MODERATION</span><span class="sep">·</span>
-        <span>FEDERATION</span><span class="sep">·</span>
-        <span>INFRASTRUCTURE</span><span class="sep">·</span>
-        <span>RULES</span><span class="sep">·</span>
-        <span>ROLES</span><span class="sep">·</span>
-        <span>PRIVACY</span><span class="sep">·</span>
-      </div>
-    </div>
+      <div class="divider"></div>
 
-    <div class="divider"></div>
+      <section class="features">
+        <div class="feature-card">
+          <span class="feature-num">01</span>
+          <h3>DEFINE YOUR STRUCTURE</h3>
+          <p>
+            Document your governance, roles, and decision-making processes in
+            one place.
+          </p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-num">02</span>
+          <h3>SHARE TRANSPARENTLY</h3>
+          <p>
+            Generate a shareable card that communicates your community's values
+            and rules.
+          </p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-num">03</span>
+          <h3>BUILD TRUST</h3>
+          <p>
+            Help members understand expectations and hold communities
+            accountable.
+          </p>
+        </div>
+      </section>
+    </main>
 
-    <section class="features">
-      <div class="feature-card">
-        <span class="feature-num">01</span>
-        <h3>DEFINE YOUR STRUCTURE</h3>
-        <p>Document your governance, roles, and decision-making processes in one place.</p>
-      </div>
-      <div class="feature-card">
-        <span class="feature-num">02</span>
-        <h3>SHARE TRANSPARENTLY</h3>
-        <p>Generate a shareable card that communicates your community's values and rules.</p>
-      </div>
-      <div class="feature-card">
-        <span class="feature-num">03</span>
-        <h3>BUILD TRUST</h3>
-        <p>Help members understand expectations and hold communities accountable.</p>
-      </div>
-    </section>
-
-  </main>
-
-  <script type="module" src="/src/main.js"></script>
-</body>
+    <script type="module" src="/src/main.js"></script>
+  </body>
 </html>

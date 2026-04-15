@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="federation.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Federation</title>
-
 </head>
 <body>
   <nav class="navbar">
@@ -32,7 +31,6 @@
       <div class="page-divider"></div>
       <h3>Summarize your policy for federating with other servers, including those on other protocols.</h3>
 
-      
       <div class="policy-section">
         <div class="section-header">
           <h2>Federation Mode</h2>
@@ -44,13 +42,11 @@
         </div>
       </div>
 
-      
       <div class="policy-section">
         <div class="section-header">
           <h2>Policies</h2>
         </div>
 
-        
         <div class="sub-section">
           <div class="toggle-row">
             <label class="toggle-switch">
@@ -85,14 +81,12 @@
           </div>
         </div>
 
-        
         <div class="sub-section">
           <div class="section-header">
             <h2>Defederation Strategy</h2>
             <span class="info-tooltip">ⓘ<span class="tooltip-text">Steps taken before fully defederating. Select all that apply — each reveals a notes field.</span></span>
           </div>
           <div class="strategy-list">
-
             <div class="strategy-buttons-row">
               <div class="strategy-item-row">
                 <button class="module-btn" data-group="strategy" data-notes-id="notes-warn">Warn</button>
@@ -121,15 +115,13 @@
             <div class="strategy-notes" id="notes-deliberate">
               <textarea placeholder="Describe your deliberation process…"></textarea>
             </div>
-
           </div>
         </div>
       </div>
 
-      
       <div class="policy-section">
         <div class="section-header">
-          <h2>Bridging </h2>
+          <h2>Bridging</h2>
           <span class="info-tooltip">ⓘ<span class="tooltip-text">Other protocols this server allows bridged content from</span></span>
         </div>
         <div id="bridgingContainer" class="button-container">
@@ -145,7 +137,6 @@
         </div>
       </div>
 
-      
       <div class="policy-section">
         <div class="section-header">
           <h2>Blocklist Subscriptions</h2>
@@ -177,23 +168,20 @@
     const supabaseKey = "sb_publishable_wSb8KHh3lvlLMMCxSTLQ-Q_bYqvk77x";
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const defaultFederation  = ['Allowlist Mode', 'Blocklist Mode'];
-    const defaultBridging    = ['AT Protocol', 'Nostr', 'Farcaster'];
-    const defaultBlocklists  = ['Garden Fence', 'CARIAD', 'IFTAS-DNI', 'Seridy Tier-0', 'FediNuke'];
-    const defaultReasons     = ['spam', 'illegal content', 'incompatible values', 'scale', 'disputes', 'non-responsive admin', 'no bots'];
-    const defaultStrategy    = ['warn', 'mute', 'ghost', 'deliberate'];
+    const defaultFederation = ['Allowlist Mode', 'Blocklist Mode'];
+    const defaultBridging   = ['AT Protocol', 'Nostr', 'Farcaster'];
+    const defaultBlocklists = ['Garden Fence', 'CARIAD', 'IFTAS-DNI', 'Seridy Tier-0', 'FediNuke'];
+    const defaultReasons    = ['Spam', 'Illegal Content', 'Incompatible Values', 'Scale', 'Disputes', 'Non-responsive admin', 'No bots'];
 
-    
     let saveTimeout;
     function autoSaveData() {
       clearTimeout(saveTimeout);
       saveTimeout = setTimeout(saveFederationData, 1000);
     }
 
-    
     function collectFormData() {
       const sel = id => [...document.querySelectorAll(`#${id} .module-btn.selected`)].map(b => b.textContent.trim());
-      const all = (id, defaults) => {
+      const customOf = (id, defaults) => {
         const custom = [];
         document.querySelectorAll(`#${id} .module-btn`).forEach(b => {
           const t = b.textContent.trim();
@@ -212,41 +200,30 @@
       });
 
       return {
-        selectedFederation:  sel('federationContainer'),
-        selectedBridging:    sel('bridgingContainer'),
-        customBridging:      all('bridgingContainer', defaultBridging),
-        selectedBlocklists:  sel('blocklistsContainer'),
-        selectedReasons:     sel('reasonsContainer'),
-        customReasons:       all('reasonsContainer', defaultReasons),
-        selectedStrategy:    sel('strategyList'),   
+        selectedFederation: sel('federationContainer'),
+        selectedBridging:   sel('bridgingContainer'),
+        customBridging:     customOf('bridgingContainer', defaultBridging),
+        selectedBlocklists: sel('blocklistsContainer'),
+        selectedReasons:    sel('reasonsContainer'),
+        customReasons:      customOf('reasonsContainer', defaultReasons),
+        selectedStrategy:   [...document.querySelectorAll('.strategy-list .module-btn.selected')].map(b => b.textContent.trim()),
         strategyNotes,
         antiMeta: document.getElementById('antimetaToggle').checked,
       };
     }
 
-    
-    function collectStrategy() {
-      return {
-        selectedStrategy: [...document.querySelectorAll('.strategy-list .module-btn.selected')].map(b => b.textContent.trim()),
-      };
-    }
-
-    
     async function saveFederationData() {
       const communityId = localStorage.getItem("communityId");
       if (!communityId) return;
-
-      const data = { ...collectFormData(), ...collectStrategy() };
+      const data = collectFormData();
       const { error } = await supabase.from("communities").update({ federation_data: data }).eq("id", communityId);
       if (error) console.error("Error saving:", error);
       else console.log("Saved federation data");
     }
 
-    
     async function loadFederationData() {
       const communityId = localStorage.getItem("communityId");
       if (!communityId) return;
-
       const { data, error } = await supabase.from("communities").select("federation_data").eq("id", communityId).single();
       if (error || !data?.federation_data) return;
       populateForm(data.federation_data);
@@ -265,12 +242,10 @@
       markSelected('#blocklistsContainer', d.selectedBlocklists);
       markSelected('#reasonsContainer',    d.selectedReasons);
 
-      
-      if (d.customReasons) addCustomButtons('reasonsContainer', d.customReasons, defaultReasons, d.selectedReasons || []);
-      
+      // Insert custom buttons (no listeners yet — initToggleButtons runs after this)
+      if (d.customReasons)  addCustomButtons('reasonsContainer',  d.customReasons,  defaultReasons,  d.selectedReasons  || []);
       if (d.customBridging) addCustomButtons('bridgingContainer', d.customBridging, defaultBridging, d.selectedBridging || []);
 
-      
       if (d.selectedStrategy) {
         document.querySelectorAll('.strategy-list .module-btn').forEach(btn => {
           if (d.selectedStrategy.includes(btn.textContent.trim())) {
@@ -295,6 +270,13 @@
       }
     }
 
+    function makeToggleBtn(text) {
+      const btn = document.createElement('button');
+      btn.className = 'module-btn';
+      btn.textContent = text;
+      return btn;
+    }
+
     function addCustomButtons(containerId, items, defaults, selected) {
       const container = document.getElementById(containerId);
       const addBtn = container.querySelector('.add-module-btn');
@@ -307,16 +289,6 @@
       });
     }
 
-    
-    function makeToggleBtn(text) {
-      const btn = document.createElement('button');
-      btn.className = 'module-btn';
-      btn.textContent = text;
-      btn.addEventListener('click', () => { btn.classList.toggle('selected'); autoSaveData(); });
-      return btn;
-    }
-
-    
     function initAddFlow(addBtnId, newItemId, containerId, placeholder) {
       const addBtn    = document.getElementById(addBtnId);
       const newItem   = document.getElementById(newItemId);
@@ -324,7 +296,6 @@
       const saveBtn   = newItem.querySelector('.save-module');
       const cancelBtn = newItem.querySelector('.cancel-module');
       const container = document.getElementById(containerId);
-      const insertBefore = addBtn; 
 
       input.placeholder = placeholder;
 
@@ -334,7 +305,9 @@
         const val = input.value.trim();
         if (!val) return;
         const btn = makeToggleBtn(val);
-        container.insertBefore(btn, insertBefore);
+        // Attach toggle listener to the newly created button right away
+        btn.addEventListener('click', () => { btn.classList.toggle('selected'); autoSaveData(); });
+        container.insertBefore(btn, addBtn);
         newItem.classList.remove('visible');
         input.value = '';
         autoSaveData();
@@ -342,7 +315,6 @@
       input.addEventListener('keypress', e => { if (e.key === 'Enter') saveBtn.click(); });
     }
 
-    
     function initExclusiveModeButtons() {
       document.querySelectorAll('#federationContainer .module-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -354,19 +326,16 @@
       });
     }
 
-    
     function initStrategyButtons() {
       document.querySelectorAll('.strategy-list .module-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           btn.classList.toggle('selected');
           const notesId = btn.dataset.notesId;
           if (notesId) {
-            const notesEl = document.getElementById(notesId);
-            notesEl?.classList.toggle('visible', btn.classList.contains('selected'));
+            document.getElementById(notesId)?.classList.toggle('visible', btn.classList.contains('selected'));
           }
           autoSaveData();
         });
-        
         const notesId = btn.dataset.notesId;
         if (notesId) {
           document.getElementById(notesId)?.querySelector('textarea')
@@ -375,16 +344,14 @@
       });
     }
 
-    
     function initToggleButtons(containerSelector) {
       document.querySelectorAll(containerSelector + ' .module-btn').forEach(btn => {
         btn.addEventListener('click', () => { btn.classList.toggle('selected'); autoSaveData(); });
       });
     }
 
-    
-    document.addEventListener("DOMContentLoaded", () => {
-      loadFederationData();
+    document.addEventListener("DOMContentLoaded", async () => {
+      await loadFederationData(); 
 
       initExclusiveModeButtons();
       initStrategyButtons();
@@ -392,9 +359,9 @@
       initToggleButtons('#bridgingContainer');
       initToggleButtons('#blocklistsContainer');
 
-      initAddFlow('reasonsAddBtn',   'reasonsNewItem',   'reasonsContainer',   'Enter custom reason...');
-      initAddFlow('bridgingAddBtn',  'bridgingNewItem',  'bridgingContainer',  'Enter bridging protocol...');
-      initAddFlow('blocklistsAddBtn','blocklistsNewItem','blocklistsContainer','Enter blocklist name...');
+      initAddFlow('reasonsAddBtn',    'reasonsNewItem',    'reasonsContainer',    'Enter custom reason...');
+      initAddFlow('bridgingAddBtn',   'bridgingNewItem',   'bridgingContainer',   'Enter bridging protocol...');
+      initAddFlow('blocklistsAddBtn', 'blocklistsNewItem', 'blocklistsContainer', 'Enter blocklist name...');
 
       document.getElementById('antimetaToggle').addEventListener('change', autoSaveData);
     });
